@@ -1,10 +1,10 @@
 // ------------------------------------------------------------
 // FILENAME:        DefaultScriptHeaderComments.cs
 // AUTHOR:          xgc
-// VERSION:         v1.0
 // DESCRIPTION:     默认 C# 脚本头部注释
 // ------------------------------------------------------------
 
+/*
 using System.IO;
 using UnityEngine;
 
@@ -18,7 +18,6 @@ public class DefaultScriptHeaderComments : UnityEditor.AssetModificationProcesso
           "// ------------------------------------------------------------\n"
         + "// FILENAME:        #FILENAME#\n"
         + "// AUTHOR:          #AUTHOR#\n"
-        + "// VERSION:         #VERSION#\n"
         + "// DESCRIPTION:     \n"
         + "// ------------------------------------------------------------\n\n";
 
@@ -44,10 +43,10 @@ public class DefaultScriptHeaderComments : UnityEditor.AssetModificationProcesso
         //修改注释内容
         scriptContent = scriptContent.Replace("#FILENAME#", Path.GetFileName(scriptFullPath));
         scriptContent = scriptContent.Replace("#AUTHOR#", "xgc");
-        scriptContent = scriptContent.Replace("#VERSION#", "v1.0");
         //scriptContent = scriptContent.Replace("#DATE#", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 
         //写入文件
         File.WriteAllText(scriptFullPath, scriptContent);
     }
 }
+*/
