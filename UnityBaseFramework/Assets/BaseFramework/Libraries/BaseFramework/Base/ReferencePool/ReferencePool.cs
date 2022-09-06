@@ -59,6 +59,9 @@ namespace BaseFramework
             return results;
         }
 
+		/// <summary>
+        /// 清除所有引用池。
+        /// </summary>			  
         public static void ClearAll()
         {
             lock (s_ReferenceCollections)

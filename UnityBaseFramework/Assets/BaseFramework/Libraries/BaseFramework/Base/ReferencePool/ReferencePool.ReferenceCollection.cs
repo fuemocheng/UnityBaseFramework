@@ -5,7 +5,7 @@ namespace BaseFramework
 {
     public static partial class ReferencePool
     {
-        public sealed class ReferenceCollection
+        private sealed class ReferenceCollection
         {
             private readonly Queue<IReference> m_References;
             private readonly Type m_ReferenceType;
