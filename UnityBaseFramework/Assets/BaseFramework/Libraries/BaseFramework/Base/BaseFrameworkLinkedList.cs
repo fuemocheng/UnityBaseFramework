@@ -213,8 +213,8 @@ namespace BaseFramework
         /// <summary>
         /// 链表中是否包含此值。
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">指定值。</param>
+        /// <returns>指定值是否在链表中。</returns>
         public bool Contains(T value)
         {
             return m_LinkedList.Contains(value);
@@ -358,7 +358,7 @@ namespace BaseFramework
         /// <summary>
         /// 将值添加到 ICollection<T> 的结尾处。
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="value">要添加的值。</param>
         void ICollection<T>.Add(T value)
         {
             AddLast(value);
@@ -394,7 +394,7 @@ namespace BaseFramework
             {
                 if (linkedList == null)
                 {
-                    throw new BaseFrameworkException("LinkedList is invalid");
+                    throw new BaseFrameworkException("Linked list is invalid.");
                 }
                 m_Enumerator = linkedList.GetEnumerator();
             }
@@ -432,7 +432,7 @@ namespace BaseFramework
             /// <summary>
             /// 获取下一个结点。
             /// </summary>
-            /// <returns></returns>
+            /// <returns>返回下一个结点。</returns>
             public bool MoveNext()
             {
                 return m_Enumerator.MoveNext();

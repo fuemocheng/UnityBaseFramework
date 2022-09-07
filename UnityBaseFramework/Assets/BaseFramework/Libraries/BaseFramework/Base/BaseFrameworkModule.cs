@@ -11,9 +11,9 @@ namespace BaseFramework
         /// <remarks>优先级较高的模块会优先轮询，并且关闭操作会后进行。</remarks>
         internal virtual int Priority
         {
-            get 
+            get
             {
-                return 0; 
+                return 0;
             }
         }
 
@@ -27,6 +27,6 @@ namespace BaseFramework
         /// <summary>
         /// 关闭并清理模块。
         /// </summary>
-        internal abstract void ShotDown();
+        internal abstract void Shutdown();
     }
 }

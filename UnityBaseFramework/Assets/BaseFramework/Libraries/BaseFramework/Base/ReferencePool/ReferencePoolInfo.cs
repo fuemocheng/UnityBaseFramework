@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace BaseFramework
 {
+	/// <summary>
+    /// 引用池信息。
+    /// </summary>
     [StructLayout(LayoutKind.Auto)]
     public struct ReferencePoolInfo
     {

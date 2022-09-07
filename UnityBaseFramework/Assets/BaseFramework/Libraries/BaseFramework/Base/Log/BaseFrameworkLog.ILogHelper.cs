@@ -10,8 +10,8 @@ namespace BaseFramework
             /// <summary>
             /// 打印日志
             /// </summary>
-            /// <param name="level"></param>
-            /// <param name="message"></param>
+            /// <param name="level">日志等级。</param>
+            /// <param name="message">日志内容。</param>
             void Log(BaseFrameworkLogLevel level, object message);
         }
     }

@@ -121,7 +121,7 @@ namespace BaseFramework
         /// </summary>
         /// <param name="key">指定的主键。</param>
         /// <param name="value">指定的值。</param>
-        /// <returns></returns>
+        /// <returns>是否移除成功。</returns>
         public bool Remove(TKey key, TValue value)
         {
             BaseFrameworkLinkedListRange<TValue> range = default(BaseFrameworkLinkedListRange<TValue>);

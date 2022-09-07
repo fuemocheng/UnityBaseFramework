@@ -11,7 +11,7 @@ namespace BaseFramework
         /// 初始化基础框架中包含事件数据的类的新实例。
         /// </summary>
         public BaseFrameworkEventArgs()
-        { 
+        {
         }
 
         /// <summary>

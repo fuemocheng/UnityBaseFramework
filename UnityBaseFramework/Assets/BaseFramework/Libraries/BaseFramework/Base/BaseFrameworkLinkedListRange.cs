@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace BaseFramework
 {
     /// <summary>
-    /// 链表范围类。
+    /// 链表范围结构体。
     /// </summary>
     /// <typeparam name="T">指定链表范围的元素类型。</typeparam>
     [StructLayout(LayoutKind.Auto)]
@@ -23,7 +23,7 @@ namespace BaseFramework
         {
             if (first == null || terminal == null || first == terminal)
             {
-                throw new BaseFrameworkException("Range is invalid");
+                throw new BaseFrameworkException("Range is invalid.");
             }
 
             m_First = first;

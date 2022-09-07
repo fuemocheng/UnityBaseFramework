@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityBaseFramework.Runtime
 {
-    /// <summary>L
+    /// <summary>
     /// 日志辅助器。
     /// </summary>
     public class DefaultLogHelper : BaseFrameworkLog.ILogHelper

@@ -28,7 +28,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取引用池的数量
+        /// 获取引用池的数量。
         /// </summary>
         public static int Count
         {
@@ -61,7 +61,7 @@ namespace BaseFramework
 
 		/// <summary>
         /// 清除所有引用池。
-        /// </summary>			  
+        /// </summary>
         public static void ClearAll()
         {
             lock (s_ReferenceCollections)

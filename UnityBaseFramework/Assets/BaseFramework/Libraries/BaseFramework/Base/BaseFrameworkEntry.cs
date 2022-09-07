@@ -26,17 +26,17 @@ namespace BaseFramework
         /// <summary>
         /// 关闭并清理所有基础框架模块。
         /// </summary>
-        public static void ShutDown()
+        public static void Shutdown()
         {
             for (LinkedListNode<BaseFrameworkModule> current = s_BaseFrameworkModules.Last; current != null; current = current.Previous)
             {
-                current.Value.ShotDown();
+                current.Value.Shutdown();
             }
 
             s_BaseFrameworkModules.Clear();
             ReferencePool.ClearAll();
             //TODO:释放缓存中的从进程的非托管内存中分配的内存。
-
+			//Utility.Marshal.FreeCachedHGlobal();
             BaseFrameworkLog.SetLogHelper(null);
         }
 
@@ -51,12 +51,12 @@ namespace BaseFramework
             Type interfaceType = typeof(T);
             if (!interfaceType.IsInterface)
             {
-                throw new BaseFrameworkException(Utility.Text.Format("You must get module by interface, but {0} is not.", interfaceType.FullName));
+                throw new BaseFrameworkException(Utility.Text.Format("You must get module by interface, but '{0}' is not.", interfaceType.FullName));
             }
 
             if (!interfaceType.FullName.StartsWith("BaseFramework.", StringComparison.Ordinal))
             {
-                throw new BaseFrameworkException(Utility.Text.Format("You must get a Base Framework module, but {0} is not.", interfaceType.FullName));
+                throw new BaseFrameworkException(Utility.Text.Format("You must get a Base Framework module, but '{0}' is not.", interfaceType.FullName));
             }
 
             string moduleName = Utility.Text.Format("{0}.{1}", interfaceType.Namespace, interfaceType.Name.Substring(1));

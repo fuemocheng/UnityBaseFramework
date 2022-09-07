@@ -19,13 +19,13 @@ namespace BaseFramework
             }
 
             /// <summary>
-            /// 获取格式化字符串
-            /// </summary>。
-            /// <typeparam name="T">字符串参数类型。</typeparam>
+            /// 获取格式化字符串。
+            /// </summary>
+            /// <typeparam name="T">字符串参数的类型。</typeparam>
             /// <param name="format">字符串格式。</param>
-            /// <param name="args">字符串参数</param>
-            /// <returns>格式化后的字符串</returns>
-            public static string Format<T>(string format, T args)
+            /// <param name="arg">字符串参数。</param>
+            /// <returns>格式化后的字符串。</returns>
+            public static string Format<T>(string format, T arg)
             {
                 if (format == null)
                 {
@@ -34,10 +34,10 @@ namespace BaseFramework
 
                 if (s_TextHelper == null)
                 {
-                    return string.Format(format, args);
+                    return string.Format(format, arg);
                 }
 
-                return s_TextHelper.Format<T>(format, args);
+                return s_TextHelper.Format(format, arg);
             }
 
             /// <summary>

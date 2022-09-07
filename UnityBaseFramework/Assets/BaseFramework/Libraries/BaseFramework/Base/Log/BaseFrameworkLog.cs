@@ -13,7 +13,7 @@ namespace BaseFramework
         /// <summary>
         /// 设置日志辅助器。
         /// </summary>
-        /// <param name="logHelper"></param>
+        /// <param name="logHelper">要设置的日志辅助器。</param>
         public static void SetLogHelper(ILogHelper logHelper)
         {
             s_LogHelper = logHelper;
