@@ -178,10 +178,10 @@ namespace UnityBaseFramework.Runtime
             base.Awake();
 
             InitTextHelper();
-            //InitVersionHelper();
+            InitVersionHelper();
             InitLogHelper();
-            //Log.Info("Base Framework Version: {0}", BaseFramework.Version.GameFrameworkVersion);
-            //Log.Info("Base Version: {0} ({1})", BaseFramework.Version.GameVersion, BaseFramework.Version.InternalGameVersion);
+            Log.Info("Base Framework Version: {0}", BaseFramework.Version.BaseFrameworkVersion);
+            Log.Info("Base Version: {0} ({1})", BaseFramework.Version.GameVersion, BaseFramework.Version.InternalGameVersion);
             Log.Info("Unity Version: {0}", Application.unityVersion);
 
 #if UNITY_5_3_OR_NEWER || UNITY_5_3
@@ -304,27 +304,27 @@ namespace UnityBaseFramework.Runtime
             Utility.Text.SetTextHelper(textHelper);
         }
 
-        //private void InitVersionHelper()
-        //{
-        //    if (string.IsNullOrEmpty(m_VersionHelperTypeName))
-        //    {
-        //        return;
-        //    }
+        private void InitVersionHelper()
+        {
+            if (string.IsNullOrEmpty(m_VersionHelperTypeName))
+            {
+                return;
+            }
 
-        //    Type versionHelperType = Utility.Assembly.GetType(m_VersionHelperTypeName);
-        //    if (versionHelperType == null)
-        //    {
-        //        throw new BaseFrameworkException(Utility.Text.Format("Can not find version helper type '{0}'.", m_VersionHelperTypeName));
-        //    }
+            Type versionHelperType = Utility.Assembly.GetType(m_VersionHelperTypeName);
+            if (versionHelperType == null)
+            {
+                throw new BaseFrameworkException(Utility.Text.Format("Can not find version helper type '{0}'.", m_VersionHelperTypeName));
+            }
 
-        //    GameFramework.Version.IVersionHelper versionHelper = (GameFramework.Version.IVersionHelper)Activator.CreateInstance(versionHelperType);
-        //    if (versionHelper == null)
-        //    {
-        //        throw new BaseFrameworkException(Utility.Text.Format("Can not create version helper instance '{0}'.", m_VersionHelperTypeName));
-        //    }
+            BaseFramework.Version.IVersionHelper versionHelper = (BaseFramework.Version.IVersionHelper)Activator.CreateInstance(versionHelperType);
+            if (versionHelper == null)
+            {
+                throw new BaseFrameworkException(Utility.Text.Format("Can not create version helper instance '{0}'.", m_VersionHelperTypeName));
+            }
 
-        //    GameFramework.Version.SetVersionHelper(versionHelper);
-        //}
+            BaseFramework.Version.SetVersionHelper(versionHelper);
+        }
 
         private void InitLogHelper()
         {
