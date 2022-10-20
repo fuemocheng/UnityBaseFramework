@@ -72,12 +72,29 @@ Queue<IReference> m_References;
 
 ## 0x03 ObjectPool
 
+1.Object<T> 是在ObjectBase基础上又包装了一层，加了SpawnCount;
 
+## 0x04 VersionHelper
 
+## 0x05 CompressionHelper
 
+## 0x06 JsonHelper
 
+## 0x07 GameEntry BaseEntry
 
-
-
+## 0x08 Utility
+		Utility.Assembly
+		Utility.Convertrt
+		Utility.Encryption
+		Utility.Masrshal
+		Utility.Path
+		Utility.Random
+		Utility.Verifier.Crc32
+		Utility.Verifier
+		
+		BinaryExtension
+		StringExtension
+		UnityExtension
+		
 
 

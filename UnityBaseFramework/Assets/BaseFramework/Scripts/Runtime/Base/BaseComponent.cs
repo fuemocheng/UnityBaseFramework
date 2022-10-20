@@ -185,14 +185,14 @@ namespace UnityBaseFramework.Runtime
             Log.Info("Unity Version: {0}", Application.unityVersion);
 
 #if UNITY_5_3_OR_NEWER || UNITY_5_3
-            //InitCompressionHelper();
-            //InitJsonHelper();
+            InitCompressionHelper();
+            InitJsonHelper();
 
-            //Utility.Converter.ScreenDpi = Screen.dpi;
-            //if (Utility.Converter.ScreenDpi <= 0)
-            //{
-            //    Utility.Converter.ScreenDpi = DefaultDpi;
-            //}
+            Utility.Converter.ScreenDpi = Screen.dpi;
+            if (Utility.Converter.ScreenDpi <= 0)
+            {
+                Utility.Converter.ScreenDpi = DefaultDpi;
+            }
 
             m_EditorResourceMode &= Application.isEditor;
             if (m_EditorResourceMode)
@@ -348,53 +348,53 @@ namespace UnityBaseFramework.Runtime
             BaseFrameworkLog.SetLogHelper(logHelper);
         }
 
-        //private void InitCompressionHelper()
-        //{
-        //    if (string.IsNullOrEmpty(m_CompressionHelperTypeName))
-        //    {
-        //        return;
-        //    }
+        private void InitCompressionHelper()
+        {
+            if (string.IsNullOrEmpty(m_CompressionHelperTypeName))
+            {
+                return;
+            }
 
-        //    Type compressionHelperType = Utility.Assembly.GetType(m_CompressionHelperTypeName);
-        //    if (compressionHelperType == null)
-        //    {
-        //        Log.Error("Can not find compression helper type '{0}'.", m_CompressionHelperTypeName);
-        //        return;
-        //    }
+            Type compressionHelperType = Utility.Assembly.GetType(m_CompressionHelperTypeName);
+            if (compressionHelperType == null)
+            {
+                Log.Error("Can not find compression helper type '{0}'.", m_CompressionHelperTypeName);
+                return;
+            }
 
-        //    Utility.Compression.ICompressionHelper compressionHelper = (Utility.Compression.ICompressionHelper)Activator.CreateInstance(compressionHelperType);
-        //    if (compressionHelper == null)
-        //    {
-        //        Log.Error("Can not create compression helper instance '{0}'.", m_CompressionHelperTypeName);
-        //        return;
-        //    }
+            Utility.Compression.ICompressionHelper compressionHelper = (Utility.Compression.ICompressionHelper)Activator.CreateInstance(compressionHelperType);
+            if (compressionHelper == null)
+            {
+                Log.Error("Can not create compression helper instance '{0}'.", m_CompressionHelperTypeName);
+                return;
+            }
 
-        //    Utility.Compression.SetCompressionHelper(compressionHelper);
-        //}
+            Utility.Compression.SetCompressionHelper(compressionHelper);
+        }
 
-        //private void InitJsonHelper()
-        //{
-        //    if (string.IsNullOrEmpty(m_JsonHelperTypeName))
-        //    {
-        //        return;
-        //    }
+        private void InitJsonHelper()
+        {
+            if (string.IsNullOrEmpty(m_JsonHelperTypeName))
+            {
+                return;
+            }
 
-        //    Type jsonHelperType = Utility.Assembly.GetType(m_JsonHelperTypeName);
-        //    if (jsonHelperType == null)
-        //    {
-        //        Log.Error("Can not find JSON helper type '{0}'.", m_JsonHelperTypeName);
-        //        return;
-        //    }
+            Type jsonHelperType = Utility.Assembly.GetType(m_JsonHelperTypeName);
+            if (jsonHelperType == null)
+            {
+                Log.Error("Can not find JSON helper type '{0}'.", m_JsonHelperTypeName);
+                return;
+            }
 
-        //    Utility.Json.IJsonHelper jsonHelper = (Utility.Json.IJsonHelper)Activator.CreateInstance(jsonHelperType);
-        //    if (jsonHelper == null)
-        //    {
-        //        Log.Error("Can not create JSON helper instance '{0}'.", m_JsonHelperTypeName);
-        //        return;
-        //    }
+            Utility.Json.IJsonHelper jsonHelper = (Utility.Json.IJsonHelper)Activator.CreateInstance(jsonHelperType);
+            if (jsonHelper == null)
+            {
+                Log.Error("Can not create JSON helper instance '{0}'.", m_JsonHelperTypeName);
+                return;
+            }
 
-        //    Utility.Json.SetJsonHelper(jsonHelper);
-        //}
+            Utility.Json.SetJsonHelper(jsonHelper);
+        }
 
         private void OnLowMemory()
         {
