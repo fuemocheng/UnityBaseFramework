@@ -9,7 +9,37 @@
 2.1 abstract class
 事件数据类的基类
 
-## 0x01 WebRequest
+## 0x01 自定义存储结构
+
+### BaseFrameworkLinkedList 链表
+1.数据存储在链表 LinkedList<T> 里，同时维护一份缓存队列Queue<LinkedListNode<T>> m_CachedNodes；
+2.添加节点时，先判断缓存队列是否有节点，有的话用缓存队列中的；
+3.删除节点时，从 LinkedList<T> 中删除，还原默认值，添加到缓存队列中；
+4.缓存队列需要手动清理；
+5.实现迭代器；
+总结：比传统的链表增加了缓存队列，在频繁创建删除的链表中，具有优势；
+
+### BaseFrameworkLinkedListRange 链表范围结构体
+1.是结构体；
+2.只记录两个节点，第一个和最后一个；
+3.实现First，Terminal，IsValid，Count，Contains()；
+4.实现迭代器；
+总结：为了实现多值字典类而定义的结构体；
+
+### BaseFrameworkMultiDictionary 多值字典类
+1.数据存储在 BaseFrameworkLinkedList<TValue> m_LinkedList 链表中；
+2.维护一个 Dictionary<TKey, BaseFrameworkLinkedListRange<TValue>> m_Dictionary 字典，
+来记录键值在链表的开始结束位置，方便查询获取；
+3.添加时，查找字典中此键对应的的最后一个值，然后添加到此值之前；
+4.删除时，需要判断是否是Range的第一个值，需要特殊判断，然后m_LinkedList中删除即可；
+5.实现迭代器；
+
+
+
+
+
+
+## 0x0A WebRequest
 1. 结构
 UnityWebRequestAgentHelper : WebRequestAgentHelperBase : IWebRequestAgentHelper
 
