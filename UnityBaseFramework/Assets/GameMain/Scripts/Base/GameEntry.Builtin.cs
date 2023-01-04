@@ -74,11 +74,11 @@ namespace XGame
         /// <summary>
         /// 获取事件组件。
         /// </summary>
-        //public static EventComponent Event
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static EventComponent Event
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取文件系统组件。
@@ -182,11 +182,11 @@ namespace XGame
         /// <summary>
         /// 获取网络组件。
         /// </summary>
-        //public static WebRequestComponent WebRequest
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static WebRequestComponent WebRequest
+        {
+            get;
+            private set;
+        }
 
         private static void InitBuiltinComponents()
         {
@@ -197,7 +197,7 @@ namespace XGame
             //Debugger = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DebuggerComponent>();
             //Download = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DownloadComponent>();
             //Entity = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EntityComponent>();
-            //Event = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EventComponent>();
+            Event = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EventComponent>();
             //FileSystem = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FileSystemComponent>();
             //Fsm = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FsmComponent>();
             //Localization = UnityBaseFramework.Runtime.BaseEntry.GetComponent<LocalizationComponent>();
@@ -209,7 +209,7 @@ namespace XGame
             //Setting = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SettingComponent>();
             //Sound = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SoundComponent>();
             //UI = UnityBaseFramework.Runtime.BaseEntry.GetComponent<UIComponent>();
-            //WebRequest = UnityBaseFramework.Runtime.BaseEntry.GetComponent<WebRequestComponent>();
+            WebRequest = UnityBaseFramework.Runtime.BaseEntry.GetComponent<WebRequestComponent>();
         }
     }
 }
