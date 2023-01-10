@@ -142,8 +142,8 @@
 	- 在框架初始化的时候，将 DefaultTextHelper 注册到 BaseFramework.Utility.Text 中；
 	- DefaultTextHelper主要是使用 StringBuilder 提前申请好一片内存空间， 通过 StringBuilder 进行字符串的格式化拼接，以减少字符串的GC；
 4. 调用
-	- 直接使用 BaseFramework.Utility.Text.Format\<T>(string format, T arg, ...) 进行字符串格式化；
-5. 设计启发
+	- BaseFramework.Utility.Text.Format\<T>(string format, T arg, ...) 字符串格式化；
+5. 总结
 	- 在设计好 BaseFramework 中字符串格式化接口后，实际编码中我们只需要实现此接口，初始化时注册进通用类，就可以使用了；
 	- 接口既是对此功能入口的设计规划，也是对编码规范的限制，防止代码入口变得混乱；
 	- 对接口的实现可以有不同的方式，也就是字符串的处理也是自由的；
@@ -162,8 +162,8 @@
 	- 此类对 BaseFramework.BaseFrameworkLog 进行了预编译封装，只有在某些编译条件下才能打印日志；
 	- 这样既减少了打印，也减少了打印过程中可能出现的字符串拼接格式化等问题；
 6. 调用
-	- 直接使用 UnityBaseFramework.Runtime.Log.Debug()/Info()/Warning()/Error()/Fatal() 进行日志打印输出；
-7. 设计启发
+	- UnityBaseFramework.Runtime.Log.Debug()/Info()/Warning()/Error()/Fatal() 日志打印输出；
+7. 总结
 	- 首先规范日志打印的接口，然后自定义的类实现打印接口，最终使用Unity的打印，还是接第三方打印，具体问题再具体分析；
 	- 在设计完整个流程后，入口固定，但是实现方式可自定义；
 	- 对于某个功能来说，先将接口和功能的出入口设计出来，具体的编码实现则是自定义；
@@ -292,26 +292,223 @@
 
 
 ## 0x06 VersionHelper
+1. IVersionHelper 版本号辅助器接口
+	- BaseFramework 命名空间
+	- Version.IVersionHelper
+    	- IVersionHelper 属于Version的内部类；
+        - string GameVersion；游戏版本号；
+        - int InternalGameVersion；内部游戏版本号；
+2. BaseFramework.Version
+	- SetVersionHelper(IVersionHelper versionHelper) 
+    	- 框架初始化的时候设置版本号辅助器；
+	- Version.GameVersion -> s_VersionHelper.GameVersion;
+	- Version.InternalGameVersion -> s_VersionHelper.InternalGameVersion;
+3. DefaultVersionHelper : Version.IVersionHelper
+	- UnityBaseFramework.Runtime 命名空间；
+	- 实现IVersionHelper接口
+        - string GameVersion;
+    	- int InternalGameVersion;
+	- 框架初始化的时候，将DefaultVersionHelper注册进框架
+4. 使用
+	- BaseFramework.Version.GameVersion;
+	- BaseFramework.Version.InternalGameVersion;
+5. 总结
+	- 定义 版本辅助器接口，版本类 通过接口获取数据；
+	- 默认版本辅助器 实现接口，在框架之初将 默认版本辅助器 注册进框架；
+	- 从而实现 版本类 间接调用 默认版本辅助器，将调用与逻辑解耦；
 
 ## 0x07 CompressionHelper
+1. ICompressionHelper 压缩解压缩辅助器接口
+	- BaseFramework 命名空间；
+    - Compression.ICompressionHelper, ICompressionHelper属于Compression内部接口；
+  	- bool Compress(byte[] bytes, int offset, int length, Stream compressedStream);
+  	- bool Compress(Stream stream, Stream compressedStream);
+  	- bool Decompress(byte[] bytes, int offset, int length, Stream decompressedStream);
+  	- bool Decompress(Stream stream, Stream decompressedStream);
+2. Compression 压缩解压缩相关的实用函数
+	- BaseFramework 命名空间；
+	- Utility.Compression 属于Utility内部类；
+	- void SetCompressionHelper(ICompressionHelper compressionHelper)
+    	- 初始化时设置压缩解压缩辅助器；
+	- 压缩解压缩调用辅助器相应的函数来进行压缩解压缩；
+3. DefaultCompressionHelper
+	- UnityBaseFramework.Runtime 命名空间；
+	- DefaultCompressionHelper : Utility.Compression.ICompressionHelper
+    	- 实现ICompressionHelper接口
+	- 使用SharpZipLib类库进行最终的压缩解压缩的实现；
+    	- SharpZipLib是一个开源的C#压缩解压库；
+4. 使用
+	- byte[] compressedBytes = Utility.Compression.Compress(bytes);
+	- byte[] decompressedBytes = Utility.Compression.Decompress(bytes);
+5. 总结
+	- 设计接口（压缩解压缩辅助器接口）；
+	- 默认压缩解压缩辅助器类 实现接口；
+	- 初始化时将 辅助器类 注册进 压缩解压缩的实用类；
+	- 压缩解压缩实用类 调用 压缩解压缩函数时，使用注册进来的辅助器进行解压缩；
 
 ## 0x08 JsonHelper
+1. IJsonHelper JSON辅助器接口
+	- BaseFramework 命名空间；
+	- Json.IJsonHelper，IJsonHelper属于Json的内部接口；
+	- string ToJson(object obj); 将对象序列化为 JSON 字符串；
+	- T ToObject<T>(string json); 将 JSON 字符串反序列化为对象；
+	- object ToObject(Type objectType, string json); 将 JSON 字符串反序列化为对象；
+2. Json JSON相关的实用函数
+	- Utility.Json 属于Utility内部类；
+	- SetJsonHelper(IJsonHelper jsonHelper)
+    	- 初始化时设置Json辅助器；
+  	- 序列化和反序列化时调用对应的Json辅助器的来进行序列化反序列化；
+3. DefaultJsonHelper 默认JSON函数集辅助器
+	- UnityBaseFramework.Runtime命名空间；
+	- DefaultJsonHelper : Utility.Json.IJsonHelper；
+	- 使用UnityEngine.JsonUtility来进行json数据的序列化反序列化；
+    	- JsonUtility.ToJson(object obj);
+    	- JsonUtility.FromJson<T>(string json);
+    	- JsonUtility.FromJson(string json, Type type);
+4. 使用
+	- string ret = Utility.Json.ToJson(obj)
+	- m_VersionInfo = Utility.Json.ToObject\<VersionInfo>(versionInfoString)
+5. 总结
+	- 设计JSON辅助器接口；
+	- 默认Json函数辅助器实现接口；
+	- 框架初始化时，将 Json函数辅助器 注册进 Json实用函数类；
+	- 调用Json实用函数序列化和反序列化时，使用注册的 Json函数辅助器 进行序列化和反序列化；
 
-## 0x09 GameEntry BaseEntry
+## 0x09 Entry
+1. BaseFrameworkModule 基础模块抽象类
+    1. abstract class 抽象类；
+        - int Priority 模块优先级；
+        - Update(float elapseSeconds, float realElapseSeconds) 模块轮询；
+        - Shutdown() 关闭并清理模块
+    2. 一般需要优先级，需要Update的模块都需要继承此类，比如；
+		- ObjectPoolManager : BaseFrameworkModule, IObjectPoolManager;
+		- WebRequestManager : BaseFrameworkModule, IWebRequestManager
+		- EventManager : BaseFrameworkModule, IEventManager
+2. BaseFrameworkEntry 基础框架入口
+    1. static class 静态类；
+    2. BaseFrameworkLinkedList\<BaseFrameworkModule> s_BaseFrameworkModules;
+		- 维护一个BaseFrameworkModule的链表；
+    3. Update(float elapseSeconds, float realElapseSeconds);
+		- 更新s_BaseFrameworkModules链表中所有模块；
+	4. Shutdown()
+        - Shutdown s_BaseFrameworkModules链表中所有模块；
+      	- 清理s_BaseFrameworkModules；
+      	- ReferencePool.ClearAll();
+      	- Utility.Marshal.FreeCachedHGlobal();释放缓存中的从进程的非托管内存中分配的内存；
+      	- BaseFrameworkLog.SetLogHelper(null);
+	5. T GetModule<T>() where T : class 获取基础框架模块
+        - 根据T的接口名，拼出要穿件的模块类型；
+        - interfaceType.Namespace + interfaceType.Name.Substring(1);
+            - IEventManager -> BaseFramework.Event.EventManager
+        - 转到CreateModule(Type moduleType)；
+	6. BaseFrameworkModule CreateModule(Type moduleType) 创建模块
+		- Activator.CreateInstance(moduleType)创建；
+		- 根据优先级，添加到链表指定位置；
+	7. 示例
+		- EventComponent 中 Awake()
+    		- m_EventManager = BaseFrameworkEntry.GetModule\<IEventManager>();
+  		- WebRequestComponent 中 Awake()
+    		- m_WebRequestManager = BaseFrameworkEntry.GetModule\<IWebRequestManager>();
+  
+3. BaseFrameworkComponent 基础框架组件抽象类
+	1. BaseFrameworkComponent : MonoBehaviour;
+	2. Awake中将此组件注册进BaseEntry；
+        - BaseEntry.RegisterComponent(this);
+	3. 所有继承BaseFrameworkComponent的组件，都需要挂载在一个GameObject上，默认挂载在BaseFramework/Builtin/...同名的GameObject上；
+	4. 所有继承BaseFrameworkComponent的组件，在Awake时，都会将自己注册进BaseEntry；
+	5. 示例：
+        - BaseComponent : BaseFrameworkComponent;
+        - EventComponent : BaseFrameworkComponent;
+        - WebRequestComponent : BaseFrameworkComponent;
+
+4. BaseEntry 框架入口
+	- static class; 静态类；
+    	- 所有成员函数也是 static；
+	- BaseFrameworkLinkedList\<BaseFrameworkComponent> s_BaseFrameworkCompomemts;
+    	- 维护一个基础组件的链表；
+  	- RegisterComponent(BaseFrameworkComponent baseFrameworkComponent)
+    	- 注册基础框架组件，添加到s_BaseFrameworkCompomemts中；
+    	- 不能重复添加，一个组件只能有一个实例；
+  	- BaseFrameworkComponent GetComponent(Type type)
+    	- 获取框架组件；
+    	- 从s_BaseFrameworkCompomemts链表中遍历获取；
+  	- void Shutdown(ShutdownType shutdownType)
+		- 基础组件Shutdown；
+		- 清理s_BaseFrameworkCompomemts；
+		- 根据ShutdownType来判断是重启还是退出；
+	- 总结
+    	- BaseFrameworkComponent组件会在Awake()中自动注册进链表；
+    	- BaseEntry维护了继承自BaseFrameworkComponent的所有组件；
+    	- 通过BaseEntry.GetComponent()来获取组件；
+
+5. BaseComponent 基础组件
+	- BaseComponent : BaseFrameworkComponent; 会在初始时注册进BaseEntry；
+	- EditorResourceMode : 是否使用编辑器资源模式；
+	- EditorLanguage : 编辑器语言；
+	- EditorResourceHelper : 编辑器资源辅助器；
+	- FrameRate : 游戏帧率；
+	- GameSpeed : 游戏速度；
+	- TextHelper : UnityBaseFramework.Runtime.DefaultTextHelper；
+    	- Activator.CreateInstance(textHelperType);
+    	- Utility.Text.SetTextHelper(textHelper);
+	- VersionHelper : UnityBaseFramework.Runtime.DefaultVersionHelper；
+    	- Activator.CreateInstance(versionHelperType);
+    	- BaseFramework.Version.SetVersionHelper(versionHelper);
+	- LogHelper : UnityBaseFramework.Runtime.DefaultLogHelper；
+    	- Activator.CreateInstance(logHelperType);
+    	- BaseFrameworkLog.SetLogHelper(logHelper);
+	- CompressionHelper : UnityBaseFramework.Runtime.DefaultCompressionHelper；
+    	- Activator.CreateInstance(compressionHelperType);
+    	- Utility.Compression.SetCompressionHelper(compressionHelper);
+	- JsonHelper : UnityBaseFramework.Runtime.DefaultJsonHelper；
+    	- Activator.CreateInstance(jsonHelperType);
+    	- Utility.Json.SetJsonHelper(jsonHelper);
+  	- 总结
+    	- 主要设置游戏的一些基础设置；
+    	- 初始化一些工具类Helper,并注册进相应的工具类中（静态类）；
+
+6. GameEntry 游戏入口
+	- GameEntry : MonoBehaviour;
+    	- 挂在 BaseFramework 上；
+	- Start()
+    	- 初始化内置基础组件；
+    	- 初始化自定义组件；
+  	- InitBuiltinComponents()
+    	- Base = BaseEntry.GetComponent\<BaseComponent>();
+        	- 挂在 BaseFramework\Builtin 上；
+    	- Event = BaseEntry.GetComponent\<EventComponent>();
+        	- 挂在 BaseFramework\Builtin\Event 上；
+    	- WebRequest = BaseEntry.GetComponent\<WebRequestComponent>();
+        	- 挂在 BaseFramework\Builtin\WebRequest 上；
+		- ...
+    - InitCustomComponents()
+        - HPBar = BaseEntry.GetComponent\<HPBarComponent>();
+            - 挂在 BaseFramework\Customs\HPBar 上；
+        - ...
+    - 总结
+        - GameEntry在获取基础组件的时候，所有基础组件已经在 Awake 时注册进了BaseEntry;
+        - GameEntry.Base 
+            - UnityBaseFramework.Runtime.BaseComponent
+        - GameEntry.Event
+            - UnityBaseFramework.Runtime.EventComponent
+                - BaseFramework.Event.EventManager
+        - GameEntry.WebRequest
+            - UnityBaseFramework.Runtime.WebRequestComponent
+                - BaseFramework.WebRequest.WebRequestManager
+                - UnityBaseFramework.Runtime.EventComponent
 
 ## 0x0A Utility
-		Utility.Assembly
-		Utility.Convertrt
-		Utility.Encryption
-		Utility.Masrshal
-		Utility.Path
-		Utility.Random
-		Utility.Verifier.Crc32
-		Utility.Verifier
-		
-		BinaryExtension
-		StringExtension
-		UnityExtension
+- Utility.Assembly 程序集相关的实用函数；
+- Utility.Convertrt 类型转换相关的实用函数；
+- Utility.Encryption 加密解密相关的实用函数；
+- Utility.Masrshal Marshal相关的实用函数；
+- Utility.Path 路径相关的实用函数；
+- Utility.Random 随机相关的实用函数；
+- Utility.Verifier.Crc32 CRC32算法；
+- Utility.Verifier 校验相关的实用函数；
+- BinaryExtension 对BinaryReader和BinaryWriter的扩展方法；
+- StringExtension 对string的扩展方法；
+- UnityExtension 对Unity的扩展方法；
 		
 ## 0x0B Event
 
