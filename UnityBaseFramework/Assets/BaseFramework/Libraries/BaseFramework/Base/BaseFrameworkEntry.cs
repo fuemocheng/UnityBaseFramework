@@ -35,8 +35,8 @@ namespace BaseFramework
 
             s_BaseFrameworkModules.Clear();
             ReferencePool.ClearAll();
-            //TODO:释放缓存中的从进程的非托管内存中分配的内存。
-			//Utility.Marshal.FreeCachedHGlobal();
+            //释放缓存中的从进程的非托管内存中分配的内存。
+			Utility.Marshal.FreeCachedHGlobal();
             BaseFrameworkLog.SetLogHelper(null);
         }
 
