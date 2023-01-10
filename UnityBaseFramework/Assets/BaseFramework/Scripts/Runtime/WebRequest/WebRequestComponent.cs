@@ -9,7 +9,7 @@ namespace UnityBaseFramework.Runtime
     /// Web 请求组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Web Request")]
+    [AddComponentMenu("Base Framework/Web Request")]
     public sealed class WebRequestComponent : BaseFrameworkComponent
     {
         private const int DefaultPriority = 0;
