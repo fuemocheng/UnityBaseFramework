@@ -400,11 +400,11 @@ namespace UnityBaseFramework.Runtime
         {
             Log.Info("Low memory reported...");
 
-            //ObjectPoolComponent objectPoolComponent = BaseEntry.GetComponent<ObjectPoolComponent>();
-            //if (objectPoolComponent != null)
-            //{
-            //    objectPoolComponent.ReleaseAllUnused();
-            //}
+            ObjectPoolComponent objectPoolComponent = BaseEntry.GetComponent<ObjectPoolComponent>();
+            if (objectPoolComponent != null)
+            {
+                objectPoolComponent.ReleaseAllUnused();
+            }
 
             //ResourceComponent resourceCompoent = BaseEntry.GetComponent<ResourceComponent>();
             //if (resourceCompoent != null)
