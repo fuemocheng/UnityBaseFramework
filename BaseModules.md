@@ -1,4 +1,4 @@
-# Modules 模块
+# BaseModules 基础模块
 
 ## 0x00 ReferencePool 引用池
 - 引用池一般用来储存普通的C#类型对象；
@@ -404,7 +404,11 @@
 	6. BaseFrameworkModule CreateModule(Type moduleType) 创建模块
 		- Activator.CreateInstance(moduleType)创建；
 		- 根据优先级，添加到链表指定位置；
-	7. 示例
+	7. 在 BaseComponent 的 Update 中更新 BaseFrameworkEntry
+        - BaseFrameworkEntry.Update(Time.deltaTime, Time.unscaledDeltaTime); 
+	8. 在 BaseComponent 的 OnDestroy 中Shutdown BaseFrameworkEntry
+		- BaseFrameworkEntry.Shutdown();
+	9.  示例
 		- EventComponent 中 Awake()
     		- m_EventManager = BaseFrameworkEntry.GetModule\<IEventManager>();
   		- WebRequestComponent 中 Awake()
@@ -511,16 +515,235 @@
 - UnityExtension 对Unity的扩展方法；
 		
 ## 0x0B Event
+1. BaseEventArgs 事件基类
+	- BaseFramework 命名空间；
+	- BaseEventArgs : BaseFrameworkEventArgs;
+		- BaseFrameworkEventArgs : EventArgs, IReference;
+    - abstract class 抽象类；
+        - abstract int Id;
+            - 以此ID为key存储委托EventHandler；
+    - 示例
+        - GameEntry.Event.Subscribe(WebRequestSuccessEventArgs.EventId, OnWebRequestSuccess);
+        - WebRequestSuccessEventArgs:BaseEventArgs;
+        - WebRequestSuccessEventArgs.Id -> EventId;
+2. Event 事件节点
+    - BaseFramework 命名空间；
+    - EventPool.Event : IReference
+        - Event 属于 EventPool 的内部私有类；
+        - 实现IReference接口，使用ReferencePool获取；
+    - 结构
+        - object m_Sender; 为事件注册者；
+        - T m_EventArgs; T为BaseEventArgs；
+    - 总结
+        - Event属于EventPool内部类，外界不知晓其存在；
+        - 主要是EventPool抛出事件时，用此结构包装一下数据，在下一帧的Update中通过这个结构数据进行事件分发；
+3. EventPoolMode 事件池模式
+	- BaseFramework 命名空间
+	- enum EventPoolMode : byte
+    	- Default : 默认事件池模式，即必须存在有且只有一个事件处理函数；
+    	- AllowNoHandler : 允许不存在事件处理函数；
+    	- AllowMultiHandler : 允许存在多个事件处理函数；
+    	- AllowDuplicateHandler : 允许存在重复的事件处理函数；
+4. EventPool 事件池
+	- BaseFramework 命名空间
+	- EventPool\<T> where T : BaseEventArgs
+    	- 泛型参数T是BaseEventArgs；
+  	- 存储结构
+    	- BaseFrameworkMultiDictionary\<int, EventHandler\<T>> m_EventHandlers
+        	- key 是 BaseEventArgs.Id；
+        	- value 是泛型类型是 BaseEventArgs 的 EventHandler 委托；
+        	- 一个 key 对应多个 value ；
+      	- Queue\<Event> m_Events
+        	- Fire(object sender, T e) 抛出事件时，为了线程安全，会 lock (m_Events)，将Fire的参数生成内部事件节点 Event eventNode = Event.Create(sender, e)，添加到 m_Events 中，之后在下一帧的Update中再根据事件参数中的Id，查找到事件委托，最终调用委托；
+        	- 总结下来，是为了线程安全而在内部使用的存储队列；
+      	- 两个缓存字典
+        	- Dictionary\<object, LinkedListNode\<EventHandler\<T>>> m_CachedNodes；
+        	- Dictionary\<object, LinkedListNode\<EventHandler\<T>>> m_TempNodes;
+        	- 在 HandleEvent(object sender, T e) 处理事件节点时，通过事件参数Id，取出此事件参数对应的事件委托链表的开始节点和结束节点，从第一个节点 range.First 开始遍历，m_CachedNodes[e] 记录为将处理的下一个节点，然后执行当前委托，执行完之后当前节点赋值为 m_CachedNodes[e]，继续下一轮循环；
+        	- 当处在循环中时，收到了取消订阅的函数；
+            	- Unsubscribe(int id, EventHandler\<T> handler);
+            	- 如果 m_CachedNodes.Count > 0， 则处在事件处理中；
+            	- 遍历 m_CachedNodes 中的所有即将处理的节点，如果取消订阅的事件处理函数在 m_CachedNodes 中，则，通过m_TempNodes缓存一下，将即将处理的节点的值变成 cachedNode.Value.Next 下一个；
+            	- 然后 m_EventHandlers.Remove(id, handler)；
+          	- 这两个缓存容器，是为了处理这种情况
+            	- 即即将被调用的事件委托函数，突然被取消订阅了，怎么把这个函数删除的问题；
+  	- Subscribe(int id, EventHandler<T> handler) 订阅事件处理函数
+    	- id 为 泛型参数 T （即 BaseEventArgs）的Id；
+    	- 如果 m_EventHandlers 不包含此Id，则直接添加；
+    	- 如果 m_EventHandlers 已经包含此 Id， 
+        	- 事件池模式不允许存在多个事件处理函数，则抛出异常；
+        	- 事件池模式不允许存在重复的事件处理函数，并且已经存在了，则抛出异常；
+        	- 否则就是允许存在多个事件处理函数，直接添加；
+      	- m_EventHandlers.Add(id, handler)；
+  	- Unsubscribe(int id, EventHandler<T> handler) 取消订阅事件处理函数
+		- 取消订阅事件处理函数，主要处理当前的事件是否为即将处理的事件；详见EventPool存储结构的第三条；
+		- m_EventHandlers.Remove(id, handler)，直接删除此订阅事件处理函数；
+    - Fire(object sender, T e) 
+        - 抛出事件，这个操作是线程安全的，即使不在主线程中抛出，也可保证在主线程中回调事件处理函数，但事件会在抛出后的下一帧分发；
+		- 根据参数创建内部事件节点；
+    		- Event eventNode = Event.Create(sender, e);
+		- 添加到 m_Events队列中；
+    		- m_Events.Enqueue(eventNode)；
+		- 在下一帧的Update中处理事件节点；
+    		- Event eventNode = m_Events.Dequeue()
+    		- HandleEvent(eventNode.Sender, eventNode.EventArgs)；
+	- FireNow(object sender, T e) 
+    	- 抛出事件立即模式，这个操作不是线程安全的，事件会立刻分发；
+		- HandleEvent(sender, e)；
+    - HandleEvent(object sender, T e) 处理事件结点
+        - 从 m_EventHandlers 查找出对应事件委托链表的开始节点和结束节点；
+        - 遍历并处理节点；
+            - 取出的数据为 LinkedListNode\<EventHandler\<T>> current;
+            - EventHandler\<T>委托数据存储在LinkedListNode的Value中；
+            - 直接执行 current.Value(sender, e)；
+		- 根据事件池类型判断是否抛出异常等；
+5. GameEventArgs 游戏逻辑事件基类
+	- BaseFramework.Event 命名空间；
+	- abstract class 抽象类；
+	- GameEventArgs : BaseEventArgs；
+6. EventManager 事件管理器
+	- 命名空间 BaseFramework.Event；
+	- EventManager : BaseFrameworkModule, IEventManager
+    	- 继承BaseFrameworkModule
+    	- Update顺序
+        	- BaseComponent(MonoBehaviour).Update()
+        	- BaseFrameworkEntry.Update(Time.deltaTime, Time.unscaledDeltaTime);
+        	- BaseFrameworkModule.Update(...)，即EventManager.Update(...)；
+  	- 存储结构
+    	- EventPool\<GameEventArgs> m_EventPool = new EventPool\<GameEventArgs>(EventPoolMode.AllowNoHandler | EventPoolMode.AllowMultiHandler);
+    	- 允许不存在事件处理函数；
+    	- 允许存在多个事件处理函数；
+  	- Subscribe(int id, EventHandler<GameEventArgs> handler)
+    	- 订阅事件处理函数；
+    	- m_EventPool.Subscribe(id, handler)；
+  	- Unsubscribe(int id, EventHandler<GameEventArgs> handler)
+    	- 取消订阅事件处理函数；
+    	- m_EventPool.Unsubscribe(id, handler)；
+  	- Fire(object sender, GameEventArgs e)
+    	- 抛出事件，这个操作是线程安全的，即使不在主线程中抛出，也可保证在主线程中回调事件处理函数，但事件会在抛出后的下一帧分发；
+    	- m_EventPool.Fire(sender, e)；
+  	- FireNow(object sender, GameEventArgs e)
+    	- 抛出事件立即模式，这个操作不是线程安全的，事件会立刻分发；
+    	- m_EventPool.FireNow(sender, e)
+7. EventComponent
+	- UnityBaseFramework.Runtime 命名空间
+	- EventComponent : BaseFrameworkComponent : MonoBehaviour
+    	- 挂在 BaseFramework\Builtin\Event 上； 
+  	- 事件基类定为 GameEventArgs
+	- Awake()
+    	- m_EventManager = BaseFrameworkEntry.GetModule\<IEventManager>();
+    	- Activator.CreateInstance(BaseFramework.Event.EventManager);
+  	- Subscribe(int id, EventHandler\<GameEventArgs> handler)
+    	- m_EventManager.Subscribe(id, handler);
+  	- Unsubscribe(int id, EventHandler<GameEventArgs> handler)
+    	- m_EventManager.Unsubscribe(id, handler);
+  	- Fire(object sender, GameEventArgs e)
+    	- m_EventManager.Fire(sender, e);
+	- FireNow(object sender, GameEventArgs e)
+    	-  m_EventManager.FireNow(sender, e);
 
 ## 0x0C Task
-
-## 0x0D WebRequest
-
-## 0x0E 
-
-## 0x0F
-
-		
-		
-
+1. TaskStatus
+    - BaseFramework 命名空间 
+	- enum TaskStatus : byte
+    	- Todo : 未开始；
+    	- Doing : 执行中；
+    	- Done : 完成；
+2. StartTaskStatus 开始处理任务的状态
+	- BaseFramework 命名空间
+	- enum StartTaskStatus : byte
+    	- Done : 可以立刻处理完成此任务；
+    	- CanResume : 可以继续处理此任务；
+    	- HasToWait : 不能继续处理此任务，需等待其它任务执行完成；
+    	- UnknownError : 不能继续处理此任务，出现未知错误；
+3. TaskBase 任务基类
+	1. 基础
+        - BaseFramework 命名空间
+        - abstract class 抽象类
+        - TaskBase : IReference
+	2. 属性
+        - int SerialId 任务的序列编号；
+        - string Tag 任务的标签；
+        - int Priority 任务的优先级；
+        - object UserData 任务的用户自定义数据；
+        - bool Done 任务是否完成；
+        - string Description 任务描述；
+	3. Function
+		- Initialize(int serialId, string tag, int priority, object userData)
+    		- 初始化任务基类
+		- Clear()
+    		- 清理任务基类
+	4. TaskBase 类只负责存储数据，不负责具体行为；
+4. ITaskAgent\<T> 任务代理接口
+    - BaseFramework 命名空间
+    - interface ITaskAgent\<T> where T : TaskBase
+    - T Task，获取任务；
+    - Initialize()，初始化任务代理；
+    - Update(float elapseSeconds, float realElapseSeconds)，任务代理轮询；
+    - Shutdown()，关闭并清理任务代理；
+    - Start(T task)，开始处理任务；
+    - Reset()，停止正在处理的任务并重置任务代理；
+5. TaskPool 任务池
+	1. 基础
+		- BaseFramework 命名空间
+		- TaskPool\<T> where T : TaskBase
+	2. 存储结构
+        - Stack\<ITaskAgent\<T>> m_FreeAgents；空闲的代理集合；
+        - BaseFrameworkLinkedList\<ITaskAgent\<T>> m_WorkingAgents；正在工作的代理链表；
+        - BaseFrameworkLinkedList\<T> m_WaitingTasks；等待处理的任务链表；
+	3. AddAgent(ITaskAgent<T> agent) 增加任务代理
+        - 初始化agent，添加到m_FreeAgents等待使用；
+			- agent.Initialize();
+            - m_FreeAgents.Push(agent);
+        - ITaskAgent 由外部初始化时传入，传入数量可指定；
+        - 示例 
+            - WebRequestComponent.Start()
+                - AddWebRequestAgentHelper(int index)
+                    - webRequestAgentHelper = Helper.CreateHelper("UnityGameFramework.Runtime.UnityWebRequestAgentHelper")
+                    - m_WebRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper)
+            - WebRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper)
+                - WebRequestAgent agent = new WebRequestAgent(webRequestAgentHelper)
+                - m_TaskPool.AddAgent(agent)
+	4. AddTask(T task) 增加任务
+        - 将 task 插入到 m_WaitingTasks 的合适位置；
+        - 只将数据添加进来，何时处理，如何处理，与task无关；
+	5. Update(...) 任务池每帧更新
+        1. 从里更新调用到这里，示例
+			- BaseComponent.Update
+			- BaseFrameworkEntry.Update()
+			- WebRequestManager.Update()
+			- m_TaskPool.Update() 
+		2. 先处理当前有的任务，这一帧如果处理完，则释放代理器，空闲的代理可以继续处理等待的任务；
+        3. ProcessRunningTasks 处理正在运行的任务
+            1. 从 m_WorkingAgents 取一个代理节点 LinkedListNode\<ITaskAgent\<T>> current，current是链表节点，current.Value是代理类（agent），current.Value.Task是任务数据(task)；
+            2. T task = current.Value.Task;
+                - 根据 task.Done 判断task是否完成；
+                - 如果未完成，agent 继续 Update();
+                - 循环继续判断下一个；
+                - 如果完成，则：
+                    - agent重置，重新将agent添加到m_FreeAgents中；
+                    - m_WorkingAgents 删除current节点；
+                    - ReferencePool.Release(task)，处理完，回收task，因为task是引用池创建的；
+                - 循环继续判断下一个；
+        4. ProcessWaitingTasks 处理等待的任务
+			1. 从 m_WaitingTasks 中的取一个 Task 数据，为current；
+			2. 判断是否有空闲的Agent可以处理Task，有则继续，没有则退出；
+			3. 取一个空闲的agent，将agent添加到 m_WorkingAgents 中；
+			4. agent 开始处理 task 数据，agent.Start(task)；
+			5. 根据4中处理的结果，判断下一步执行：
+            	- 如果立刻完成了任务（Done），或者需要等待其他任务完成（HasToWait），或者出现错误（UnknownError），则此取消此代理agent，agent重置，然后添加到m_FreeAgents，m_WorkingAgents删除agentNode；
+            	- 如果已经完成了任务（Done），或者可以继续处理此任务（CanResume），或者出现错误（UnknownError），则将m_WaitingTasks删除此任务数据，此任务已经处理，或者处理中，或者不需要处理；
+            	- 如果已经完成了任务（Done），或者出现错误（UnknownError），怎上面删除任务数据后， ReferencePool.Release(task)回收task，因为task是引用池创建的；
+          	1.  回到2继续循环，判断是否有任务数据要处理，是否有空闲的agent可以处理；
+    6. RemoveTask(int serialId)\RemoveTasks(string tag) 移除任务
+        - 从 m_WaitingTasks 移除等待处理的task；
+       	- 从 m_WorkingAgents 正在执行的代理中删除task，不管是否完成；
+	7. GetAllTaskInfos() 获取所有任务的信息
+        - 编辑器获取信息展示在Inspect面板上，供查看调试；
+6. 总结
+	- 任务池不关心处理的数据，也不关心处理的逻辑；
+	- 通过AddAgent添加处理数据的代理器；
+	- 通过AddTask添加任务数据；
+	- 在Update中使用代理器agent处理task数据；
+	- 这样解耦了数据和数据处理的逻辑；
 
