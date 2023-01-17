@@ -206,7 +206,7 @@
             		- m_WebRequestManager.WebRequestFailure += OnWebRequestFailure;
           		- m_WebRequestManager.Timeout = m_Timeout，超时时间；
       		- Start()
-        		- 获取事件组件 m_EventComponent = BaseEntry.GetComponent<EventComponent>()；
+        		- 获取事件组件 m_EventComponent = BaseEntry.GetComponent\<EventComponent>()；
         		- 根据预设的代理辅助器数量，初始化代理辅助器；
             		- AddWebRequestAgentHelper(i);
                 		- 创建 UnityWebRequestAgentHelper 对应的GameObject;
