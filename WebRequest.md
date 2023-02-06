@@ -178,7 +178,6 @@
 	
 	5. UnityWebRequestAgentHelper : WebRequestAgentHelperBase, IDisposable
 		- 通过初始化注册，最终由 WebRequestAgent 直接使用；
-    		- 
 		- event EventHandler\<WebRequestAgentHelperCompleteEventArgs> WebRequestAgentHelperComplete，请求代理辅助器完成事件
 		- event EventHandler\<WebRequestAgentHelperErrorEventArgs> WebRequestAgentHelperError，请求代理辅助器错误事件
 		- Request(string webRequestUri, object userData)，请求代理辅助器发送请求；
@@ -257,13 +256,13 @@
             - GameEntry.Event.Subscribe(WebRequestFailureEventArgs.EventId, OnWebRequestFailure)；
         2. 发送Web请求
             - GameEntry.WebRequest.AddWebRequest(url, this) -> WebRequestComponent.AddWebRequest(url, ..., userdata)；
-      	3. m_WebRequestManager.AddWebRequest(url, ..., WWWFormInfo.Create(wwwForm, userData))；
+      	1. m_WebRequestManager.AddWebRequest(url, ..., WWWFormInfo.Create(wwwForm, userData))；
             - wwwForm表单数据可能为空；
             - 以下的userdata则全部为 WWWFormInfo，发送者数据为 userData.UserData；
-      	4. 创建 WebRequestTask 数据，添加到TaskPool中；
+      	2. 创建 WebRequestTask 数据，添加到TaskPool中；
             - WebRequestTask webRequestTask = WebRequestTask.Create(url, ..., userdata)；
             - m_TaskPool.AddTask(webRequestTask); 
-      	5. WebRequestManager.Update()
+      	3. WebRequestManager.Update()
 			- m_TaskPool.Update()
     			- 取空闲的 WebRequestAgent ，将 WebRequestTask 数据交给 WebRequestAgent 处理；
     			- WebRequestAgent 开始处理任务，agent.Start(WebRequestTask task)；
@@ -273,7 +272,7 @@
                     	- 使用了 UnityEngine.Networking.UnityWebRequest 进行HTTP请求；
                         	- m_UnityWebRequest = UnityWebRequest.Get(webRequestUri);
                           	- m_UnityWebRequest.SendWebRequest();
-        6. 至此，从外部调用，最终使用了自定义的web请求辅助器来发送请求；
+        3. 至此，从外部调用，最终使用了自定义的web请求辅助器来发送请求；
 
 	2. 接收流程
         1. 请求代理辅助器，即 UnityWebRequestAgentHelper(继承MonoBehaviour) 中的Update()
