@@ -1,7 +1,6 @@
 # FileSystem 模块
 
 ## 1.FileSystemAccess.cs 文件系统访问方式
-
 ```
 public enum FileSystemAccess : byte
 {
@@ -11,7 +10,6 @@ public enum FileSystemAccess : byte
     ReadWrite = 3,     //可读写
 }
 ```
-&nbsp;
 
 ## 2.FileInfo.cs 
 FileInfo   [StructLayout(LayoutKind.Auto)]  
@@ -21,12 +19,10 @@ FileInfo   [StructLayout(LayoutKind.Auto)]
     long Offset;        //偏移
     int Length;         //长度（解密后）
 ```
-&nbsp;
 
 ## 3.HeaderData.cs
 FileSystem.HeaderData  [StructLayout(LayoutKind.Sequential)]  
 头数据，描述整个文件系统信息  
-
 ```
     byte Version;            //FileSystemVersion  
     int MaxFileCount;        //最大文件数  
@@ -39,12 +35,10 @@ FileSystem.HeaderData  [StructLayout(LayoutKind.Sequential)]
     //MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)  
     byte[] m_EncryptBytes;   //加密信息，构造时用随机数填充 
 ```
-&nbsp;
 
 ## 4.StringData.cs
 FileSystem.StringData  [StructLayout(LayoutKind.Sequential)]  
 字符串数据，单个文件的String数据，目前存储的是：文件名（加密）
-
 ```
     //缓存字节数据，0.25KB 空间  
     static readonly byte[] s_CachedBytes = new byte[256]  
@@ -68,12 +62,10 @@ FileSystem.StringData  [StructLayout(LayoutKind.Sequential)]
     //返回一个新的 new StringData(0, m_Bytes);  
     public StringData Clear();  
 ```
-&nbsp;
 
 ## 5.BlockData.cs
 FileSystem.BlockData  [StructLayout(LayoutKind.Sequential)]  
 块数据，单个文件的信息  
-
 ```
     //空数据块  
     public static readonly BlockData Empty = new BlockData(0, 0);
@@ -82,11 +74,9 @@ FileSystem.BlockData  [StructLayout(LayoutKind.Sequential)]
     int ClusterIndex;    //簇索引（用于计算偏移）
     int Length;          //文件长度
 ```
-&nbsp;
 
 ## 6.FileSystem.cs
 单个文件系统，一般包含多个文件
-
 ```
 const int ClusterSize = 1024 * 4;       //4096 byte = 4k
 const int CachedBytesLength = 0x1000;   //4096 byte = 4k
@@ -140,7 +130,7 @@ int m_FileDataOffset;
    m_FileDataOffset = (int)GetUpBoundClusterOffset(m_StringDataOffset + StringDataSize * HeaderData.MaxFileCount) = 4096;
 
 7. 存储示例：  
-   Img:
+   ![FileSystem_StorageStructure](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Pics/FileSystem_StorageStructure.png?raw=true)
 
 ### 6.2 创建文件系统 Create(...)
 1. FileSystem fileSystem = new FileSystem(fullPath, access, stream);  
@@ -180,6 +170,7 @@ public bool WriteFile(string name, byte[] buffer, int startIndex, int length){}
    计算Block的簇索引（GetUpBoundClusterCount(fileLength)，大于等于 fileLength 的最小的4096(4k)的倍数），重新写入Block的ClusterIndex和长度；
 
    不管以前是否有这个文件，都重新申请新BlockIndex；旧Block如何回收在后面；
+
 3. 根据申请的BlockData的簇索引，计算写入文件时Stream流的开始位置，为 ClusterIndex * 4096；  
    m_Stream.Position = GetClusterOffset(ClusterIndex);
    将二进制数据写入Stream流；
@@ -232,7 +223,7 @@ public bool WriteFile(string name, byte[] buffer, int startIndex, int length){}
    m_FreeBlockIndexes.Add(blockData.Length, blockIndex);
 
 ### 6.8 TryCombineFreeBlocks 合并FreeBlocks
-1. 主要思想是遍历 m_FreeBlockIndexes，找出此block的前一个或者后一个也是free的block，将它们合并；  
+   主要思想是遍历 m_FreeBlockIndexes，找出此block的前一个或者后一个也是free的block，将它们合并；  
    细节不再赘述；
 
 ## 7.FileSystemManager.cs 文件系统管理器
@@ -254,48 +245,10 @@ public bool WriteFile(string name, byte[] buffer, int startIndex, int length){}
    FileSystem fileSystem = FileSystem.Create(... , fileSystemStream, ...)
 
 ## 8.FileSystemStream.cs
-1. CommonFileSystemStream : FileSystemStream, IDisposable
+1. CommonFileSystemStream : FileSystemStream, IDisposable  
    封装System.FileStream
 
-2. AndroidFileSystemStream : FileSystemStream
+2. AndroidFileSystemStream : FileSystemStream  
    封装AndroidJavaObject
-
-## 9.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
