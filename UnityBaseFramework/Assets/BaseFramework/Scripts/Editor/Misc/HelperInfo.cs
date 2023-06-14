@@ -10,7 +10,6 @@ namespace UnityBaseFramework.Editor
     {
         private const string CustomOptionName = "<Custom>";
 
-
         private readonly string m_Name;
 
         private SerializedProperty m_HelperTypeName;

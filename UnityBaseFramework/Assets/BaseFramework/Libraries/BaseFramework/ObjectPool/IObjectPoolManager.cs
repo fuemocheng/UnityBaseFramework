@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BaseFramework.ObjectPool
 {
     /// <summary>
-    /// 对象池管理器接口。
+    /// 对象池管理器。
     /// </summary>
     public interface IObjectPoolManager
     {

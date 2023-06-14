@@ -3,16 +3,16 @@ namespace BaseFramework
     public static partial class Utility
     {
         /// <summary>
-        /// 字符串相关的实用函数。
+        /// 字符相关的实用函数。
         /// </summary>
         public static partial class Text
         {
             private static ITextHelper s_TextHelper = null;
 
             /// <summary>
-            /// 设置字符串辅助器。
+            /// 设置字符辅助器。
             /// </summary>
-            /// <param name="textHelper">要设置的字符串辅助器。</param>
+            /// <param name="textHelper">要设置的字符辅助器。</param>
             public static void SetTextHelper(ITextHelper textHelper)
             {
                 s_TextHelper = textHelper;

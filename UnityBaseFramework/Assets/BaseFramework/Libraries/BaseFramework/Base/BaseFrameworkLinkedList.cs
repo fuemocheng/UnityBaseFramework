@@ -6,16 +6,16 @@ using System.Runtime.InteropServices;
 namespace BaseFramework
 {
     /// <summary>
-    /// 链表。
+    /// 游戏框架链表类。
     /// </summary>
-    /// <typeparam name="T">链表元素类型</typeparam>
+    /// <typeparam name="T">指定链表的元素类型。</typeparam>
     public sealed class BaseFrameworkLinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
         private readonly LinkedList<T> m_LinkedList;
         private readonly Queue<LinkedListNode<T>> m_CachedNodes;
 
         /// <summary>
-        /// 初始化链表新实例。
+        /// 初始化游戏框架链表类的新实例。
         /// </summary>
         public BaseFrameworkLinkedList()
         {
@@ -24,7 +24,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取链表节点数量。
+        /// 获取链表中实际包含的结点数量。
         /// </summary>
         public int Count
         {
@@ -35,7 +35,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取链表节点的缓存数量。
+        /// 获取链表结点缓存数量。
         /// </summary>
         public int CachedNodeCount
         {
@@ -46,7 +46,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取链表的第一个节点。
+        /// 获取链表的第一个结点。
         /// </summary>
         public LinkedListNode<T> First
         {
@@ -57,7 +57,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取链表的最后一个节点。
+        /// 获取链表的最后一个结点。
         /// </summary>
         public LinkedListNode<T> Last
         {
@@ -68,7 +68,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取一个值，该值指示 ICollection<T> 是否为只读。
+        /// 获取一个值，该值指示 ICollection`1 是否为只读。
         /// </summary>
         public bool IsReadOnly
         {
@@ -103,9 +103,9 @@ namespace BaseFramework
         /// <summary>
         /// 在链表中指定的现有结点后添加包含指定值的新结点。
         /// </summary>
-        /// <param name="node">指定的现有节点。</param>
+        /// <param name="node">指定的现有结点。</param>
         /// <param name="value">指定值。</param>
-        /// <returns>包含指定值的新节点。</returns>
+        /// <returns>包含指定值的新结点。</returns>
         public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value)
         {
             LinkedListNode<T> newNode = AcquireNode(value);
@@ -128,7 +128,7 @@ namespace BaseFramework
         /// </summary>
         /// <param name="node">指定的现有结点。</param>
         /// <param name="value">指定值。</param>
-        /// <returns>包含指定值的新结点</returns>
+        /// <returns>包含指定值的新结点。</returns>
         public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value)
         {
             LinkedListNode<T> newNode = AcquireNode(value);
@@ -153,9 +153,9 @@ namespace BaseFramework
         /// <returns>包含指定值的新结点。</returns>
         public LinkedListNode<T> AddFirst(T value)
         {
-            LinkedListNode<T> newNode = AcquireNode(value);
-            m_LinkedList.AddFirst(newNode);
-            return newNode;
+            LinkedListNode<T> node = AcquireNode(value);
+            m_LinkedList.AddFirst(node);
+            return node;
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace BaseFramework
         /// <returns>包含指定值的新结点。</returns>
         public LinkedListNode<T> AddLast(T value)
         {
-            LinkedListNode<T> newNode = AcquireNode(value);
-            m_LinkedList.AddLast(newNode);
-            return newNode;
+            LinkedListNode<T> node = AcquireNode(value);
+            m_LinkedList.AddLast(node);
+            return node;
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 清理链表
+        /// 从链表中移除所有结点。
         /// </summary>
         public void Clear()
         {
@@ -199,11 +199,12 @@ namespace BaseFramework
                 ReleaseNode(current);
                 current = current.Next;
             }
+
             m_LinkedList.Clear();
         }
 
         /// <summary>
-        /// 清理链表的缓存队列
+        /// 清除链表结点缓存。
         /// </summary>
         public void ClearCachedNodes()
         {
@@ -211,10 +212,10 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 链表中是否包含此值。
+        /// 确定某值是否在链表中。
         /// </summary>
         /// <param name="value">指定值。</param>
-        /// <returns>指定值是否在链表中。</returns>
+        /// <returns>某值是否在链表中。</returns>
         public bool Contains(T value)
         {
             return m_LinkedList.Contains(value);
@@ -274,6 +275,7 @@ namespace BaseFramework
                 ReleaseNode(node);
                 return true;
             }
+
             return false;
         }
 
@@ -297,6 +299,7 @@ namespace BaseFramework
             {
                 throw new BaseFrameworkException("First is invalid.");
             }
+
             m_LinkedList.RemoveFirst();
             ReleaseNode(first);
         }
@@ -311,12 +314,13 @@ namespace BaseFramework
             {
                 throw new BaseFrameworkException("Last is invalid.");
             }
+
             m_LinkedList.RemoveLast();
             ReleaseNode(last);
         }
 
         /// <summary>
-        /// 获取循环访问集合的枚举数。
+        /// 返回循环访问集合的枚举数。
         /// </summary>
         /// <returns>循环访问集合的枚举数。</returns>
         public Enumerator GetEnumerator()
@@ -324,11 +328,6 @@ namespace BaseFramework
             return new Enumerator(m_LinkedList);
         }
 
-        /// <summary>
-        /// 获取结点，通过缓存或者新建。
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         private LinkedListNode<T> AcquireNode(T value)
         {
             LinkedListNode<T> node = null;
@@ -345,10 +344,6 @@ namespace BaseFramework
             return node;
         }
 
-        /// <summary>
-        /// 释放节点，加入缓存
-        /// </summary>
-        /// <param name="node"></param>
         private void ReleaseNode(LinkedListNode<T> node)
         {
             node.Value = default(T);
@@ -356,7 +351,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 将值添加到 ICollection<T> 的结尾处。
+        /// 将值添加到 ICollection`1 的结尾处。
         /// </summary>
         /// <param name="value">要添加的值。</param>
         void ICollection<T>.Add(T value)
@@ -365,7 +360,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取循环访问集合的枚举数。
+        /// 返回循环访问集合的枚举数。
         /// </summary>
         /// <returns>循环访问集合的枚举数。</returns>
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
@@ -374,7 +369,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取循环访问集合的枚举数。
+        /// 返回循环访问集合的枚举数。
         /// </summary>
         /// <returns>循环访问集合的枚举数。</returns>
         IEnumerator IEnumerable.GetEnumerator()
@@ -396,6 +391,7 @@ namespace BaseFramework
                 {
                     throw new BaseFrameworkException("Linked list is invalid.");
                 }
+
                 m_Enumerator = linkedList.GetEnumerator();
             }
 

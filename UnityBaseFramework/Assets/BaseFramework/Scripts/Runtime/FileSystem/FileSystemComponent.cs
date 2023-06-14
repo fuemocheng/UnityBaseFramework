@@ -9,7 +9,7 @@ namespace UnityBaseFramework.Runtime
     /// 文件系统件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/File System")]
+    [AddComponentMenu("Base Framework/File System")]
     public sealed class FileSystemComponent : BaseFrameworkComponent
     {
         private IFileSystemManager m_FileSystemManager = null;

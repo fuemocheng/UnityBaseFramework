@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace BaseFramework
 {
     /// <summary>
@@ -14,7 +10,7 @@ namespace BaseFramework
         private static IVersionHelper s_VersionHelper = null;
 
         /// <summary>
-        /// 获取框架版本号。
+        /// 获取游戏框架版本号。
         /// </summary>
         public static string BaseFrameworkVersion
         {

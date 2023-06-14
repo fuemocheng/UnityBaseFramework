@@ -1,7 +1,7 @@
-using System;
-using System.IO;
 using BaseFramework;
 using ICSharpCode.SharpZipLib.GZip;
+using System;
+using System.IO;
 
 namespace UnityBaseFramework.Runtime
 {

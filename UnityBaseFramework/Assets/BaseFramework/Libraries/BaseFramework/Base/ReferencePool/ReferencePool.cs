@@ -5,7 +5,6 @@ namespace BaseFramework
 {
     /// <summary>
     /// 引用池。
-    /// 所有实现IReference接口的对象，都可以通过引用池获取释放。
     /// </summary>
     public static partial class ReferencePool
     {
@@ -13,7 +12,7 @@ namespace BaseFramework
         private static bool m_EnableStrictCheck = false;
 
         /// <summary>
-        /// 是否开启强制检查。
+        /// 获取或设置是否开启强制检查。
         /// </summary>
         public static bool EnableStrictCheck
         {
@@ -59,7 +58,7 @@ namespace BaseFramework
             return results;
         }
 
-		/// <summary>
+        /// <summary>
         /// 清除所有引用池。
         /// </summary>
         public static void ClearAll()
@@ -217,4 +216,3 @@ namespace BaseFramework
         }
     }
 }
-

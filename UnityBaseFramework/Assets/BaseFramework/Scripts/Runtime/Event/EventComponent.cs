@@ -9,7 +9,7 @@ namespace UnityBaseFramework.Runtime
     /// 事件组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Event")]
+    [AddComponentMenu("Base Framework/Event")]
     public sealed class EventComponent : BaseFrameworkComponent
     {
         private IEventManager m_EventManager = null;

@@ -4,14 +4,14 @@ using System.Collections.Generic;
 namespace BaseFramework
 {
     /// <summary>
-    /// 基础框架入口
+    /// 游戏框架入口。
     /// </summary>
     public static class BaseFrameworkEntry
     {
         private static readonly BaseFrameworkLinkedList<BaseFrameworkModule> s_BaseFrameworkModules = new BaseFrameworkLinkedList<BaseFrameworkModule>();
 
         /// <summary>
-        /// 所有基础框架模块轮询。
+        /// 所有游戏框架模块轮询。
         /// </summary>
         /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
@@ -24,7 +24,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 关闭并清理所有基础框架模块。
+        /// 关闭并清理所有游戏框架模块。
         /// </summary>
         public static void Shutdown()
         {
@@ -36,16 +36,16 @@ namespace BaseFramework
             s_BaseFrameworkModules.Clear();
             ReferencePool.ClearAll();
             //释放缓存中的从进程的非托管内存中分配的内存。
-			Utility.Marshal.FreeCachedHGlobal();
+            Utility.Marshal.FreeCachedHGlobal();
             BaseFrameworkLog.SetLogHelper(null);
         }
 
         /// <summary>
-        /// 获取基础框架模块。
+        /// 获取游戏框架模块。
         /// </summary>
-        /// <typeparam name="T">要获取的模块类型。</typeparam>
-        /// <returns>要获取的模块。</returns>
-        /// <remarks>如果要获取的模块不存在，则自动创建该模块。</remarks>
+        /// <typeparam name="T">要获取的游戏框架模块类型。</typeparam>
+        /// <returns>要获取的游戏框架模块。</returns>
+        /// <remarks>如果要获取的游戏框架模块不存在，则自动创建该游戏框架模块。</remarks>
         public static T GetModule<T>() where T : class
         {
             Type interfaceType = typeof(T);
@@ -63,18 +63,18 @@ namespace BaseFramework
             Type moduleType = Type.GetType(moduleName);
             if (moduleType == null)
             {
-                throw new BaseFrameworkException(Utility.Text.Format("Can not find Game Framework module type '{0}'.", moduleName));
+                throw new BaseFrameworkException(Utility.Text.Format("Can not find Base Framework module type '{0}'.", moduleName));
             }
 
             return GetModule(moduleType) as T;
         }
 
         /// <summary>
-        /// 获取基础框架模块。
+        /// 获取游戏框架模块。
         /// </summary>
-        /// <param name="moduleType">要获取的模块类型。</param>
-        /// <returns>要获取的模块。</returns>
-        /// <remarks>如果要获取的模块不存在，则自动创建该模块。</remarks>
+        /// <param name="moduleType">要获取的游戏框架模块类型。</param>
+        /// <returns>要获取的游戏框架模块。</returns>
+        /// <remarks>如果要获取的游戏框架模块不存在，则自动创建该游戏框架模块。</remarks>
         private static BaseFrameworkModule GetModule(Type moduleType)
         {
             foreach (BaseFrameworkModule module in s_BaseFrameworkModules)
@@ -89,10 +89,10 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 创建模块。
+        /// 创建游戏框架模块。
         /// </summary>
-        /// <param name="moduleType">要创建的模块类型。</param>
-        /// <returns>要创建的模块。</returns>
+        /// <param name="moduleType">要创建的游戏框架模块类型。</param>
+        /// <returns>要创建的游戏框架模块。</returns>
         private static BaseFrameworkModule CreateModule(Type moduleType)
         {
             BaseFrameworkModule module = (BaseFrameworkModule)Activator.CreateInstance(moduleType);

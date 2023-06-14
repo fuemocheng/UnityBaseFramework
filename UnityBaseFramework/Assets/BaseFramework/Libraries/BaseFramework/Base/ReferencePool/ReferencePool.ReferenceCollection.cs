@@ -128,6 +128,7 @@ namespace BaseFramework
                     {
                         throw new BaseFrameworkException("The reference has been released.");
                     }
+
                     m_References.Enqueue(reference);
                 }
 

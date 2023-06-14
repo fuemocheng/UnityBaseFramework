@@ -1,11 +1,11 @@
+using BaseFramework;
 using System;
 using System.Text;
-using BaseFramework;
 
 namespace UnityBaseFramework.Runtime
 {
     /// <summary>
-    /// 默认字符串辅助器
+    /// 默认字符辅助器。
     /// </summary>
     public class DefaultTextHelper : Utility.Text.ITextHelper
     {

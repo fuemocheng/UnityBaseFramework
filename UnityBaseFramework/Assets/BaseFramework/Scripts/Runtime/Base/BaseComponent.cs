@@ -1,6 +1,8 @@
+using BaseFramework;
+//using BaseFramework.Localization;
+//using BaseFramework.Resource;
 using System;
 using UnityEngine;
-using BaseFramework;
 
 namespace UnityBaseFramework.Runtime
 {
@@ -171,7 +173,7 @@ namespace UnityBaseFramework.Runtime
         }
 
         /// <summary>
-        /// 组件初始化。
+        /// 游戏框架组件初始化。
         /// </summary>
         protected override void Awake()
         {
@@ -181,7 +183,7 @@ namespace UnityBaseFramework.Runtime
             InitVersionHelper();
             InitLogHelper();
             Log.Info("Base Framework Version: {0}", BaseFramework.Version.BaseFrameworkVersion);
-            Log.Info("Base Version: {0} ({1})", BaseFramework.Version.GameVersion, BaseFramework.Version.InternalGameVersion);
+            Log.Info("Game Version: {0} ({1})", BaseFramework.Version.GameVersion, BaseFramework.Version.InternalGameVersion);
             Log.Info("Unity Version: {0}", Application.unityVersion);
 
 #if UNITY_5_3_OR_NEWER || UNITY_5_3

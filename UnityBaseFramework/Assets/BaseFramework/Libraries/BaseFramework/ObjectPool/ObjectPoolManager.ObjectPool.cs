@@ -49,7 +49,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池对象类型。
+            /// 获取对象池对象类型。
             /// </summary>
             public override Type ObjectType
             {
@@ -60,7 +60,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池中对象的数量。
+            /// 获取对象池中对象的数量。
             /// </summary>
             public override int Count
             {
@@ -71,7 +71,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池中能被释放的对象的数量。
+            /// 获取对象池中能被释放的对象的数量。
             /// </summary>
             public override int CanReleaseCount
             {
@@ -83,7 +83,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 是否允许对象被多次获取。
+            /// 获取是否允许对象被多次获取。
             /// </summary>
             public override bool AllowMultiSpawn
             {
@@ -94,7 +94,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池自动释放可释放对象的间隔秒数。
+            /// 获取或设置对象池自动释放可释放对象的间隔秒数。
             /// </summary>
             public override float AutoReleaseInterval
             {
@@ -109,7 +109,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池的容量。
+            /// 获取或设置对象池的容量。
             /// </summary>
             public override int Capacity
             {
@@ -135,7 +135,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池对象过期秒数。
+            /// 获取或设置对象池对象过期秒数。
             /// </summary>
             public override float ExpireTime
             {
@@ -143,6 +143,7 @@ namespace BaseFramework.ObjectPool
                 {
                     return m_ExpireTime;
                 }
+
                 set
                 {
                     if (value < 0f)
@@ -161,7 +162,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 对象池的优先级。
+            /// 获取或设置对象池的优先级。
             /// </summary>
             public override int Priority
             {

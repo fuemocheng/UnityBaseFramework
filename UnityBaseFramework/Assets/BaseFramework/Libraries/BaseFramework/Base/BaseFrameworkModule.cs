@@ -1,12 +1,12 @@
 namespace BaseFramework
 {
     /// <summary>
-    /// 基础模块抽象类
+    /// 游戏框架模块抽象类。
     /// </summary>
     internal abstract class BaseFrameworkModule
     {
         /// <summary>
-        /// 获取模块优先级。
+        /// 获取游戏框架模块优先级。
         /// </summary>
         /// <remarks>优先级较高的模块会优先轮询，并且关闭操作会后进行。</remarks>
         internal virtual int Priority
@@ -18,14 +18,14 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 模块轮询。
+        /// 游戏框架模块轮询。
         /// </summary>
         /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal abstract void Update(float elapseSeconds, float realElapseSeconds);
 
         /// <summary>
-        /// 关闭并清理模块。
+        /// 关闭并清理游戏框架模块。
         /// </summary>
         internal abstract void Shutdown();
     }

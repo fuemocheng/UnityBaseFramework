@@ -23,7 +23,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 名称。
+            /// 获取对象名称。
             /// </summary>
             public string Name
             {
@@ -34,7 +34,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 是否被加锁。
+            /// 获取对象是否被加锁。
             /// </summary>
             public bool Locked
             {
@@ -49,7 +49,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 优先级。
+            /// 获取对象的优先级。
             /// </summary>
             public int Priority
             {
@@ -64,7 +64,7 @@ namespace BaseFramework.ObjectPool
             }
 
             /// <summary>
-            /// 自定义释放检查标记。
+            /// 获取自定义释放检查标记。
             /// </summary>
             public bool CustomCanReleaseFlag
             {

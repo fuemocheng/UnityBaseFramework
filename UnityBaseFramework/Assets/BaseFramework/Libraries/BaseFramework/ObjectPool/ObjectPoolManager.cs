@@ -27,7 +27,7 @@ namespace BaseFramework.ObjectPool
         }
 
         /// <summary>
-        /// 获取模块优先级。
+        /// 获取游戏框架模块优先级。
         /// </summary>
         /// <remarks>优先级较高的模块会优先轮询，并且关闭操作会后进行。</remarks>
         internal override int Priority
@@ -1199,7 +1199,6 @@ namespace BaseFramework.ObjectPool
             return InternalDestroyObjectPool(new TypeNamePair(objectPool.ObjectType, objectPool.Name));
         }
 
-
         /// <summary>
         /// 释放对象池中的可释放对象。
         /// </summary>
@@ -1260,7 +1259,6 @@ namespace BaseFramework.ObjectPool
                 throw new BaseFrameworkException("Object type is invalid.");
             }
 
-            // ObjectBase 是否是 objectType 的超类。
             if (!typeof(ObjectBase).IsAssignableFrom(objectType))
             {
                 throw new BaseFrameworkException(Utility.Text.Format("Object type '{0}' is invalid.", objectType.FullName));
@@ -1286,6 +1284,7 @@ namespace BaseFramework.ObjectPool
                 objectPool.Shutdown();
                 return m_ObjectPools.Remove(typeNamePair);
             }
+
             return false;
         }
 

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace BaseFramework
 {
-	/// <summary>
+    /// <summary>
     /// 引用池信息。
     /// </summary>
     [StructLayout(LayoutKind.Auto)]

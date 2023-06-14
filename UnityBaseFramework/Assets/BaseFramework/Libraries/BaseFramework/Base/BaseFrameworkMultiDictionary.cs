@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace BaseFramework
 {
     /// <summary>
-    /// 多值字典类。
+    /// 游戏框架多值字典类。
     /// </summary>
     /// <typeparam name="TKey">指定多值字典的主键类型。</typeparam>
     /// <typeparam name="TValue">指定多值字典的值类型。</typeparam>
@@ -15,7 +15,7 @@ namespace BaseFramework
         private readonly Dictionary<TKey, BaseFrameworkLinkedListRange<TValue>> m_Dictionary;
 
         /// <summary>
-        /// 初始化多值字典类的新实例。
+        /// 初始化游戏框架多值字典类的新实例。
         /// </summary>
         public BaseFrameworkMultiDictionary()
         {
@@ -24,7 +24,7 @@ namespace BaseFramework
         }
 
         /// <summary>
-        /// 获取多值字典中的主键数量。
+        /// 获取多值字典中实际包含的主键数量。
         /// </summary>
         public int Count
         {

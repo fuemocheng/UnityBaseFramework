@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace BaseFramework
 {
     /// <summary>
-    /// 链表范围结构体。
+    /// 游戏框架链表范围。
     /// </summary>
     /// <typeparam name="T">指定链表范围的元素类型。</typeparam>
     [StructLayout(LayoutKind.Auto)]
@@ -15,7 +15,7 @@ namespace BaseFramework
         private readonly LinkedListNode<T> m_Terminal;
 
         /// <summary>
-        /// 初始化链表范围的新实例。
+        /// 初始化游戏框架链表范围的新实例。
         /// </summary>
         /// <param name="first">链表范围的开始结点。</param>
         /// <param name="terminal">链表范围的终结标记结点。</param>

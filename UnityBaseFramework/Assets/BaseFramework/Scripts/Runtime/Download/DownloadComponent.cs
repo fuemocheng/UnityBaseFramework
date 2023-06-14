@@ -9,7 +9,7 @@ namespace UnityBaseFramework.Runtime
     /// 下载组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Download")]
+    [AddComponentMenu("Base Framework/Download")]
     public sealed class DownloadComponent : BaseFrameworkComponent
     {
         private const int DefaultPriority = 0;
@@ -22,7 +22,7 @@ namespace UnityBaseFramework.Runtime
         private Transform m_InstanceRoot = null;
 
         [SerializeField]
-        private string m_DownloadAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestDownloadAgentHelper";
+        private string m_DownloadAgentHelperTypeName = "UnityBaseFramework.Runtime.UnityWebRequestDownloadAgentHelper";
 
         [SerializeField]
         private DownloadAgentHelperBase m_CustomDownloadAgentHelper = null;

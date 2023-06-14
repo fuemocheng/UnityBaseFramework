@@ -1,7 +1,7 @@
 namespace BaseFramework
 {
     /// <summary>
-    /// 基础模块日志等级。
+    /// 游戏框架日志等级。
     /// </summary>
     public enum BaseFrameworkLogLevel : byte
     {
