@@ -15,7 +15,7 @@ namespace UnityBaseFramework.Runtime
         private IFileSystemManager m_FileSystemManager = null;
 
         [SerializeField]
-        private string m_FileSystemHelperTypeName = "UnityGameFramework.Runtime.DefaultFileSystemHelper";
+        private string m_FileSystemHelperTypeName = "UnityBaseFramework.Runtime.DefaultFileSystemHelper";
 
         [SerializeField]
         private FileSystemHelperBase m_CustomFileSystemHelper = null;
