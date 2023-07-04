@@ -40,7 +40,7 @@ namespace UnityBaseFramework.Editor.ResourceTools
         private string[][] m_CachedCircularDependencyDatas = null;
         private Vector2 m_CircularDependencyScroll = Vector2.zero;
 
-        [MenuItem("Game Framework/Resource Tools/Resource Analyzer", false, 42)]
+        [MenuItem("Base Framework/Resource Tools/Resource Analyzer", false, 42)]
         private static void Open()
         {
             ResourceAnalyzer window = GetWindow<ResourceAnalyzer>("Resource Analyzer", true);
