@@ -6,7 +6,7 @@ using UnityBaseFramework.Editor.ResourceTools;
 
 namespace XGame.Editor
 {
-    public static class GameFrameworkConfigs
+    public static class BaseFrameworkConfigs
     {
         //[BuildSettingsConfigPath]
         //public static string BuildSettingsConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameMain/Configs/BuildSettings.xml"));
