@@ -1,6 +1,6 @@
 using BaseFramework;
 //using BaseFramework.Localization;
-//using BaseFramework.Resource;
+using BaseFramework.Resource;
 using System;
 using UnityEngine;
 
@@ -83,11 +83,11 @@ namespace UnityBaseFramework.Runtime
         /// <summary>
         /// 获取或设置编辑器资源辅助器。
         /// </summary>
-        //public IResourceManager EditorResourceHelper
-        //{
-        //    get;
-        //    set;
-        //}
+        public IResourceManager EditorResourceHelper
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// 获取或设置游戏帧率。
@@ -408,11 +408,11 @@ namespace UnityBaseFramework.Runtime
                 objectPoolComponent.ReleaseAllUnused();
             }
 
-            //ResourceComponent resourceCompoent = BaseEntry.GetComponent<ResourceComponent>();
-            //if (resourceCompoent != null)
-            //{
-            //    resourceCompoent.ForceUnloadUnusedAssets(true);
-            //}
+            ResourceComponent resourceCompoent = BaseEntry.GetComponent<ResourceComponent>();
+            if (resourceCompoent != null)
+            {
+                resourceCompoent.ForceUnloadUnusedAssets(true);
+            }
         }
     }
 }
