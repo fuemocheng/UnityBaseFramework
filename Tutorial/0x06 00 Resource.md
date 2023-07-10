@@ -1,4 +1,4 @@
-# Resource 模块
+# ResourceEditor 模块
 
 
 
