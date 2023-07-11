@@ -502,6 +502,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9035866955694066761}
+  - component: {fileID: 664191128361060984}
   m_Layer: 0
   m_Name: Config
   m_TagString: Untagged
@@ -524,6 +525,23 @@ Transform:
   m_Father: {fileID: 9035866954879854471}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &664191128361060984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035866955694066766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6da1f64d03e95e4d8882477fff83929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EnableLoadConfigUpdateEvent: 0
+  m_EnableLoadConfigDependencyAssetEvent: 0
+  m_ConfigHelperTypeName: UnityBaseFramework.Runtime.DefaultConfigHelper
+  m_CustomConfigHelper: {fileID: 0}
+  m_CachedBytesSize: 0
 --- !u!1 &9035866955875403451
 GameObject:
   m_ObjectHideFlags: 0
