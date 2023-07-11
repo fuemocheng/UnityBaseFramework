@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ab4dae8fa7e0634388e43fbf84b74e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ResourceMode: 1
+  m_ResourceMode: 2
   m_ReadWritePathType: 0
   m_MinUnloadUnusedAssetsInterval: 60
   m_MaxUnloadUnusedAssetsInterval: 300
@@ -812,6 +812,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9035866956335643000}
+  - component: {fileID: 3501652022323336769}
   m_Layer: 0
   m_Name: Setting
   m_TagString: Untagged
@@ -834,6 +835,20 @@ Transform:
   m_Father: {fileID: 9035866954879854471}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3501652022323336769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035866956335643001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1569818955a3d14b86057e6119a8e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SettingHelperTypeName: UnityBaseFramework.Runtime.DefaultSettingHelper
+  m_CustomSettingHelper: {fileID: 0}
 --- !u!1 &9035866956444153223
 GameObject:
   m_ObjectHideFlags: 0
