@@ -30,4 +30,6 @@
    
 5. [FileSystem 模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/0x05%20FileSystem.md#filesystem-%E6%A8%A1%E5%9D%97)
    
-6. [Resource 模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/0x06%20Resource.md#resource-%E6%A8%A1%E5%9D%97)
+6. [Resource 模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/0x06%2000%20Resource.md)  
+   [ResourceTools 打包构建模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/0x06%2001%20ResourceTools.md)
+7. 
