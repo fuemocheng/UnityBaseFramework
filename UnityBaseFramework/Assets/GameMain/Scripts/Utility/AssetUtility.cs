@@ -1,6 +1,6 @@
 using BaseFramework;
 
-namespace StarForce
+namespace XGame
 {
     public static class AssetUtility
     {
