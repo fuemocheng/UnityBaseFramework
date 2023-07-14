@@ -299,10 +299,10 @@
                 - 再调用到委托 m_WebRequestFailureEventHandler(this, webRequestFailureEventArgs)；
 		
 		4. 上面的委托是在 WebRequestComponent的Awake()中赋值的的；
-            - 上面成功事件回调到 OnWebRequestSuccess(object sender, GameFramework.WebRequest.WebRequestSuccessEventArgs e)；
+            - 上面成功事件回调到 OnWebRequestSuccess(object sender, BaseFramework.WebRequest.WebRequestSuccessEventArgs e)；
         		- 先创建 WebRequestSuccessEventArgs 事件参数，其中 e.UserData 为 WWWFormInfo wwwFormInfo，wwwFormInfo.UserData 则为发送者；
         		- m_EventComponent.Fire(this, WebRequestSuccessEventArgs.Create(e))，抛出事件；
-      		- 上面失败事件回调到 OnWebRequestFailure(object sender, GameFramework.WebRequest.WebRequestFailureEventArgs e)；
+      		- 上面失败事件回调到 OnWebRequestFailure(object sender, BaseFramework.WebRequest.WebRequestFailureEventArgs e)；
         		- 先创建 WebRequestFailureEventArgs 事件参数，其中 e.UserData 为 WWWFormInfo wwwFormInfo，wwwFormInfo.UserData 则为发送者；
         		- m_EventComponent.Fire(this, WebRequestFailureEventArgs.Create(e));
         

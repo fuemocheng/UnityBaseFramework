@@ -98,7 +98,7 @@ readonly Dictionary<string, int> m_FileDatas;
 readonly List<BlockData> m_BlockDatas;
 
 //Key-Value : Block.Length - ListRange<BlockIndex>
-readonly GameFrameworkMultiDictionary<int, int> m_FreeBlockIndexes; 
+readonly BaseFrameworkMultiDictionary<int, int> m_FreeBlockIndexes; 
 
 readonly SortedDictionary<int, StringData> m_StringDatas;
 readonly Queue<int> m_FreeStringIndexes;

@@ -699,7 +699,7 @@
         - 示例 
             - WebRequestComponent.Start()
                 - AddWebRequestAgentHelper(int index)
-                    - webRequestAgentHelper = Helper.CreateHelper("UnityGameFramework.Runtime.UnityWebRequestAgentHelper")
+                    - webRequestAgentHelper = Helper.CreateHelper("UnityBaseFramework.Runtime.UnityWebRequestAgentHelper")
                     - m_WebRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper)
             - WebRequestManager.AddWebRequestAgentHelper(webRequestAgentHelper)
                 - WebRequestAgent agent = new WebRequestAgent(webRequestAgentHelper)
