@@ -865,8 +865,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc5f8db1d043fe4682fe9f5307ea817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AvailableProcedureTypeNames: []
-  m_EntranceProcedureTypeName: 
+  m_AvailableProcedureTypeNames:
+  - XGame.ProcedureLaunch
+  - XGame.ProcedurePreload
+  m_EntranceProcedureTypeName: XGame.ProcedureLaunch
 --- !u!1 &9035866956335643001
 GameObject:
   m_ObjectHideFlags: 0
