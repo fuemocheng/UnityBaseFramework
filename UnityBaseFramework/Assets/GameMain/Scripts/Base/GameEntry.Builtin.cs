@@ -47,11 +47,11 @@ namespace XGame
         /// <summary>
         /// 获取调试组件。
         /// </summary>
-        //public static DebuggerComponent Debugger
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static DebuggerComponent Debugger
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取下载组件。
@@ -101,11 +101,11 @@ namespace XGame
         /// <summary>
         /// 获取本地化组件。
         /// </summary>
-        //public static LocalizationComponent Localization
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static LocalizationComponent Localization
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取网络组件。
@@ -194,13 +194,13 @@ namespace XGame
             Config = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ConfigComponent>();
             DataNode = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DataNodeComponent>();
             DataTable = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DataTableComponent>();
-            //Debugger = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DebuggerComponent>();
+            Debugger = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DebuggerComponent>();
             Download = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DownloadComponent>();
             //Entity = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EntityComponent>();
             Event = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EventComponent>();
             FileSystem = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FileSystemComponent>();
             Fsm = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FsmComponent>();
-            //Localization = UnityBaseFramework.Runtime.BaseEntry.GetComponent<LocalizationComponent>();
+            Localization = UnityBaseFramework.Runtime.BaseEntry.GetComponent<LocalizationComponent>();
             //Network = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkComponent>();
             ObjectPool = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ObjectPoolComponent>();
             Procedure = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ProcedureComponent>();

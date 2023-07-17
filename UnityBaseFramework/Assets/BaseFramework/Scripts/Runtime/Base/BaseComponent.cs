@@ -1,5 +1,5 @@
 using BaseFramework;
-//using BaseFramework.Localization;
+using BaseFramework.Localization;
 using BaseFramework.Resource;
 using System;
 using UnityEngine;
@@ -20,8 +20,8 @@ namespace UnityBaseFramework.Runtime
         [SerializeField]
         private bool m_EditorResourceMode = true;
 
-        //[SerializeField]
-        //private Language m_EditorLanguage = Language.Unspecified;
+        [SerializeField]
+        private Language m_EditorLanguage = Language.Unspecified;
 
         [SerializeField]
         private string m_TextHelperTypeName = "UnityBaseFramework.Runtime.DefaultTextHelper";
@@ -68,17 +68,17 @@ namespace UnityBaseFramework.Runtime
         /// <summary>
         /// 获取或设置编辑器语言（仅编辑器内有效）。
         /// </summary>
-        //public Language EditorLanguage
-        //{
-        //    get
-        //    {
-        //        return m_EditorLanguage;
-        //    }
-        //    set
-        //    {
-        //        m_EditorLanguage = value;
-        //    }
-        //}
+        public Language EditorLanguage
+        {
+            get
+            {
+                return m_EditorLanguage;
+            }
+            set
+            {
+                m_EditorLanguage = value;
+            }
+        }
 
         /// <summary>
         /// 获取或设置编辑器资源辅助器。
