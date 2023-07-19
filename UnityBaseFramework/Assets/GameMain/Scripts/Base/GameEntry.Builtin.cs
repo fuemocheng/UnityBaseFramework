@@ -164,11 +164,11 @@ namespace XGame
         /// <summary>
         /// 获取声音组件。
         /// </summary>
-        //public static SoundComponent Sound
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static SoundComponent Sound
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取界面组件。
@@ -207,7 +207,7 @@ namespace XGame
             Resource = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ResourceComponent>();
             Scene = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SceneComponent>();
             Setting = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SettingComponent>();
-            //Sound = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SoundComponent>();
+            Sound = UnityBaseFramework.Runtime.BaseEntry.GetComponent<SoundComponent>();
             //UI = UnityBaseFramework.Runtime.BaseEntry.GetComponent<UIComponent>();
             WebRequest = UnityBaseFramework.Runtime.BaseEntry.GetComponent<WebRequestComponent>();
         }

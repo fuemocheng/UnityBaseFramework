@@ -16,12 +16,12 @@ namespace XGame
             //"Armor",
             //"Asteroid",
             //"Entity",
-            //"Music",
+            "Music",
             "Scene",
-            //"Sound",
+            "Sound",
             //"Thruster",
             //"UIForm",
-            //"UISound",
+            "UISound",
             //"Weapon",
         };
 
