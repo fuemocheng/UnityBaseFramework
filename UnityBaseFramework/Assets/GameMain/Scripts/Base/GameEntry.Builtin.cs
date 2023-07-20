@@ -65,11 +65,11 @@ namespace XGame
         /// <summary>
         /// 获取实体组件。
         /// </summary>
-        //public static EntityComponent Entity
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static EntityComponent Entity
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取事件组件。
@@ -196,7 +196,7 @@ namespace XGame
             DataTable = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DataTableComponent>();
             Debugger = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DebuggerComponent>();
             Download = UnityBaseFramework.Runtime.BaseEntry.GetComponent<DownloadComponent>();
-            //Entity = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EntityComponent>();
+            Entity = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EntityComponent>();
             Event = UnityBaseFramework.Runtime.BaseEntry.GetComponent<EventComponent>();
             FileSystem = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FileSystemComponent>();
             Fsm = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FsmComponent>();

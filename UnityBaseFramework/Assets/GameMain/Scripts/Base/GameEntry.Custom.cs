@@ -9,11 +9,11 @@ namespace XGame
     /// </summary>
     public partial class GameEntry : MonoBehaviour
     {
-        //public static BuiltinDataComponent BuiltinData
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static BuiltinDataComponent BuiltinData
+        {
+            get;
+            private set;
+        }
 
         //public static HPBarComponent HPBar
         //{
@@ -23,7 +23,7 @@ namespace XGame
 
         private static void InitCustomComponents()
         {
-            //BuiltinData = UnityBaseFramework.Runtime.BaseEntry.GetComponent<BuiltinDataComponent>();
+            BuiltinData = UnityBaseFramework.Runtime.BaseEntry.GetComponent<BuiltinDataComponent>();
             //HPBar = UnityBaseFramework.Runtime.BaseEntry.GetComponent<HPBarComponent>();
         }
     }
