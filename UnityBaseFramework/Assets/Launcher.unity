@@ -177,6 +177,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 323501405}
     m_Modifications:
+    - target: {fileID: 3710880779689643014, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_InstanceRoot
+      value: 
+      objectReference: {fileID: 985903275}
     - target: {fileID: 9035866954879854468, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_Name
       value: Builtin
@@ -226,11 +230,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 9035866956444153222, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 985903275}
   m_SourcePrefab: {fileID: 100100000, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
 --- !u!4 &619952508 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9035866954879854471, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+  m_PrefabInstance: {fileID: 619952507}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &619952509 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9035866956444153222, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
   m_PrefabInstance: {fileID: 619952507}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &646992769
@@ -263,6 +275,37 @@ Transform:
   m_Children:
   - {fileID: 1001608601}
   m_Father: {fileID: 323501405}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &985903274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 985903275}
+  m_Layer: 0
+  m_Name: UI Form Instances
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &985903275
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985903274}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 619952509}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1001608600
@@ -311,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BuildInfoTextAsset: {fileID: 4900000, guid: 0f949a7f73d128547b1314a7e471f19f, type: 3}
   m_DefaultDictionaryTextAsset: {fileID: 4900000, guid: 8e021a81c51ce9b499c75ec6e783c32b, type: 3}
+  m_UpdateResourceFormTemplate: {fileID: 11487720, guid: a6c731de80e9d824d8f657301a357269, type: 3}
 --- !u!1 &1680164520
 GameObject:
   m_ObjectHideFlags: 0
