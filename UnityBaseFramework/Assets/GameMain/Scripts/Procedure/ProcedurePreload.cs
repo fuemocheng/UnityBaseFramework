@@ -20,7 +20,7 @@ namespace XGame
             "Scene",
             "Sound",
             //"Thruster",
-            //"UIForm",
+            "UIForm",
             "UISound",
             //"Weapon",
         };
