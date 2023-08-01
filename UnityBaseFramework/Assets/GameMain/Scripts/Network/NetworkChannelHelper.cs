@@ -153,7 +153,7 @@ namespace XGame
         {
             // 注意：此函数并不在主线程调用！
             customErrorData = null;
-            return (IPacketHeader)RuntimeTypeModel.Default.Deserialize(source, ReferencePool.Acquire<SCPacketHeader>(), typeof(SCPacketHeader));
+            return (IPacketHeader)RuntimeTypeModel.Default.Deserialize(source, (object)ReferencePool.Acquire<SCPacketHeader>(), typeof(SCPacketHeader));
         }
 
         /// <summary>
