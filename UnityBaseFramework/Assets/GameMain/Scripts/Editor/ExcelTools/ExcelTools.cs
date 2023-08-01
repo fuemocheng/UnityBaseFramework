@@ -6,11 +6,11 @@ using UnityEngine;
 using NPOI.SS.UserModel;
 using BaseFramework;
 
-namespace XGame.Editor.ExcelTools
+namespace XGame.Editor.Tools
 {
     public sealed class ExcelTools
     {
-        [MenuItem("XGame/Excel to TXT")]
+        [MenuItem("Tools/Excel to TXT")]
         private static void GenerateTXT()
         {
             // Excel 表路径

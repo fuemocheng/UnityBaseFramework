@@ -1,12 +1,13 @@
 using BaseFramework;
 using UnityEditor;
 using UnityEngine;
+using XGame.Editor.DataTableTools;
 
-namespace XGame.Editor.DataTableTools
+namespace XGame.Editor.Tools
 {
     public sealed class DataTableGeneratorMenu
     {
-        [MenuItem("XGame/Generate DataTables")]
+        [MenuItem("Tools/Generate DataTables")]
         private static void GenerateDataTables()
         {
             foreach (string dataTableName in ProcedurePreload.DataTableNames)

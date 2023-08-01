@@ -1,16 +1,12 @@
-using System;
 using System.IO;
-using System.Text;
 using UnityEditor;
-using UnityEngine;
-using NPOI.SS.UserModel;
 using BaseFramework;
 
-namespace XGame.Editor.ProtoTools
+namespace XGame.Editor.Tools
 {
     public sealed class ProtoTools
     {
-        [MenuItem("XGame/ExportProto")]
+        [MenuItem("Tools/Gen Proto")]
         private static void ExportProto()
         {
             // 设置批处理文件工作目录
