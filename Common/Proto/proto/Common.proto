@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package XGame;
+
+//心跳
+message CSHeartBeat{
+}
+
+message SCHeartBeat{
+}
+
+
+//登录验证
+message CSLoginVerify{
+	string Account = 1;
+	string Password = 2;
+}
+
+message SCLoginVerify{
+	int32 State = 1;
+}

@@ -9,11 +9,11 @@ using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
-    public partial class SCHeartBeatHandler : PacketHandlerBase
+    public partial class SCLoginVerifyHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            SCHeartBeat packetImpl = (SCHeartBeat)packet;
+            SCLoginVerify packetImpl = (SCLoginVerify)packet;
             Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
         }
     }
