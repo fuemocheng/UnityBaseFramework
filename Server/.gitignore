@@ -10,3 +10,5 @@ Server/NetFrame/bin/
 Server/NetFrame/obj/
 Server/Protocol/bin/
 Server/Protocol/obj/
+
+!Server/Server.sln
