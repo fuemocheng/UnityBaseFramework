@@ -1,6 +1,7 @@
 using BaseFramework;
 using BaseFramework.Event;
 using BaseFramework.Network;
+using GameProto;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System;

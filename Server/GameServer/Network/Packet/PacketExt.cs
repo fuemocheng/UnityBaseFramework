@@ -4,7 +4,9 @@
 //   These types are extended from proto classes.
 // </auto-generated>
 
-namespace Network
+using Network;
+
+namespace GameProto
 {
     public partial class CSHeartBeat : CSPacketBase
     {
