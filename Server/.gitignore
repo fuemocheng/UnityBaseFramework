@@ -4,11 +4,13 @@ obj
 
 *.cache
 
-Server/Server/bin/
-Server/Server/obj/
-Server/NetFrame/bin/
-Server/NetFrame/obj/
-Server/Protocol/bin/
-Server/Protocol/obj/
+GameServer/BaseFramework/bin/
+GameServer/BaseFramework/obj/
 
-!Server/Server.sln
+GameServer/Network/bin/
+GameServer/Network/obj/
+
+GameServer/Server/bin/
+GameServer/Server/obj/
+
+!GameServer/GameServer.sln
