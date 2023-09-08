@@ -110,11 +110,11 @@ namespace XGame
         /// <summary>
         /// 获取网络组件。
         /// </summary>
-        //public static NetworkComponent Network
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static NetworkComponent Network
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取对象池组件。
@@ -201,7 +201,7 @@ namespace XGame
             FileSystem = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FileSystemComponent>();
             Fsm = UnityBaseFramework.Runtime.BaseEntry.GetComponent<FsmComponent>();
             Localization = UnityBaseFramework.Runtime.BaseEntry.GetComponent<LocalizationComponent>();
-            //Network = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkComponent>();
+            Network = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkComponent>();
             ObjectPool = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ObjectPoolComponent>();
             Procedure = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ProcedureComponent>();
             Resource = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ResourceComponent>();

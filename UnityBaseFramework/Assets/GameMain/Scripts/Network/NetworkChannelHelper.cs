@@ -133,6 +133,8 @@ namespace XGame
             m_CachedStream.Position = 0L;
 
             CSPacketHeader packetHeader = ReferencePool.Acquire<CSPacketHeader>();
+            packetHeader.Id = packetImpl.Id;
+            packetHeader.PacketLength = packetImpl.GetLength();
             Serializer.Serialize(m_CachedStream, packetHeader);
             ReferencePool.Release(packetHeader);
 
