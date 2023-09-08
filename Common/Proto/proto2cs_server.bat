@@ -26,7 +26,7 @@ for %%i in (proto\\*.cs) do (
 )
 
 REM 把proto文件copy到客户端相应目录
-set c=..\\..\\UnityBaseFramework\Assets\GameMain\Scripts\Network\Proto
+set c=..\\..\\Server\GameServer\Network\Proto
 for %%i in (out\\*.cs) do (
 	if exist %c% (
 		copy %%i %c% > nul
@@ -34,6 +34,6 @@ for %%i in (out\\*.cs) do (
 	)
 )
 
-echo GEN PROTO CSHARP FILE SUCCEED
+echo GEN SERVER PROTO CSHARP FILE SUCCEED
 
 REM pause
