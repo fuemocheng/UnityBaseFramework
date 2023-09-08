@@ -14,3 +14,7 @@ GameServer/Server/bin/
 GameServer/Server/obj/
 
 !GameServer/GameServer.sln
+
+!GameServer/BaseFramework/BaseFramework.csproj
+!GameServer/Network/Network.csproj
+!GameServer/Server/Server.csproj
