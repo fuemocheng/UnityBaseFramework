@@ -13,18 +13,13 @@ namespace XGame
         DialogForm = 1,
 
         /// <summary>
-        /// 主菜单。
+        /// 登录。
         /// </summary>
-        MenuForm = 100,
+        LoginForm = 100,
 
         /// <summary>
-        /// 设置。
+        /// 大厅。
         /// </summary>
-        SettingForm = 101,
-
-        /// <summary>
-        /// 关于。
-        /// </summary>
-        AboutForm = 102,
+        LobbyForm = 200,
     }
 }

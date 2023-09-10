@@ -15,16 +15,16 @@ namespace XGame
             private set;
         }
 
-        //public static HPBarComponent HPBar
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static NetworkExtendedComponent NetworkExtended
+        {
+            get;
+            private set;
+        }
 
         private static void InitCustomComponents()
         {
             BuiltinData = UnityBaseFramework.Runtime.BaseEntry.GetComponent<BuiltinDataComponent>();
-            //HPBar = UnityBaseFramework.Runtime.BaseEntry.GetComponent<HPBarComponent>();
+            NetworkExtended = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkExtendedComponent>();
         }
     }
 }

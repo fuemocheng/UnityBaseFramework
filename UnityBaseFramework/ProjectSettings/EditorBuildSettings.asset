@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Launcher.unity
     guid: 25dabbf994581074892809e7a9c50917
+  - enabled: 1
+    path: Assets/GameMain/Scenes/Login.unity
+    guid: 90160e3023df3fd45bdefa4972e3b319
+  - enabled: 1
+    path: Assets/GameMain/Scenes/Lobby.unity
+    guid: f00001644c5492c4d9cb0dbfe061a86d
   m_configObjects: {}

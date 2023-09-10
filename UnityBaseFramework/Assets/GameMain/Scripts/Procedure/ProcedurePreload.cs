@@ -43,8 +43,8 @@ namespace XGame
             GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
             GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
             GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
-            //GameEntry.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
-            //GameEntry.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
+            GameEntry.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
+            GameEntry.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
 
             m_LoadedFlag.Clear();
 
@@ -57,8 +57,8 @@ namespace XGame
             GameEntry.Event.Unsubscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
             GameEntry.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
             GameEntry.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
-            //GameEntry.Event.Unsubscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
-            //GameEntry.Event.Unsubscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
+            GameEntry.Event.Unsubscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
+            GameEntry.Event.Unsubscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
 
             base.OnLeave(procedureOwner, isShutdown);
         }
@@ -74,9 +74,9 @@ namespace XGame
                     return;
                 }
             }
-
-            //procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Menu"));
-            //ChangeState<ProcedureChangeScene>(procedureOwner);
+            
+            procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Login"));
+            ChangeState<ProcedureChangeScene>(procedureOwner);
         }
 
         private void PreloadResources()
@@ -111,29 +111,29 @@ namespace XGame
             GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
         }
 
-        //private void LoadDictionary(string dictionaryName)
-        //{
-        //    string dictionaryAssetName = AssetUtility.GetDictionaryAsset(dictionaryName, false);
-        //    m_LoadedFlag.Add(dictionaryAssetName, false);
-        //    GameEntry.Localization.ReadData(dictionaryAssetName, this);
-        //}
+        private void LoadDictionary(string dictionaryName)
+        {
+            string dictionaryAssetName = AssetUtility.GetDictionaryAsset(dictionaryName, false);
+            m_LoadedFlag.Add(dictionaryAssetName, false);
+            GameEntry.Localization.ReadData(dictionaryAssetName, this);
+        }
 
-        //private void LoadFont(string fontName)
-        //{
-        //    m_LoadedFlag.Add(Utility.Text.Format("Font.{0}", fontName), false);
-        //    GameEntry.Resource.LoadAsset(AssetUtility.GetFontAsset(fontName), Constant.AssetPriority.FontAsset, new LoadAssetCallbacks(
-        //        (assetName, asset, duration, userData) =>
-        //        {
-        //            m_LoadedFlag[Utility.Text.Format("Font.{0}", fontName)] = true;
-        //            UGuiForm.SetMainFont((Font)asset);
-        //            Log.Info("Load font '{0}' OK.", fontName);
-        //        },
+        private void LoadFont(string fontName)
+        {
+            m_LoadedFlag.Add(Utility.Text.Format("Font.{0}", fontName), false);
+            GameEntry.Resource.LoadAsset(AssetUtility.GetFontAsset(fontName), Constant.AssetPriority.FontAsset, new LoadAssetCallbacks(
+                (assetName, asset, duration, userData) =>
+                {
+                    m_LoadedFlag[Utility.Text.Format("Font.{0}", fontName)] = true;
+                    UGuiForm.SetMainFont((Font)asset);
+                    Log.Info("Load font '{0}' OK.", fontName);
+                },
 
-        //        (assetName, status, errorMessage, userData) =>
-        //        {
-        //            Log.Error("Can not load font '{0}' from '{1}' with error message '{2}'.", fontName, assetName, errorMessage);
-        //        }));
-        //}
+                (assetName, status, errorMessage, userData) =>
+                {
+                    Log.Error("Can not load font '{0}' from '{1}' with error message '{2}'.", fontName, assetName, errorMessage);
+                }));
+        }
 
         private void OnLoadConfigSuccess(object sender, GameEventArgs e)
         {
@@ -181,27 +181,27 @@ namespace XGame
             Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName, ne.DataTableAssetName, ne.ErrorMessage);
         }
 
-        //private void OnLoadDictionarySuccess(object sender, GameEventArgs e)
-        //{
-        //    LoadDictionarySuccessEventArgs ne = (LoadDictionarySuccessEventArgs)e;
-        //    if (ne.UserData != this)
-        //    {
-        //        return;
-        //    }
+        private void OnLoadDictionarySuccess(object sender, GameEventArgs e)
+        {
+            LoadDictionarySuccessEventArgs ne = (LoadDictionarySuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
 
-        //    m_LoadedFlag[ne.DictionaryAssetName] = true;
-        //    Log.Info("Load dictionary '{0}' OK.", ne.DictionaryAssetName);
-        //}
+            m_LoadedFlag[ne.DictionaryAssetName] = true;
+            Log.Info("Load dictionary '{0}' OK.", ne.DictionaryAssetName);
+        }
 
-        //private void OnLoadDictionaryFailure(object sender, GameEventArgs e)
-        //{
-        //    LoadDictionaryFailureEventArgs ne = (LoadDictionaryFailureEventArgs)e;
-        //    if (ne.UserData != this)
-        //    {
-        //        return;
-        //    }
+        private void OnLoadDictionaryFailure(object sender, GameEventArgs e)
+        {
+            LoadDictionaryFailureEventArgs ne = (LoadDictionaryFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
 
-        //    Log.Error("Can not load dictionary '{0}' from '{1}' with error message '{2}'.", ne.DictionaryAssetName, ne.DictionaryAssetName, ne.ErrorMessage);
-        //}
+            Log.Error("Can not load dictionary '{0}' from '{1}' with error message '{2}'.", ne.DictionaryAssetName, ne.DictionaryAssetName, ne.ErrorMessage);
+        }
     }
 }
