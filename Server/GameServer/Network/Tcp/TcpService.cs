@@ -139,6 +139,7 @@ namespace Network
 
                 // 成功接收回调。
                 NetworkChannelAccept(channel);
+                Log.Info("Network channel '{0}' connected, remote address '{1}'.", channel.Id, e.AcceptSocket.RemoteEndPoint.ToString());
             }
             catch (Exception exception)
             {

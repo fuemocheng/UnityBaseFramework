@@ -9,11 +9,7 @@ namespace BaseFramework.Runtime
     {
         private string m_TextHelperTypeName = "BaseFramework.Runtime.DefaultTextHelper";
 
-        private string m_VersionHelperTypeName = "BaseFramework.Runtime.DefaultVersionHelper";
-
         private string m_LogHelperTypeName = "BaseFramework.Runtime.DefaultLogHelper";
-
-        private string m_CompressionHelperTypeName = "BaseFramework.Runtime.DefaultCompressionHelper";
 
         private string m_JsonHelperTypeName = "BaseFramework.Runtime.DefaultJsonHelper";
 
@@ -27,7 +23,6 @@ namespace BaseFramework.Runtime
 
             InitTextHelper();
             InitLogHelper();
-            InitCompressionHelper();
             InitJsonHelper();
         }
 
@@ -83,30 +78,6 @@ namespace BaseFramework.Runtime
             }
 
             BaseFrameworkLog.SetLogHelper(logHelper);
-        }
-
-        private void InitCompressionHelper()
-        {
-            if (string.IsNullOrEmpty(m_CompressionHelperTypeName))
-            {
-                return;
-            }
-
-            Type compressionHelperType = Utility.Assembly.GetType(m_CompressionHelperTypeName);
-            if (compressionHelperType == null)
-            {
-                Log.Error("Can not find compression helper type '{0}'.", m_CompressionHelperTypeName);
-                return;
-            }
-
-            Utility.Compression.ICompressionHelper compressionHelper = (Utility.Compression.ICompressionHelper)Activator.CreateInstance(compressionHelperType);
-            if (compressionHelper == null)
-            {
-                Log.Error("Can not create compression helper instance '{0}'.", m_CompressionHelperTypeName);
-                return;
-            }
-
-            Utility.Compression.SetCompressionHelper(compressionHelper);
         }
 
         private void InitJsonHelper()
