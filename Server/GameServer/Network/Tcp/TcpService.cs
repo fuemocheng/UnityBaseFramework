@@ -80,7 +80,11 @@ namespace Network
 
             // 异步操作是否挂起。false 表示没挂起，则立即执行；true 表示挂起，则等异步完成执行 OnComplete()。
             bool isPending = m_ListenSocket.AcceptAsync(m_InnArgs);
-            if (!isPending)
+            if (isPending)
+            {
+                return;
+            }
+            else
             {
                 OnAcceptComplete(m_InnArgs);
             }
