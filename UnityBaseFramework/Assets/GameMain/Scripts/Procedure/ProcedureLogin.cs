@@ -6,6 +6,8 @@ namespace XGame
 {
     public class ProcedureLogin : ProcedureBase
     {
+        private bool m_Connected = false;
+        private bool m_LoggedIn = false;
         private LoginForm m_LoginForm = null;
 
         public override bool UseNativeDialog
@@ -21,6 +23,7 @@ namespace XGame
             base.OnEnter(procedureOwner);
 
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Subscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
 
             GameEntry.UI.OpenUIForm(UIFormId.LoginForm, this);
         }
@@ -30,6 +33,7 @@ namespace XGame
             base.OnLeave(procedureOwner, isShutdown);
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Unsubscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
 
             if (m_LoginForm != null)
             {
@@ -52,6 +56,17 @@ namespace XGame
             }
 
             m_LoginForm = (LoginForm)ne.UIForm.Logic;
+        }
+
+        private void OnNetworkConnected(object sender, GameEventArgs e)
+        {
+            UnityBaseFramework.Runtime.NetworkConnectedEventArgs ne = (UnityBaseFramework.Runtime.NetworkConnectedEventArgs)e;
+            if (ne.NetworkChannel != GameEntry.NetworkExtended.TcpChannel)
+            {
+                return;
+            }
+            m_Connected = true;
+            m_LoginForm.Login();
         }
     }
 }

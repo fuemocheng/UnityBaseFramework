@@ -136,7 +136,7 @@ namespace XGame
             CSPacketHeader packetHeader = ReferencePool.Acquire<CSPacketHeader>();
             packetHeader.Id = packetImpl.Id;
             packetHeader.PacketLength = packetImpl.GetLength();
-            Serializer.Serialize(m_CachedStream, packetHeader);
+            Serializer.Serialize(m_CachedStream, packetHeader, packetHeader.GetType());
             ReferencePool.Release(packetHeader);
 
             Serializer.SerializeWithLengthPrefix(m_CachedStream, packet, PrefixStyle.Fixed32);
