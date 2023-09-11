@@ -15,37 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BaseFramework\BaseFramework.csproj" />
+    <PackageReference Include="protobuf-net" Version="3.2.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="protobuf-net.Core.dll">
-      <HintPath>Protobuf\protobuf-net.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net.Core.xml">
-      <HintPath>Protobuf\protobuf-net.Core.xml</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net.dll">
-      <HintPath>Protobuf\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net.xml">
-      <HintPath>Protobuf\protobuf-net.xml</HintPath>
-    </Reference>
-    <Reference Include="System.Buffers.dll">
-      <HintPath>Protobuf\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable.dll">
-      <HintPath>Protobuf\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory.dll">
-      <HintPath>Protobuf\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics.Vectors.dll">
-      <HintPath>Protobuf\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe.dll">
-      <HintPath>Protobuf\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\BaseFramework\BaseFramework.csproj" />
   </ItemGroup>
 
 </Project>
