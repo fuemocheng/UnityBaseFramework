@@ -9,11 +9,11 @@ using Network;
 
 namespace GameProto
 {
-    public partial class SCHeartBeatHandler : PacketHandlerBase
+    public partial class CSLoginVerifyHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            SCHeartBeat packetImpl = (SCHeartBeat)packet;
+            CSLoginVerify packetImpl = (CSLoginVerify)packet;
             Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
         }
     }

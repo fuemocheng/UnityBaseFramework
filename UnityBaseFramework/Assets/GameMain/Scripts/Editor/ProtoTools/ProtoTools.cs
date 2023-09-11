@@ -236,8 +236,8 @@ namespace XGame.Editor.Tools
                 sb.AppendLine($"    }}");
                 sb.AppendLine();
 
-                // SC的数据包的 PacketHandler 扩展类
-                if (pbClassName.StartsWith("SC"))
+                // CS的数据包的 PacketHandler 扩展类
+                if (pbClassName.StartsWith("CS"))
                 {
                     sb.AppendLine($"    public partial class {pbClassName}Handler : PacketHandlerBase");
                     sb.AppendLine($"    {{");
@@ -413,7 +413,7 @@ namespace XGame.Editor.Tools
             {
                 // 遍历每一行，获取预定义的 pb 类名
                 string pbClassName = line.Trim();
-                if (string.IsNullOrEmpty(pbClassName) || pbClassName.StartsWith("#") || !pbClassName.StartsWith("SC"))
+                if (string.IsNullOrEmpty(pbClassName) || pbClassName.StartsWith("#") || !pbClassName.StartsWith("CS"))
                     continue;
 
                 string handlerPath = $"{handlerDir}/{pbClassName}Handler.cs";
