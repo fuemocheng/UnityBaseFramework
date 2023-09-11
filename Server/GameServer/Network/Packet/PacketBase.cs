@@ -1,5 +1,5 @@
 ﻿using ProtoBuf;
-using System;
+
 namespace Network
 {
     public abstract class PacketBase : Packet, IExtensible
@@ -14,11 +14,6 @@ namespace Network
         public abstract PacketType PacketType
         {
             get;
-        }
-
-        public int GetLength()
-        {
-            return m_ExtensionObject != null ? m_ExtensionObject.GetLength() : 0;
         }
 
         IExtension IExtensible.GetExtensionObject(bool createIfMissing)

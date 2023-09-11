@@ -15,7 +15,8 @@ namespace XGame
     public class NetworkChannelHelper : INetworkChannelHelper
     {
         private readonly Dictionary<int, Type> m_ServerToClientPacketTypes = new Dictionary<int, Type>();
-        private readonly MemoryStream m_CachedStream = new MemoryStream(1024 * 8);
+        private readonly MemoryStream m_HeaderCachedStream = new MemoryStream(4 + 5 + 5);
+        private readonly MemoryStream m_PacketCachedStream = new MemoryStream(1024 * 8);
         private INetworkChannel m_NetworkChannel = null;
 
         /// <summary>
@@ -25,7 +26,8 @@ namespace XGame
         {
             get
             {
-                return sizeof(int);
+                // 4(预留长度) + 5(Fixed32 + 1) + 5(Fixed32 + 1)
+                return 14;
             }
         }
 
@@ -130,19 +132,28 @@ namespace XGame
                 return false;
             }
 
-            m_CachedStream.SetLength(m_CachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
-            m_CachedStream.Position = 0L;
+            m_HeaderCachedStream.SetLength(m_HeaderCachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
+            m_HeaderCachedStream.Position = 0L;
 
+            m_PacketCachedStream.SetLength(m_PacketCachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
+            m_PacketCachedStream.Position = 0L;
+
+            // 先将消息序列化到缓存。
+            RuntimeTypeModel.Default.SerializeWithLengthPrefix(m_PacketCachedStream, packet, packet.GetType(), PrefixStyle.Fixed32, 0);
+            
+            // 再将序列化后的长度保存在Header中，然后将Header序列化到缓存。
             CSPacketHeader packetHeader = ReferencePool.Acquire<CSPacketHeader>();
             packetHeader.Id = packetImpl.Id;
-            packetHeader.PacketLength = packetImpl.GetLength();
-            Serializer.Serialize(m_CachedStream, packetHeader, packetHeader.GetType());
+            packetHeader.PacketLength = (int)m_PacketCachedStream.Length;
+            RuntimeTypeModel.Default.SerializeWithLengthPrefix(m_HeaderCachedStream, packetHeader, packetHeader.GetType(), PrefixStyle.Fixed32, 0);
+            
+            // 释放 Header 和 Packet。
             ReferencePool.Release(packetHeader);
-
-            Serializer.SerializeWithLengthPrefix(m_CachedStream, packet, PrefixStyle.Fixed32);
             ReferencePool.Release((IReference)packet);
 
-            m_CachedStream.WriteTo(destination);
+            // 先将Header缓存写入目标流，再消息缓存写入目标流。
+            m_HeaderCachedStream.WriteTo(destination);
+            m_PacketCachedStream.WriteTo(destination);
             return true;
         }
 
@@ -156,7 +167,7 @@ namespace XGame
         {
             // 注意：此函数并不在主线程调用！
             customErrorData = null;
-            return (IPacketHeader)RuntimeTypeModel.Default.Deserialize(source, (object)ReferencePool.Acquire<SCPacketHeader>(), typeof(SCPacketHeader));
+            return (IPacketHeader)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(source, ReferencePool.Acquire<SCPacketHeader>(), typeof(SCPacketHeader), PrefixStyle.Fixed32, 0);
         }
 
         /// <summary>

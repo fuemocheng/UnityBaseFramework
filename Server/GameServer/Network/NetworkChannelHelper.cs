@@ -4,6 +4,8 @@ using ProtoBuf.Meta;
 using BaseFramework;
 using BaseFramework.Event;
 using BaseFramework.Runtime;
+using Network;
+using GameProto;
 
 namespace Network
 {
@@ -11,7 +13,8 @@ namespace Network
     {
         private readonly Dictionary<int, Type> m_PacketTypes = new();
         private readonly Dictionary<int, IPacketHandler> m_PacketHandlerTypes = new();
-        private readonly MemoryStream m_CachedStream = new MemoryStream(1024 * 8);
+        private readonly MemoryStream m_HeaderCachedStream = new MemoryStream(4 + 5 + 5);
+        private readonly MemoryStream m_PacketCachedStream = new MemoryStream(1024 * 8);
 
         /// <summary>
         /// 获取消息包头长度。
@@ -20,7 +23,8 @@ namespace Network
         {
             get
             {
-                return sizeof(int);
+                // 4(预留长度) + 5(Fixed32 + 1) + 5(Fixed32 + 1)
+                return 14;
             }
         }
 
@@ -30,7 +34,7 @@ namespace Network
         public void Initialize()
         {
             // 反射注册包和包处理函数。
-            Type packetBaseType = typeof(PacketBase);
+            Type packetBaseType = typeof(CSPacketBase);
             Type packetHandlerBaseType = typeof(PacketHandlerBase);
             Assembly assembly = Assembly.GetExecutingAssembly();
             Type[] types = assembly.GetTypes();
@@ -108,19 +112,28 @@ namespace Network
                 return false;
             }
 
-            m_CachedStream.SetLength(m_CachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
-            m_CachedStream.Position = 0L;
+            m_HeaderCachedStream.SetLength(m_HeaderCachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
+            m_HeaderCachedStream.Position = 0L;
 
+            m_PacketCachedStream.SetLength(m_PacketCachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
+            m_PacketCachedStream.Position = 0L;
+
+            // 先将消息序列化到缓存。
+            RuntimeTypeModel.Default.SerializeWithLengthPrefix(m_PacketCachedStream, packet, packet.GetType(), PrefixStyle.Fixed32, 0);
+
+            // 再将序列化后的长度保存在Header中，然后将Header序列化到缓存。
             CSPacketHeader packetHeader = ReferencePool.Acquire<CSPacketHeader>();
             packetHeader.Id = packetImpl.Id;
-            packetHeader.PacketLength = packetImpl.GetLength();
-            Serializer.Serialize(m_CachedStream, packetHeader);
-            ReferencePool.Release(packetHeader);
+            packetHeader.PacketLength = (int)m_PacketCachedStream.Length;
+            RuntimeTypeModel.Default.SerializeWithLengthPrefix(m_HeaderCachedStream, packetHeader, packetHeader.GetType(), PrefixStyle.Fixed32, 0);
 
-            Serializer.SerializeWithLengthPrefix(m_CachedStream, packet, PrefixStyle.Fixed32);
+            // 释放 Header 和 Packet。
+            ReferencePool.Release(packetHeader);
             ReferencePool.Release((IReference)packet);
 
-            m_CachedStream.WriteTo(destination);
+            // 先将Header缓存写入目标流，再消息缓存写入目标流。
+            m_HeaderCachedStream.WriteTo(destination);
+            m_PacketCachedStream.WriteTo(destination);
             return true;
         }
 
@@ -133,7 +146,7 @@ namespace Network
         public IPacketHeader DeserializePacketHeader(Stream source)
         {
             // 注意：此函数并不在主线程调用！
-            return (IPacketHeader)RuntimeTypeModel.Default.Deserialize(source, (object)ReferencePool.Acquire<SCPacketHeader>(), typeof(SCPacketHeader));
+            return (IPacketHeader)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(source, (object)ReferencePool.Acquire<CSPacketHeader>(), typeof(CSPacketHeader), PrefixStyle.Fixed32, 0);
         }
 
         /// <summary>
@@ -146,24 +159,24 @@ namespace Network
         public Packet DeserializePacket(IPacketHeader packetHeader, Stream source)
         {
             // 注意：此函数并不在主线程调用！
-            SCPacketHeader scPacketHeader = packetHeader as SCPacketHeader;
-            if (scPacketHeader == null)
+            CSPacketHeader csPacketHeader = packetHeader as CSPacketHeader;
+            if (csPacketHeader == null)
             {
                 Log.Warning("Packet header is invalid.");
                 return null;
             }
 
             Packet packet = null;
-            if (scPacketHeader.IsValid)
+            if (csPacketHeader.IsValid)
             {
-                Type packetType = GetPacketType(scPacketHeader.Id);
+                Type packetType = GetPacketType(csPacketHeader.Id);
                 if (packetType != null)
                 {
                     packet = (Packet)RuntimeTypeModel.Default.DeserializeWithLengthPrefix(source, ReferencePool.Acquire(packetType), packetType, PrefixStyle.Fixed32, 0);
                 }
                 else
                 {
-                    Log.Warning("Can not deserialize packet for packet id '{0}'.", scPacketHeader.Id.ToString());
+                    Log.Warning("Can not deserialize packet for packet id '{0}'.", csPacketHeader.Id.ToString());
                 }
             }
             else
@@ -171,7 +184,7 @@ namespace Network
                 Log.Warning("Packet header is invalid.");
             }
 
-            ReferencePool.Release(scPacketHeader);
+            ReferencePool.Release(csPacketHeader);
             return packet;
         }
 

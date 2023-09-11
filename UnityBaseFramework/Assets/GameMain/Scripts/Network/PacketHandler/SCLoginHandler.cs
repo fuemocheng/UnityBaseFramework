@@ -4,16 +4,17 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
-using BaseFramework.Runtime;
-using Network;
+using BaseFramework.Network;
+using UnityBaseFramework.Runtime;
+using XGame;
 
 namespace GameProto
 {
-    public partial class CSLoginVerifyHandler : PacketHandlerBase
+    public partial class SCLoginHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            CSLoginVerify packetImpl = (CSLoginVerify)packet;
+            SCLogin packetImpl = (SCLogin)packet;
             Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
         }
     }

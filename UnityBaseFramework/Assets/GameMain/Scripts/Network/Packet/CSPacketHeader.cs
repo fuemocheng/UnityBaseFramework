@@ -1,16 +1,16 @@
-﻿using ProtoBuf;
-using Network;
+using ProtoBuf;
+using XGame;
 
 namespace GameProto
 {
     [ProtoContract]
-    public sealed class SCPacketHeader : PacketHeaderBase
+    public sealed class CSPacketHeader : PacketHeaderBase
     {
         public override PacketType PacketType
         {
             get
             {
-                return PacketType.ServerToClient;
+                return PacketType.ClientToServer;
             }
         }
 

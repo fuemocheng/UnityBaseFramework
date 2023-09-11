@@ -1,5 +1,5 @@
-﻿using ProtoBuf;
-using Network;
+using ProtoBuf;
+using XGame;
 
 namespace GameProto
 {

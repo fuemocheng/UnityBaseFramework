@@ -17,6 +17,11 @@ namespace GameProto
         }
     }
 
+    public partial class CSHeartBeatHandler : PacketHandlerBase
+    {
+        public override int Id => 1;
+    }
+
     public partial class SCHeartBeat : SCPacketBase
     {
         public override int Id => 2;
@@ -26,12 +31,7 @@ namespace GameProto
         }
     }
 
-    public partial class SCHeartBeatHandler : PacketHandlerBase
-    {
-        public override int Id => 2;
-    }
-
-    public partial class CSLoginVerify : CSPacketBase
+    public partial class CSLogin : CSPacketBase
     {
         public override int Id => 3;
 
@@ -42,7 +42,12 @@ namespace GameProto
         }
     }
 
-    public partial class SCLoginVerify : SCPacketBase
+    public partial class CSLoginHandler : PacketHandlerBase
+    {
+        public override int Id => 3;
+    }
+
+    public partial class SCLogin : SCPacketBase
     {
         public override int Id => 4;
 
@@ -50,11 +55,6 @@ namespace GameProto
         {
             State = 0;
         }
-    }
-
-    public partial class SCLoginVerifyHandler : PacketHandlerBase
-    {
-        public override int Id => 4;
     }
 
 }

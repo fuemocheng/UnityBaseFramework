@@ -9,13 +9,13 @@ namespace Network
             get;
         }
 
-        public int Id
+        public virtual int Id
         {
             get;
             set;
         }
 
-        public int PacketLength
+        public virtual int PacketLength
         {
             get;
             set;

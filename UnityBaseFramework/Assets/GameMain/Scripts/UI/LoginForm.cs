@@ -1,11 +1,10 @@
-using UnityEngine;
+using System.Net;
+using BaseFramework;
+using BaseFramework.Network;
 using UnityBaseFramework.Runtime;
 using UnityEngine.UI;
-using BaseFramework.Network;
-using System.Net;
-using GameProto;
-using BaseFramework;
 using TMPro;
+using GameProto;
 
 namespace XGame
 {
@@ -80,7 +79,7 @@ namespace XGame
                 Log.Error("Cannot Login, tcpChannel is null.");
                 return;
             }
-            CSLoginVerify loginVerify = ReferencePool.Acquire<CSLoginVerify>();
+            CSLogin loginVerify = ReferencePool.Acquire<CSLogin>();
             loginVerify.Account = m_InputAccount.text;
             loginVerify.Password = m_InputPassword.text;
             tcpChannel.Send(loginVerify);

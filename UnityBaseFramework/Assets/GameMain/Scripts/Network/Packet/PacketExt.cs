@@ -31,7 +31,7 @@ namespace GameProto
         public override int Id => 2;
     }
 
-    public partial class CSLoginVerify : CSPacketBase
+    public partial class CSLogin : CSPacketBase
     {
         public override int Id => 3;
 
@@ -42,7 +42,7 @@ namespace GameProto
         }
     }
 
-    public partial class SCLoginVerify : SCPacketBase
+    public partial class SCLogin : SCPacketBase
     {
         public override int Id => 4;
 
@@ -52,7 +52,7 @@ namespace GameProto
         }
     }
 
-    public partial class SCLoginVerifyHandler : PacketHandlerBase
+    public partial class SCLoginHandler : PacketHandlerBase
     {
         public override int Id => 4;
     }
