@@ -16,6 +16,8 @@ namespace Network
         public Action<NetworkChannelBase, NetworkErrorCode, SocketError, string> NetworkChannelError;
         public Action<NetworkChannelBase, object> NetworkChannelCustomError;
 
+        public abstract void Update(float elapseSeconds, float realElapseSeconds);
+
         public abstract void Dispose();
 
         public abstract bool Send<T>(T packet) where T : Packet;

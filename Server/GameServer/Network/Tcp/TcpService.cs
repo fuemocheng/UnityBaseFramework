@@ -13,7 +13,7 @@ namespace Network
         private Socket m_ListenSocket;
         private INetworkChannelHelper m_ChannelHelper;
         private readonly SocketAsyncEventArgs m_InnArgs = new();
-        private readonly Dictionary<long, TcpChannel> m_Channels = new();
+        private readonly Dictionary<long, TcpChannel> m_NetworkChannels = new();
         public ConcurrentQueue<TcpProcessingArgs> ProcessingQueue = new();
 
         private bool m_Disposed = false;
@@ -55,19 +55,18 @@ namespace Network
             {
                 return;
             }
+            m_Disposed = true;
 
             m_ListenSocket?.Dispose();
             m_ListenSocket = null;
             m_InnArgs?.Dispose();
 
-            foreach (long id in m_Channels.Keys.ToArray())
+            foreach (long id in m_NetworkChannels.Keys.ToArray())
             {
-                TcpChannel channel = m_Channels[id];
+                TcpChannel channel = m_NetworkChannels[id];
                 channel.Dispose();
             }
-            m_Channels.Clear();
-
-            m_Disposed = true;
+            m_NetworkChannels.Clear();
         }
 
         #region Accept 接受连接
@@ -133,13 +132,16 @@ namespace Network
                 long id = CreateAcceptChannelId(0);
                 TcpChannel channel = new TcpChannel(id, e.AcceptSocket, this, m_ChannelHelper);
                 channel.NetworkChannelConnected += OnNetworkChannelConnected;
+                channel.NetworkChannelMissHeartBeat += OnNetworkChannelMissHeartBeat;
                 channel.NetworkChannelError += OnNetworkChannelError;
 
-                m_Channels.Add(channel.Id, channel);
+                m_NetworkChannels.Add(channel.Id, channel);
 
                 // 成功接收回调。
-                NetworkChannelAccept(channel);
-                Log.Info("Network channel '{0}' connected, remote address '{1}'.", channel.Id, e.AcceptSocket.RemoteEndPoint.ToString());
+                if (NetworkChannelAccept != null)
+                {
+                    NetworkChannelAccept(channel, e);
+                }
             }
             catch (Exception exception)
             {
@@ -155,7 +157,7 @@ namespace Network
         /// 更新处理队列事件。
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public override void Update()
+        public override void Update(float elapseSeconds, float realElapseSeconds)
         {
             while (true)
             {
@@ -247,21 +249,26 @@ namespace Network
                         throw new ArgumentOutOfRangeException($"{e.LastOperation}");
                 }
             }
+
+            foreach (KeyValuePair<long, TcpChannel> tcpChannel in m_NetworkChannels)
+            {
+                tcpChannel.Value.Update(elapseSeconds, realElapseSeconds);
+            }
         }
 
         public override NetworkChannelBase GetChannel(long id)
         {
-            m_Channels.TryGetValue(id, out TcpChannel channel);
+            m_NetworkChannels.TryGetValue(id, out TcpChannel channel);
             return channel;
         }
 
         public override void RemoveChannel(long id)
         {
-            if (m_Channels.TryGetValue(id, out TcpChannel channel))
+            if (m_NetworkChannels.TryGetValue(id, out TcpChannel channel))
             {
                 channel.Dispose();
             }
-            m_Channels.Remove(id);
+            m_NetworkChannels.Remove(id);
         }
 
         /// <summary>
@@ -271,7 +278,23 @@ namespace Network
         /// <param name="arg">ConnectState</param>
         public void OnNetworkChannelConnected(NetworkChannelBase channel, object arg)
         {
-            NetworkChannelConnected(channel, arg);
+            if (NetworkChannelConnected != null)
+            {
+                NetworkChannelConnected(channel, arg);
+            }
+        }
+
+        /// <summary>
+        /// 心跳丢失回调。
+        /// </summary>
+        /// <param name="channel">NetworkChannelBase</param>
+        /// <param name="arg">ConnectState</param>
+        public void OnNetworkChannelMissHeartBeat(NetworkChannelBase channel, int missHeartBeatCount)
+        {
+            if (NetworkChannelMissHeartBeat != null)
+            {
+                NetworkChannelMissHeartBeat(channel, missHeartBeatCount);
+            }
         }
 
         /// <summary>
@@ -283,8 +306,23 @@ namespace Network
         /// <param name="error"></param>
         public void OnNetworkChannelError(NetworkChannelBase channel, NetworkErrorCode errorCode, SocketError socketError, string error)
         {
-            RemoveChannel(channel.Id);
-            NetworkChannelError(channel, errorCode, socketError, error);
+            if (NetworkChannelError != null)
+            {
+                NetworkChannelError(channel, errorCode, socketError, error);
+            }
+        }
+
+        /// <summary>
+        /// 网络信道自定义错误。
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="arg"></param>
+        public void OnNetworkChannelCustomError(NetworkChannelBase channel, object arg)
+        {
+            if (NetworkChannelCustomError != null)
+            {
+                NetworkChannelCustomError(channel, arg);
+            }
         }
     }
 }

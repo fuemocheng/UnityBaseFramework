@@ -24,6 +24,17 @@
         void Shutdown();
 
         /// <summary>
+        /// 准备进行连接。
+        /// </summary>
+        void PrepareForConnecting(NetworkChannelBase channel);
+
+        /// <summary>
+        /// 发送心跳消息包。
+        /// </summary>
+        /// <returns>是否发送心跳消息包成功。</returns>
+        bool SendHeartBeat(NetworkChannelBase channel);
+
+        /// <summary>
         /// 序列化消息包。
         /// </summary>
         /// <typeparam name="T">消息包类型。</typeparam>

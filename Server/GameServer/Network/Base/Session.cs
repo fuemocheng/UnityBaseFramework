@@ -1,4 +1,5 @@
 ﻿using BaseFramework;
+using GameProto;
 
 namespace Network
 {
@@ -44,12 +45,11 @@ namespace Network
             {
                 return;
             }
+            m_Disposed = true;
 
             Id = 0;
             m_Channel.Dispose();
             m_Channel = null;
-
-            m_Disposed = true;
         }
 
         public bool Send<T>(T packet) where T : Packet
@@ -59,6 +59,17 @@ namespace Network
                 throw new BaseFrameworkException($"Session.Send Channel is null.");
             }
             return m_Channel.Send(packet);
+        }
+
+
+        /// <summary>
+        /// 发送心跳消息包。
+        /// </summary>
+        /// <returns>是否发送心跳消息包成功。</returns>
+        public bool SendHeartBeat()
+        {
+            Send(ReferencePool.Acquire<SCHeartBeat>());
+            return true;
         }
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace XGame
 
         private void OnNetworkConnected(object sender, GameEventArgs e)
         {
-            UnityBaseFramework.Runtime.NetworkConnectedEventArgs ne = (UnityBaseFramework.Runtime.NetworkConnectedEventArgs)e;
+            NetworkConnectedEventArgs ne = (NetworkConnectedEventArgs)e;
             if (ne.NetworkChannel != GameEntry.NetworkExtended.TcpChannel)
             {
                 return;

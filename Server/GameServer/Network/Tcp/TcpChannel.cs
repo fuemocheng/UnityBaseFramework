@@ -30,6 +30,11 @@ namespace Network
         private bool m_IsConnected;
         private bool m_IsSending;
 
+        private const float DefaultHeartBeatInterval = 30f;
+        private readonly HeartBeatState m_HeartBeatState;
+        private bool m_ResetHeartBeatElapseSecondsWhenReceivePacket;
+        private float m_HeartBeatInterval;
+
         private bool m_Disposed = false;
 
         /// <summary>
@@ -64,8 +69,13 @@ namespace Network
             m_SendState.Reset();
             m_ReceiveState.PrepareForPacketHeader(m_NetworkChannelHelper.PacketHeaderLength);
 
+            m_HeartBeatState = new();
+            m_HeartBeatInterval = DefaultHeartBeatInterval;
+            m_ResetHeartBeatElapseSecondsWhenReceivePacket = false;
+
             m_IsConnected = false;
             m_IsSending = false;
+
 
             m_Disposed = false;
 
@@ -104,7 +114,12 @@ namespace Network
             m_SendState.Reset();
             m_ReceiveState.PrepareForPacketHeader(m_NetworkChannelHelper.PacketHeaderLength);
 
-            m_IsConnected = false;
+            m_HeartBeatState = new();
+            m_HeartBeatInterval = DefaultHeartBeatInterval;
+            m_ResetHeartBeatElapseSecondsWhenReceivePacket = false;
+
+            // 接收到远程主机的连接。
+            m_IsConnected = true;
             m_IsSending = false;
 
             m_Disposed = false;
@@ -119,6 +134,7 @@ namespace Network
             {
                 return;
             }
+            m_Disposed = true;
 
             Log.Info($"TChannel dispose: {Id} {m_RemoteEndPoint}");
 
@@ -131,17 +147,51 @@ namespace Network
 
             long tId = Id;
             Id = 0;
-            m_Service.RemoveChannel(tId);
-            m_Socket.Close();
-            m_InnArgs.Dispose();
-            m_OutArgs.Dispose();
+            m_Service?.RemoveChannel(tId);
+            m_Socket?.Close();
+            m_InnArgs?.Dispose();
+            m_OutArgs?.Dispose();
             m_InnArgs = null;
             m_OutArgs = null;
             m_Socket = null;
 
-            m_Disposed = true;
+            m_IsConnected = false;
+
         }
 
+        public override void Update(float elapseSeconds, float realElapseSeconds)
+        {
+            if (m_HeartBeatInterval > 0)
+            {
+                bool sendHeartBeat = false;
+                int missHeartBeatCount = 0;
+                lock (m_HeartBeatState)
+                {
+                    if (m_Socket == null)
+                    {
+                        return;
+                    }
+
+                    m_HeartBeatState.HeartBeatElapseSeconds += realElapseSeconds;
+                    if (m_HeartBeatState.HeartBeatElapseSeconds >= m_HeartBeatInterval)
+                    {
+                        sendHeartBeat = true;
+                        missHeartBeatCount = m_HeartBeatState.MissHeartBeatCount;
+                        m_HeartBeatState.HeartBeatElapseSeconds = 0f;
+                        m_HeartBeatState.MissHeartBeatCount++;
+                    }
+                }
+
+                // 服务器只需接收客户端的心跳，指定时间内没有收到就当作断开连接。
+                if (sendHeartBeat /*&& m_NetworkChannelHelper.SendHeartBeat(this)*/)
+                {
+                    if (missHeartBeatCount > 0 && NetworkChannelMissHeartBeat != null)
+                    {
+                        NetworkChannelMissHeartBeat(this, missHeartBeatCount);
+                    }
+                }
+            }
+        }
 
         #region CallBack Event
         /// <summary>
@@ -184,15 +234,21 @@ namespace Network
         {
             if (m_Socket == null)
             {
-                string errorMessage = $"TChannel.OnConnectComplete Socket is null.";
-                NetworkChannelError(this, NetworkErrorCode.ConnectError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = $"TChannel.OnConnectComplete Socket is null.";
+                    NetworkChannelError(this, NetworkErrorCode.ConnectError, e.SocketError, errorMessage);
+                }
                 return;
             }
 
             if (e.SocketError != SocketError.Success)
             {
-                string errorMessage = $"TChannel.OnConnectComplete SocketError : {e.SocketError}";
-                NetworkChannelError(this, NetworkErrorCode.ConnectError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = $"TChannel.OnConnectComplete SocketError : {e.SocketError}";
+                    NetworkChannelError(this, NetworkErrorCode.ConnectError, e.SocketError, errorMessage);
+                }
                 return;
             }
 
@@ -203,7 +259,10 @@ namespace Network
             m_IsConnected = true;
 
             // 连接远程主机回调。
-            NetworkChannelConnected(this, new ConnectState(e.ConnectSocket, null));
+            if (NetworkChannelConnected != null)
+            {
+                NetworkChannelConnected(this, new ConnectState(e.ConnectSocket, null));
+            }
 
             // 开始接收、发送消息。
             m_Service.ProcessingQueue.Enqueue(new TcpProcessingArgs { ChannelId = Id, TcpOperation = TcpOperation.StartRecv });
@@ -216,8 +275,11 @@ namespace Network
         /// <param name="e"></param>
         public void OnDisconnectComplete(SocketAsyncEventArgs e)
         {
-            string errorMessage = $"TChannel.OnDisconnectComplete Disconnected : {e.SocketError}";
-            NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+            if (NetworkChannelError != null)
+            {
+                string errorMessage = $"TChannel.OnDisconnectComplete Disconnected : {e.SocketError}";
+                NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+            }
         }
         #endregion
 
@@ -248,8 +310,11 @@ namespace Network
                 catch (Exception e)
                 {
                     Log.Error($"TChannel.StartRecv SetBuffer Error : {this.Id} {m_RemoteEndPoint} {e}");
-                    string errorMessage = $"TChannel.StartRecv Exception : {e.Message}";
-                    NetworkChannelError(this, NetworkErrorCode.ReceiveError, SocketError.SocketError, errorMessage);
+                    if (NetworkChannelError != null)
+                    {
+                        string errorMessage = $"TChannel.StartRecv Exception : {e.Message}";
+                        NetworkChannelError(this, NetworkErrorCode.ReceiveError, SocketError.SocketError, errorMessage);
+                    }
                     return;
                 }
 
@@ -288,22 +353,28 @@ namespace Network
         /// <param name="e"></param>
         private void HandleRecv(SocketAsyncEventArgs e)
         {
-            if (m_Socket == null || !m_Socket.Connected)
+            if (m_Socket == null)
             {
                 return;
             }
 
             if (e.SocketError != SocketError.Success)
             {
-                string errorMessage = $"TChannel.HandleRecv SocketError : {e.SocketError}";
-                NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = $"TChannel.HandleRecv SocketError : {e.SocketError}";
+                    NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                }
                 return;
             }
 
             if (e.BytesTransferred == 0)
             {
-                string errorMessage = "TChannel.HandleRecv e.BytesTransferred is 0.";
-                NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = "TChannel.HandleRecv e.BytesTransferred is 0，client closed connection";
+                    NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                }
                 return;
             }
 
@@ -317,7 +388,7 @@ namespace Network
             //while (true)
             //{
             //    // 这里循环解析消息执行，有可能，执行消息的过程中断开了session
-            //    if (m_Socket == null || !m_Socket.Connected)
+            //    if (m_Socket == null)
             //    {
             //        return;
             //    }
@@ -409,10 +480,10 @@ namespace Network
 
         private bool ProcessPacket()
         {
-            //lock (m_HeartBeatState)
-            //{
-            //    m_HeartBeatState.Reset(m_ResetHeartBeatElapseSecondsWhenReceivePacket);
-            //}
+            lock (m_HeartBeatState)
+            {
+                m_HeartBeatState.Reset(m_ResetHeartBeatElapseSecondsWhenReceivePacket);
+            }
 
             try
             {
@@ -553,7 +624,7 @@ namespace Network
         /// <exception cref="Exception"></exception>
         public void StartSend()
         {
-            if (!m_IsConnected || !m_Socket.Connected)
+            if (!m_IsConnected)
             {
                 return;
             }
@@ -567,7 +638,7 @@ namespace Network
             {
                 try
                 {
-                    if (m_Socket == null || !m_Socket.Connected)
+                    if (m_Socket == null)
                     {
                         m_IsSending = false;
                         return;
@@ -647,15 +718,21 @@ namespace Network
 
             if (e.SocketError != SocketError.Success)
             {
-                string errorMessage = $"TChannel.HandleSend SocketError : {e.SocketError}";
-                NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = $"TChannel.HandleSend SocketError : {e.SocketError}";
+                    NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                }
                 return;
             }
 
             if (e.BytesTransferred == 0)
             {
-                string errorMessage = "TChannel.HandleRecv e.BytesTransferred is 0.";
-                NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                if (NetworkChannelError != null)
+                {
+                    string errorMessage = "TChannel.HandleRecv e.BytesTransferred is 0.";
+                    NetworkChannelError(this, NetworkErrorCode.SocketError, e.SocketError, errorMessage);
+                }
                 return;
             }
 

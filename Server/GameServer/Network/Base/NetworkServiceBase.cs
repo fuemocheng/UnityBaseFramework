@@ -6,9 +6,11 @@ namespace Network
     {
         public long Id { get; set; }
 
-        public Action<NetworkChannelBase> NetworkChannelAccept;
+        public Action<NetworkChannelBase, object> NetworkChannelAccept;
         public Action<NetworkChannelBase, object> NetworkChannelConnected;
+        public Action<NetworkChannelBase, int> NetworkChannelMissHeartBeat;
         public Action<NetworkChannelBase, NetworkErrorCode, SocketError, string> NetworkChannelError;
+        public Action<NetworkChannelBase, object> NetworkChannelCustomError;
 
         #region IdGenerater
         private long m_AcceptIdGenerater = 1;
@@ -30,7 +32,7 @@ namespace Network
         }
         #endregion
 
-        public abstract void Update();
+        public abstract void Update(float elapseSeconds, float realElapseSeconds);
 
         public abstract NetworkChannelBase GetChannel(long id);
 

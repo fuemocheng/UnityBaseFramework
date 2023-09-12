@@ -91,6 +91,25 @@ namespace Network
         }
 
         /// <summary>
+        /// 准备进行连接。
+        /// </summary>
+        public void PrepareForConnecting(NetworkChannelBase networkChannel)
+        {
+            //networkChannel.Socket.ReceiveBufferSize = 1024 * 64;
+            //networkChannel.Socket.SendBufferSize = 1024 * 64;
+        }
+
+        /// <summary>
+        /// 发送心跳消息包。
+        /// </summary>
+        /// <returns>是否发送心跳消息包成功。</returns>
+        public bool SendHeartBeat(NetworkChannelBase networkChannel)
+        {
+            networkChannel.Send(ReferencePool.Acquire<SCHeartBeat>());
+            return true;
+        }
+
+        /// <summary>
         /// 序列化消息包。
         /// </summary>
         /// <typeparam name="T">消息包类型。</typeparam>
@@ -106,7 +125,7 @@ namespace Network
                 return false;
             }
 
-            if (packetImpl.PacketType != PacketType.ClientToServer)
+            if (packetImpl.PacketType != PacketType.ServerToClient)
             {
                 Log.Warning("Send packet invalid.");
                 return false;
@@ -210,66 +229,66 @@ namespace Network
             return null;
         }
 
-        private void OnNetworkConnected(object sender, GameEventArgs e)
-        {
-            //UnityBaseFramework.Runtime.NetworkConnectedEventArgs ne = (UnityBaseFramework.Runtime.NetworkConnectedEventArgs)e;
-            //if (ne.NetworkChannel != m_NetworkChannel)
-            //{
-            //    return;
-            //}
+        //private void OnNetworkConnected(object sender, GameEventArgs e)
+        //{
+        //    UnityBaseFramework.Runtime.NetworkConnectedEventArgs ne = (UnityBaseFramework.Runtime.NetworkConnectedEventArgs)e;
+        //    if (ne.NetworkChannel != m_NetworkChannel)
+        //    {
+        //        return;
+        //    }
 
-            //Log.Info("Network channel '{0}' connected, local address '{1}', remote address '{2}'.", ne.NetworkChannel.Name, ne.NetworkChannel.Socket.LocalEndPoint.ToString(), ne.NetworkChannel.Socket.RemoteEndPoint.ToString());
-        }
+        //    Log.Info("Network channel '{0}' connected, local address '{1}', remote address '{2}'.", ne.NetworkChannel.Name, ne.NetworkChannel.Socket.LocalEndPoint.ToString(), ne.NetworkChannel.Socket.RemoteEndPoint.ToString());
+        //}
 
-        private void OnNetworkClosed(object sender, GameEventArgs e)
-        {
-            //UnityBaseFramework.Runtime.NetworkClosedEventArgs ne = (UnityBaseFramework.Runtime.NetworkClosedEventArgs)e;
-            //if (ne.NetworkChannel != m_NetworkChannel)
-            //{
-            //    return;
-            //}
+        //private void OnNetworkClosed(object sender, GameEventArgs e)
+        //{
+        //    UnityBaseFramework.Runtime.NetworkClosedEventArgs ne = (UnityBaseFramework.Runtime.NetworkClosedEventArgs)e;
+        //    if (ne.NetworkChannel != m_NetworkChannel)
+        //    {
+        //        return;
+        //    }
 
-            //Log.Info("Network channel '{0}' closed.", ne.NetworkChannel.Name);
-        }
+        //    Log.Info("Network channel '{0}' closed.", ne.NetworkChannel.Name);
+        //}
 
-        private void OnNetworkMissHeartBeat(object sender, GameEventArgs e)
-        {
-            //UnityBaseFramework.Runtime.NetworkMissHeartBeatEventArgs ne = (UnityBaseFramework.Runtime.NetworkMissHeartBeatEventArgs)e;
-            //if (ne.NetworkChannel != m_NetworkChannel)
-            //{
-            //    return;
-            //}
+        //private void OnNetworkMissHeartBeat(object sender, GameEventArgs e)
+        //{
+        //    UnityBaseFramework.Runtime.NetworkMissHeartBeatEventArgs ne = (UnityBaseFramework.Runtime.NetworkMissHeartBeatEventArgs)e;
+        //    if (ne.NetworkChannel != m_NetworkChannel)
+        //    {
+        //        return;
+        //    }
 
-            //Log.Info("Network channel '{0}' miss heart beat '{1}' times.", ne.NetworkChannel.Name, ne.MissCount.ToString());
+        //    Log.Info("Network channel '{0}' miss heart beat '{1}' times.", ne.NetworkChannel.Name, ne.MissCount.ToString());
 
-            //if (ne.MissCount < 2)
-            //{
-            //    return;
-            //}
+        //    if (ne.MissCount < 2)
+        //    {
+        //        return;
+        //    }
 
-            //ne.NetworkChannel.Close();
-        }
+        //    ne.NetworkChannel.Close();
+        //}
 
-        private void OnNetworkError(object sender, GameEventArgs e)
-        {
-            //UnityBaseFramework.Runtime.NetworkErrorEventArgs ne = (UnityBaseFramework.Runtime.NetworkErrorEventArgs)e;
-            //if (ne.NetworkChannel != m_NetworkChannel)
-            //{
-            //    return;
-            //}
+        //private void OnNetworkError(object sender, GameEventArgs e)
+        //{
+        //    UnityBaseFramework.Runtime.NetworkErrorEventArgs ne = (UnityBaseFramework.Runtime.NetworkErrorEventArgs)e;
+        //    if (ne.NetworkChannel != m_NetworkChannel)
+        //    {
+        //        return;
+        //    }
 
-            //Log.Info("Network channel '{0}' error, error code is '{1}', error message is '{2}'.", ne.NetworkChannel.Name, ne.ErrorCode.ToString(), ne.ErrorMessage);
+        //    Log.Info("Network channel '{0}' error, error code is '{1}', error message is '{2}'.", ne.NetworkChannel.Name, ne.ErrorCode.ToString(), ne.ErrorMessage);
 
-            //ne.NetworkChannel.Close();
-        }
+        //    ne.NetworkChannel.Close();
+        //}
 
-        private void OnNetworkCustomError(object sender, GameEventArgs e)
-        {
-            //UnityBaseFramework.Runtime.NetworkCustomErrorEventArgs ne = (UnityBaseFramework.Runtime.NetworkCustomErrorEventArgs)e;
-            //if (ne.NetworkChannel != m_NetworkChannel)
-            //{
-            //    return;
-            //}
-        }
+        //private void OnNetworkCustomError(object sender, GameEventArgs e)
+        //{
+        //    UnityBaseFramework.Runtime.NetworkCustomErrorEventArgs ne = (UnityBaseFramework.Runtime.NetworkCustomErrorEventArgs)e;
+        //    if (ne.NetworkChannel != m_NetworkChannel)
+        //    {
+        //        return;
+        //    }
+        //}
     }
 }
