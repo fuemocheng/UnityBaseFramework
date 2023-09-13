@@ -46,7 +46,6 @@ namespace XGame
             base.OnClose(isShutdown, userData);
         }
 
-
         private void OnClickLogin()
         {
             string account = m_InputAccount.text;

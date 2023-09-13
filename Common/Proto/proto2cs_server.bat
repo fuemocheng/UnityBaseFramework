@@ -26,7 +26,7 @@ for %%i in (proto\\*.cs) do (
 )
 
 REM 把proto文件copy到客户端相应目录
-set c=..\\..\\Server\GameServer\Network\Proto
+set c=..\\..\\Server\GameServer\Server\Game\Network\Packet
 for %%i in (out\\*.cs) do (
 	if exist %c% (
 		copy %%i %c% > nul

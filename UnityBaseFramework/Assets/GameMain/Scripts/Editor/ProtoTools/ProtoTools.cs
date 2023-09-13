@@ -187,7 +187,7 @@ namespace XGame.Editor.Tools
         private static void GenServerPacketExt()
         {
             // 要生成的文件目录
-            string packetDir = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Server/GameServer/Network/Packet");
+            string packetDir = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Server/GameServer/Server/Game/Network/Packet");
 
             // Message配置文件路径
             string msgConfPath = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Common/Proto/proto/Message.conf");
@@ -399,7 +399,7 @@ namespace XGame.Editor.Tools
         /// </summary>
         private static void GenServerPacketHandler()
         {
-            string handlerDir = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Server/GameServer/Network/PacketHandler");
+            string handlerDir = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Server/GameServer/Server/Game/Network/PacketHandler");
 
             string msgConfPath = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/../Common/Proto/proto/Message.conf"); ;
             if (!File.Exists(msgConfPath))

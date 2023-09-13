@@ -2,12 +2,11 @@
 using ProtoBuf;
 using ProtoBuf.Meta;
 using BaseFramework;
-using BaseFramework.Event;
 using BaseFramework.Runtime;
 using Network;
 using GameProto;
 
-namespace Network
+namespace Server
 {
     public class NetworkChannelHelper : INetworkChannelHelper
     {

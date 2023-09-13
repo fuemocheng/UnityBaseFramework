@@ -1,11 +1,11 @@
 ﻿namespace Network
 {
     /// <summary>
-    /// Id生成器。
+    /// 网络Id生成器。
     /// </summary>
-    public class IdGenerator
+    public class NetworkIdGenerator
     {
-        private static long _id = 0;
+        private static long m_Id = 0;
 
         /// <summary>
         /// 生成Id。
@@ -13,7 +13,7 @@
         /// <returns></returns>
         public static long GenerateId()
         {
-            return _id++;
+            return m_Id++;
         }
     }
 }

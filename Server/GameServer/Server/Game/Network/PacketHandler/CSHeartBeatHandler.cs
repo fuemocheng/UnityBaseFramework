@@ -4,8 +4,10 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
+using BaseFramework;
 using BaseFramework.Runtime;
 using Network;
+using Server;
 
 namespace GameProto
 {
@@ -17,7 +19,10 @@ namespace GameProto
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
             Session session = (Session)sender;
-            session.SendHeartBeat();
+
+            // 返回 Client 心跳消息包。
+            // CSHeartBeat -> SCHeartBeat。
+            session?.Send(ReferencePool.Acquire<SCHeartBeat>());
         }
     }
 }

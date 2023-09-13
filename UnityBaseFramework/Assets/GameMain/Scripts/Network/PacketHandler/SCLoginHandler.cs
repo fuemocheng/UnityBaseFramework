@@ -15,7 +15,8 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             SCLogin packetImpl = (SCLogin)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+
         }
     }
 }

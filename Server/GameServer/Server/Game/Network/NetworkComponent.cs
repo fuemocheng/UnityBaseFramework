@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using BaseFramework;
 using BaseFramework.Runtime;
+using Network;
 
-namespace Network
+namespace Server
 {
-    public class NetworkProxy : IDisposable
+    public class NetworkComponent : IDisposable
     {
         private NetworkServiceBase m_Service;
         private NetworkChannelHelper m_NetworkChannelHelper;
@@ -58,9 +58,9 @@ namespace Network
             m_Service?.Update(elapseSeconds, realElapseSeconds);
         }
 
-        public Session CreateSession(NetworkProxy networkProxy, NetworkChannelBase channel)
+        public Session CreateSession(NetworkComponent networkProxy, NetworkChannelBase channel)
         {
-            Session session = new Session(IdGenerator.GenerateId());
+            Session session = new Session(NetworkIdGenerator.GenerateId());
             session.Awake(networkProxy, channel, m_NetworkChannelHelper);
             return session;
         }

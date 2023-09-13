@@ -1,7 +1,7 @@
 ﻿using BaseFramework;
-using GameProto;
+using Network;
 
-namespace Network
+namespace Server
 {
     /// <summary>
     /// 会话。
@@ -10,7 +10,7 @@ namespace Network
     {
         public long Id;
 
-        private NetworkProxy m_NetworkProxy; //网络代理
+        private NetworkComponent m_NetworkProxy; //网络代理
         private NetworkChannelBase m_Channel; //网络信道
         private NetworkChannelHelper m_ChannelHelper; //网络信道处理
 
@@ -29,7 +29,7 @@ namespace Network
             m_Disposed = false;
         }
 
-        public void Awake(NetworkProxy networkProxy, NetworkChannelBase channel, NetworkChannelHelper channelHelper)
+        public void Awake(NetworkComponent networkProxy, NetworkChannelBase channel, NetworkChannelHelper channelHelper)
         {
             m_NetworkProxy = networkProxy;
             m_Channel = channel;
@@ -52,26 +52,8 @@ namespace Network
             m_Channel = null;
         }
 
-        public bool Send<T>(T packet) where T : Packet
-        {
-            if(m_Channel == null) 
-            {
-                throw new BaseFrameworkException($"Session.Send Channel is null.");
-            }
-            return m_Channel.Send(packet);
-        }
-
-
-        /// <summary>
-        /// 发送心跳消息包。
-        /// </summary>
-        /// <returns>是否发送心跳消息包成功。</returns>
-        public bool SendHeartBeat()
-        {
-            Send(ReferencePool.Acquire<SCHeartBeat>());
-            return true;
-        }
-
+        #region Receive & Handle
+        
         /// <summary>
         /// 消息包处理。
         /// </summary>
@@ -93,5 +75,25 @@ namespace Network
             handler.Handle(this, packet);
         }
 
+        #endregion
+
+
+        #region Send
+        /// <summary>
+        /// 发送消息。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="packet"></param>
+        /// <returns></returns>
+        /// <exception cref="BaseFrameworkException"></exception>
+        public bool Send<T>(T packet) where T : Packet
+        {
+            if (m_Channel == null)
+            {
+                throw new BaseFrameworkException($"Session.Send Channel is null.");
+            }
+            return m_Channel.Send(packet);
+        }
+        #endregion
     }
 }
