@@ -53,5 +53,17 @@ namespace Server
             }
             return null;
         }
+
+        public User GetUser(string account)
+        {
+            foreach(KeyValuePair<long, User> pair in m_Users)
+            {
+                if(pair.Value.Account == account)
+                {
+                    return pair.Value;
+                }
+            }
+            return null;
+        }
     }
 }

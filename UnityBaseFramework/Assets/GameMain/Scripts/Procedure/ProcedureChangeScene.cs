@@ -8,8 +8,10 @@ namespace XGame
     public class ProcedureChangeScene : ProcedureBase
     {
         private const int LoginSceneId = 1;
+        private const int LobbySceneId = 2;
 
         private bool m_ChangeToLogin = false;
+        private bool m_ChangeToLobby = false;
         private bool m_IsChangeSceneComplete = false;
         private int m_BackgroundMusicId = 0;
 
@@ -52,6 +54,7 @@ namespace XGame
 
             int sceneId = procedureOwner.GetData<VarInt32>("NextSceneId");
             m_ChangeToLogin = sceneId == LoginSceneId;
+            m_ChangeToLobby = sceneId == LobbySceneId;
             IDataTable<DRScene> dtScene = GameEntry.DataTable.GetDataTable<DRScene>();
             DRScene drScene = dtScene.GetDataRow(sceneId);
             if (drScene == null)
@@ -87,9 +90,9 @@ namespace XGame
             {
                 ChangeState<ProcedureLogin>(procedureOwner);
             }
-            else
+            else if (m_ChangeToLobby)
             {
-                //ChangeState<ProcedureMain>(procedureOwner);
+                ChangeState<ProcedureLobby>(procedureOwner);
             }
         }
 

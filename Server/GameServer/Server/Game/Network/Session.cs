@@ -10,7 +10,7 @@ namespace Server
     {
         public long Id;
 
-        private NetworkComponent m_NetworkProxy; //网络代理
+        private NetworkComponent m_NetworkComponent; //网络代理
         private NetworkChannelBase m_Channel; //网络信道
         private NetworkChannelHelper m_ChannelHelper; //网络信道处理
 
@@ -29,9 +29,9 @@ namespace Server
             m_Disposed = false;
         }
 
-        public void Awake(NetworkComponent networkProxy, NetworkChannelBase channel, NetworkChannelHelper channelHelper)
+        public void Awake(NetworkComponent networkComponent, NetworkChannelBase channel, NetworkChannelHelper channelHelper)
         {
-            m_NetworkProxy = networkProxy;
+            m_NetworkComponent = networkComponent;
             m_Channel = channel;
             m_ChannelHelper = channelHelper;
 

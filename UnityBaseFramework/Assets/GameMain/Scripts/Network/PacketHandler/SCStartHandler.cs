@@ -4,21 +4,18 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
-using BaseFramework;
 using BaseFramework.Network;
 using UnityBaseFramework.Runtime;
 using XGame;
 
 namespace GameProto
 {
-    public partial class SCLoginHandler : PacketHandlerBase
+    public partial class SCStartHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            SCLogin packetImpl = (SCLogin)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
-
-            GameEntry.Event.Fire(sender, SCLoginEventArgs.Create(packetImpl.State, null));
+            SCStart packetImpl = (SCStart)packet;
+            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
         }
     }
 }

@@ -20,19 +20,41 @@ namespace GameProto
 
             // tcp Session。
             Session session = (Session)sender;
+            bool isPasswordCorrect = true;
 
-            // Create user。
-            User user = ReferencePool.Acquire<User>();
-            user.UserId = UserIdGenerator.GenerateId();
-            user.Account = packetImpl.Account;
-            user.Password = packetImpl.Password;
-            user.TcpSession = session;
-            GameEntry.Game.AddUser(user);
+            // Get User
+            User user = GameEntry.Game.GetUser(packetImpl.Account);
+            if (user == null)
+            {
+                // Create user。
+                user = ReferencePool.Acquire<User>();
+                user.UserId = UserIdGenerator.GenerateId();
+                user.Account = packetImpl.Account;
+                user.Password = packetImpl.Password;
+                user.TcpSession = session;
+                GameEntry.Game.AddUser(user);
+            }
+            else
+            {
+                // Reset Session
+                user.TcpSession = session;
+                if (packetImpl.Password != user.Password)
+                {
+                    isPasswordCorrect = false;
+                }
+            }
 
             // 回客户端消息。
             SCLogin scLogin = ReferencePool.Acquire<SCLogin>();
-            // TODO:暂定 1 为登录成功。
-            scLogin.State = 1;
+            // TODO:暂定 1 为登录成功, 2 密码不对。
+            if(isPasswordCorrect)
+            {
+                scLogin.State = 1;
+            }
+            else
+            {
+                scLogin.State = 2;
+            }
             session.Send(scLogin);
         }
     }

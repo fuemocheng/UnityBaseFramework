@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Network\Network.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Game\Room\" />
+  </ItemGroup>
+
 </Project>

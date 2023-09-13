@@ -18,3 +18,18 @@ message CSLogin{
 message SCLogin{
 	int32 State = 1;
 }
+
+//准备游戏
+message CSReady{
+}
+
+message SCReady{
+	int32 PlayerReadyNum = 1;
+}
+
+//开始游戏
+message CSStart{
+}
+
+message SCStart{
+}

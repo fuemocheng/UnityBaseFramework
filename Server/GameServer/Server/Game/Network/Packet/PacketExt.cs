@@ -57,4 +57,51 @@ namespace GameProto
         }
     }
 
+    public partial class CSReady : CSPacketBase
+    {
+        public override int Id => 5;
+
+        public override void Clear()
+        {
+        }
+    }
+
+    public partial class CSReadyHandler : PacketHandlerBase
+    {
+        public override int Id => 5;
+    }
+
+    public partial class SCReady : SCPacketBase
+    {
+        public override int Id => 6;
+
+        public override void Clear()
+        {
+            PlayerReadyNum = 0;
+        }
+    }
+
+    public partial class CSStart : CSPacketBase
+    {
+        public override int Id => 7;
+
+        public override void Clear()
+        {
+        }
+    }
+
+    public partial class CSStartHandler : PacketHandlerBase
+    {
+        public override int Id => 7;
+    }
+
+    public partial class SCStart : SCPacketBase
+    {
+        public override int Id => 8;
+
+        public override void Clear()
+        {
+        }
+    }
+
 }
