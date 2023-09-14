@@ -1,5 +1,6 @@
 using BaseFramework.DataTable;
 using BaseFramework.Event;
+using System;
 using UnityBaseFramework.Runtime;
 using ProcedureOwner = BaseFramework.Fsm.IFsm<BaseFramework.Procedure.IProcedureManager>;
 
@@ -7,12 +8,8 @@ namespace XGame
 {
     public class ProcedureChangeScene : ProcedureBase
     {
-        private const int LoginSceneId = 1;
-        private const int LobbySceneId = 2;
-
-        private bool m_ChangeToLogin = false;
-        private bool m_ChangeToLobby = false;
         private bool m_IsChangeSceneComplete = false;
+        private DRScene drScene = null;
         private int m_BackgroundMusicId = 0;
 
         public override bool UseNativeDialog
@@ -52,11 +49,10 @@ namespace XGame
             // 还原游戏速度
             GameEntry.Base.ResetNormalGameSpeed();
 
+            // 切换到下一场景。
             int sceneId = procedureOwner.GetData<VarInt32>("NextSceneId");
-            m_ChangeToLogin = sceneId == LoginSceneId;
-            m_ChangeToLobby = sceneId == LobbySceneId;
             IDataTable<DRScene> dtScene = GameEntry.DataTable.GetDataTable<DRScene>();
-            DRScene drScene = dtScene.GetDataRow(sceneId);
+            drScene = dtScene.GetDataRow(sceneId);
             if (drScene == null)
             {
                 Log.Warning("Can not load scene '{0}' from data table.", sceneId.ToString());
@@ -86,13 +82,14 @@ namespace XGame
                 return;
             }
 
-            if (m_ChangeToLogin)
+            Type procedureType = Type.GetType(string.Format("XGame.{0}", drScene.Procedure));
+            if (procedureType != null)
             {
-                ChangeState<ProcedureLogin>(procedureOwner);
+                ChangeState(procedureOwner, procedureType);
             }
-            else if (m_ChangeToLobby)
+            else
             {
-                ChangeState<ProcedureLobby>(procedureOwner);
+                Log.Error("Can not change state, scene procedure '{0}' error, from scene '{1}'.", drScene.Procedure.ToString(), drScene.AssetName);
             }
         }
 

@@ -4,7 +4,6 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
-using BaseFramework;
 using BaseFramework.Network;
 using UnityBaseFramework.Runtime;
 using XGame;

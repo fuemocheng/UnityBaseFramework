@@ -18,12 +18,14 @@ namespace GameProto
             CSLogin packetImpl = (CSLogin)packet;
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
-            // tcp Session。
+            // Tcp Session。
             Session session = (Session)sender;
             bool isPasswordCorrect = true;
 
-            // Get User
-            User user = GameEntry.Game.GetUser(packetImpl.Account);
+            // TODO:Get From DB
+
+            // Get User。
+            User user = GameEntry.Game.UserManager.GetUser(packetImpl.Account);
             if (user == null)
             {
                 // Create user。
@@ -31,12 +33,16 @@ namespace GameProto
                 user.UserId = UserIdGenerator.GenerateId();
                 user.Account = packetImpl.Account;
                 user.Password = packetImpl.Password;
+                user.UserName = packetImpl.Account;
                 user.TcpSession = session;
-                GameEntry.Game.AddUser(user);
+
+                session.BindInfo = user;
+
+                GameEntry.Game.UserManager.AddUser(user);
             }
             else
             {
-                // Reset Session
+                // Reset Session。
                 user.TcpSession = session;
                 if (packetImpl.Password != user.Password)
                 {

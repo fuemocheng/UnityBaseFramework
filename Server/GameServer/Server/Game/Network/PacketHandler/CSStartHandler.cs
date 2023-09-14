@@ -6,6 +6,7 @@
 
 using BaseFramework.Runtime;
 using Network;
+using Server;
 
 namespace GameProto
 {
@@ -14,7 +15,25 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSStart packetImpl = (CSStart)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+
+            // Tcp Session。
+            Session session = (Session)sender;
+            // User。
+            User user = (User)session.BindInfo;
+            user.IsStarted = true;
+
+            Room room = user.Room;
+            if (room == null)
+            {
+                throw new Exception("CSStartHandler User Started Game, but room is null");
+            }
+
+            //所有人都准备完成，通知所有客户端开始游戏。
+            if(room.IsAllStarted())
+            {
+                room.SendAllClientStartGame();
+            }
         }
     }
 }

@@ -15,11 +15,16 @@ namespace XGame
         /// <summary>
         /// 登录。
         /// </summary>
-        LoginForm = 100,
+        LoginForm = 10,
 
         /// <summary>
         /// 大厅。
         /// </summary>
-        LobbyForm = 200,
+        LobbyForm = 20,
+
+        /// <summary>
+        /// 主界面。
+        /// </summary>
+        MainUIForm = 30,
     }
 }

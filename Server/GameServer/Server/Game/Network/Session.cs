@@ -14,7 +14,7 @@ namespace Server
         private NetworkChannelBase m_Channel; //网络信道
         private NetworkChannelHelper m_ChannelHelper; //网络信道处理
 
-        public object BindInfo; //会话持有者
+        public object BindInfo; //会话绑定信息，一般是User;
 
         private bool m_Disposed = false;
 

@@ -1,6 +1,8 @@
-﻿#	场景配置表			
-#	Id		AssetName	BackgroundMusicId
-#	int		string	int
-#	场景编号	备注	资源名称	背景音乐编号
-	1	登录场景	Login	1
-	2	大厅场景	Lobby	2
+﻿#	场景配置表				
+#	Id		AssetName	BackgroundMusicId	Procedure
+#	int		string	int	string
+#	场景编号	备注	资源名称	背景音乐编号	流程名称
+	1	登录场景	Login	1	ProcedureLogin
+	2	大厅场景	Lobby	1	ProcedureLobby
+	3	地图1	Map01	2	ProcedureMap
+	4	地图2	Map02	2	ProcedureMap

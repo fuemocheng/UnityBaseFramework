@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-07-24 16:23:19.084
+// 生成时间：2023-09-14 21:59:37.198
 //------------------------------------------------------------
 
 using BaseFramework;
@@ -49,6 +49,15 @@ namespace XGame
             private set;
         }
 
+        /// <summary>
+        /// 获取流程名称。
+        /// </summary>
+        public string Procedure
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -63,6 +72,7 @@ namespace XGame
             index++;
             AssetName = columnStrings[index++];
             BackgroundMusicId = int.Parse(columnStrings[index++]);
+            Procedure = columnStrings[index++];
 
             GeneratePropertyArray();
             return true;
@@ -77,6 +87,7 @@ namespace XGame
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     AssetName = binaryReader.ReadString();
                     BackgroundMusicId = binaryReader.Read7BitEncodedInt32();
+                    Procedure = binaryReader.ReadString();
                 }
             }
 

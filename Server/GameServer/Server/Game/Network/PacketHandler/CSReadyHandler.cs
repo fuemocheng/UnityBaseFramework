@@ -4,8 +4,10 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
+using BaseFramework;
 using BaseFramework.Runtime;
 using Network;
+using Server;
 
 namespace GameProto
 {
@@ -16,7 +18,29 @@ namespace GameProto
             CSReady packetImpl = (CSReady)packet;
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
+            // Tcp Session¡£
+            Session session = (Session)sender;
+            // User¡£
+            User user = (User)session.BindInfo;
 
+            // Create Room.
+            Room availableRoom = GameEntry.Game.RoomManager.GetAvailableRoom();
+            if (availableRoom == null)
+            {
+                availableRoom = ReferencePool.Acquire<Room>();
+                availableRoom.RoomId = RoomIdGenerator.GenerateId();
+                availableRoom.RoomName = user.Account;
+                availableRoom.JoinRoom(user);
+                GameEntry.Game.RoomManager.AddRoom(availableRoom);
+            }
+            else
+            {
+                availableRoom.JoinRoom(user);
+            }
+
+            SCReady scReady = ReferencePool.Acquire<SCReady>();
+            scReady.PlayerReadyNum = availableRoom.GetCurrCount();
+            session.Send(scReady);
         }
     }
 }

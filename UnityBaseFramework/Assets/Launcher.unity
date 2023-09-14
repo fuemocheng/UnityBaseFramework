@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -280,7 +280,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[0]
@@ -300,10 +300,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[4]
-      value: XGame.ProcedurePreload
+      value: XGame.ProcedureMap
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[5]
+      value: XGame.ProcedurePreload
+      objectReference: {fileID: 0}
+    - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_AvailableProcedureTypeNames.Array.data[6]
       value: XGame.ProcedureSplash
       objectReference: {fileID: 0}
     - target: {fileID: 3710880779689643014, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}

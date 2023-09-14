@@ -56,5 +56,17 @@ namespace XGame
             CSReady csReady = ReferencePool.Acquire<CSReady>();
             tcpChannel.Send(csReady);
         }
+
+        public void SetWaitingCount(int count)
+        {
+            if (count <= 0)
+            {
+                m_WaitingNum.text = "Waiting...";
+            }
+            else
+            {
+                m_WaitingNum.text = $"Waiting... {count}/{CommonDefinitions.MaxRoomMemberCount}";
+            }
+        }
     }
 }
