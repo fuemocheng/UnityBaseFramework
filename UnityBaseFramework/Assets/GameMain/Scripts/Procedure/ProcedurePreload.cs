@@ -91,7 +91,7 @@ namespace XGame
             }
 
             // Preload dictionaries
-            //LoadDictionary("Default");
+            LoadDictionary("Default");
 
             // Preload fonts
             LoadFont("MainFont");
