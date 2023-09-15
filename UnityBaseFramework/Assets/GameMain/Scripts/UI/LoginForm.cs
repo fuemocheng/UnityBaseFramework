@@ -51,7 +51,17 @@ namespace XGame
             string account = m_InputAccount.text;
             if (account.Length < 6 || account.Length > 12)
             {
-                Log.Error("Please input correct account.");
+                GameEntry.UI.OpenDialog(new DialogParams
+                {
+                    Mode = 1,
+                    Title = "Account Error",
+                    Message = "Please input correct account.",
+                    ConfirmText = "Confirm",
+                    OnClickConfirm = delegate (object userData) 
+                    {
+                        //Do something.
+                    },
+                });
                 return;
             }
             //string passWord = m_InputPassword.text;

@@ -2,7 +2,7 @@
 #	Id		AssetName	UIGroupName	AllowMultiInstance	PauseCoveredUIForm
 #	int		string	string	bool	bool
 #	界面编号	策划备注	资源名称	界面组名称	是否允许多个界面实例	是否暂停被其覆盖的界面
-	1	弹出框	DialogForm	Default	TRUE	TRUE
+	1	弹出框	DialogForm	Default	TRUE	FALSE
 	10	登录	LoginForm	Default	FALSE	TRUE
 	20	大厅	LobbyForm	Default	FALSE	TRUE
 	30	主界面	MainUIForm	Default	FALSE	TRUE
