@@ -7,6 +7,9 @@ obj
 GameServer/BaseFramework/bin/
 GameServer/BaseFramework/obj/
 
+GameServer/BaseFramework/bin/
+GameServer/BaseFramework/obj/
+
 GameServer/Network/bin/
 GameServer/Network/obj/
 
@@ -16,5 +19,6 @@ GameServer/Server/obj/
 !GameServer/GameServer.sln
 
 !GameServer/BaseFramework/BaseFramework.csproj
+!GameServer/LockstepEngine/LockstepEngine.csproj
 !GameServer/Network/Network.csproj
 !GameServer/Server/Server.csproj
