@@ -36,6 +36,7 @@ namespace XGame
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
             GameEntry.Event.Unsubscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
+            GameEntry.Event.Unsubscribe(SCLoginEventArgs.EventId, OnLoginResponse);
 
             if (m_LoginForm != null)
             {
@@ -81,12 +82,12 @@ namespace XGame
         {
             SCLoginEventArgs ne = (SCLoginEventArgs)e;
 
-            // TODO：暂定 1 为成功
-            if (ne.State == 1)
+            // TODO：暂定 1 为成功, 2 为密码错误
+            if (ne.RetCode == 1)
             {
                 m_LoggedIn = true;
             }
-            else if(ne.State == 2)
+            else if(ne.RetCode == 2)
             {
                 m_LoggedIn = false;
                 Log.Error("Password incorrect.");

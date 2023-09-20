@@ -13,7 +13,9 @@ namespace Server
         public Session KcpSession = null;
         public Game Game = null;
         public Room Room = null;
-        public bool IsStarted = false;
+        public int LocalId = -1;
+        public bool IsReady = false;
+        public int LoadingProgress = 0;
 
         public User() 
         {
@@ -31,7 +33,9 @@ namespace Server
             KcpSession = null;
             Game = null;
             Room = null;
-            IsStarted = false;
+            LocalId = -1;
+            IsReady = false;
+            LoadingProgress = 0;
         }
     }
 }

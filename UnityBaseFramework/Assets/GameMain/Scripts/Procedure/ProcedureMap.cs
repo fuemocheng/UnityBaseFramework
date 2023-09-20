@@ -24,13 +24,14 @@ namespace XGame
             base.OnEnter(procedureOwner);
 
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
-            GameEntry.Event.Subscribe(SCStartEventArgs.EventId, OnStartResponse);
+            GameEntry.Event.Subscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.MainUIForm, this);
 
-            // 场景已经加载完成，发送开始游戏。
-            // TODO: 加载角色，加载完发送开始游戏的消息。
-            SendStartGame();
+            // 场景已经加载完成，发送加载进度。
+            // TODO: 加载角色，加载完发送加载进度的消息。
+
+            SendLoadingProgress();
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -38,7 +39,7 @@ namespace XGame
             base.OnLeave(procedureOwner, isShutdown);
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
-            GameEntry.Event.Unsubscribe(SCStartEventArgs.EventId, OnStartResponse);
+            GameEntry.Event.Unsubscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
 
             if (m_MainUIForm != null)
             {
@@ -64,26 +65,45 @@ namespace XGame
         }
 
 
-        private void SendStartGame()
+        private void SendLoadingProgress()
         {
             INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
             if (tcpChannel == null)
             {
-                Log.Error("Cannot Start, tcpChannel is null.");
+                Log.Error("Cannot SendLoadingProgress, tcpChannel is null.");
                 return;
             }
-            //开始游戏
-            CSStart csStart = ReferencePool.Acquire<CSStart>();
-            tcpChannel.Send(csStart);
+            //发送进度
+            CSLoadingProgress csLoadingProgress = ReferencePool.Acquire<CSLoadingProgress>();
+            csLoadingProgress.Progress = 100;
+            tcpChannel.Send(csLoadingProgress);
         }
 
-        private void OnStartResponse(object sender, GameEventArgs e)
+        private void OnLoadingProgressResponse(object sender, GameEventArgs e)
         {
-            SCStartEventArgs ne = (SCStartEventArgs)e;
+            SCLoadingProgressEventArgs ne = (SCLoadingProgressEventArgs)e;
+            if (ne.UserData == null)
+            {
+                return;
+            }
+            SCLoadingProgress scLoadingProgress = (SCLoadingProgress)ne.UserData;
 
-            // 所有客户端都完成了准备工作。
-            // 开始游戏。
-            Log.Error("Start Game.");
+            if (scLoadingProgress == null)
+            {
+                return;
+            }
+
+            if(scLoadingProgress.AllProgress < 100)
+            {
+                //TODO: Loading 界面 设置加载进度。
+
+            }
+            else
+            {
+                // 所有客户端都完成了准备工作。
+                // 开始游戏，发送帧数据
+                Log.Error("Start Game.");
+            }
         }
     }
 }

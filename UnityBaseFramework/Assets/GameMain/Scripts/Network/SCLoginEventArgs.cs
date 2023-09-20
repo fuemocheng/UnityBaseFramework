@@ -33,9 +33,9 @@ namespace XGame
         }
 
         /// <summary>
-        /// 获取登录状态。
+        /// 获取登录返回码。
         /// </summary>
-        public int State
+        public int RetCode
         {
             get;
             private set;
@@ -55,10 +55,10 @@ namespace XGame
         /// </summary>
         /// <param name="e">内部事件。</param>
         /// <returns>创建的网络连接成功事件。</returns>
-        public static SCLoginEventArgs Create(int state, object userData = null)
+        public static SCLoginEventArgs Create(int retCode, object userData = null)
         {
             SCLoginEventArgs scLoginEventArgs = ReferencePool.Acquire<SCLoginEventArgs>();
-            scLoginEventArgs.State = state;
+            scLoginEventArgs.RetCode = retCode;
             scLoginEventArgs.UserData = userData;
             return scLoginEventArgs;
         }
@@ -68,7 +68,7 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
-            State = 0;
+            RetCode = 0;
             UserData = null;
         }
     }

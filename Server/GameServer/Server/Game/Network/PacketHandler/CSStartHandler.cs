@@ -20,20 +20,7 @@ namespace GameProto
             // Tcp Session。
             Session session = (Session)sender;
             // User。
-            User user = (User)session.BindInfo;
-            user.IsStarted = true;
-
-            Room room = user.Room;
-            if (room == null)
-            {
-                throw new Exception("CSStartHandler User Started Game, but room is null");
-            }
-
-            //所有人都准备完成，通知所有客户端开始游戏。
-            if(room.IsAllStarted())
-            {
-                room.SendAllClientStartGame();
-            }
+            Server.User user = (Server.User)session.BindInfo;
         }
     }
 }

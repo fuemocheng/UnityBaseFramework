@@ -21,26 +21,60 @@ namespace GameProto
             // Tcp Session。
             Session session = (Session)sender;
             // User。
-            User user = (User)session.BindInfo;
+            Server.User user = (Server.User)session.BindInfo;
+            // 设置为准备状态。
+            user.IsReady = packetImpl.Status == 1;
 
-            // Create Room.
-            Room availableRoom = GameEntry.Game.RoomManager.GetAvailableRoom();
-            if (availableRoom == null)
+            Room room = user.Room;
+            if(room == null)
             {
-                availableRoom = ReferencePool.Acquire<Room>();
-                availableRoom.RoomId = RoomIdGenerator.GenerateId();
-                availableRoom.RoomName = user.Account;
-                availableRoom.JoinRoom(user);
-                GameEntry.Game.RoomManager.AddRoom(availableRoom);
+                Log.Error("CSReadyHandler Error : Room is null.");
+                return;
+            }
+
+            if (room.IsAllReady())
+            {
+                // 全部准备，广播客户端开始游戏的消息。
+                foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                {
+                    Server.User sUser = kvp.Value;
+                    SCGameStartInfo gameStartInfo = ReferencePool.Acquire<SCGameStartInfo>();
+                    gameStartInfo.RoomId = room.RoomId;
+                    gameStartInfo.MapId = 1;
+                    gameStartInfo.UserCount = room.GetCurrCount();
+                    gameStartInfo.Seed = 0;
+                    // 遍历添加所有人信息，添加到 SCGameStartInfo
+                    foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
+                    {
+                        GameProto.User tUser = new GameProto.User();
+                        tUser.UserId = kvp2.Value.UserId;
+                        tUser.UserName = kvp2.Value.UserName;
+                        gameStartInfo.Users.Add(tUser);
+                    }
+                    sUser.TcpSession.Send(gameStartInfo);
+                }
             }
             else
             {
-                availableRoom.JoinRoom(user);
+                // 非全部准备，广播客户端有人准备。
+                foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                {
+                    Server.User sUser = kvp.Value;
+                    SCReady scReady = ReferencePool.Acquire<SCReady>();
+                    // 遍历添加所有人信息，添加到 SCReady
+                    foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
+                    {
+                        UserReadyInfo userReadyInfo = new UserReadyInfo();
+                        userReadyInfo.LocalId = kvp2.Value.LocalId;
+                        userReadyInfo.Status = kvp2.Value.IsReady ? 1 : 0;
+                        userReadyInfo.User = new User();
+                        userReadyInfo.User.UserId = kvp2.Value.UserId;
+                        userReadyInfo.User.UserName = kvp2.Value.UserName;
+                        scReady.UserReadyInfos.Add(userReadyInfo);
+                    }
+                    sUser.TcpSession.Send(scReady);
+                }
             }
-
-            SCReady scReady = ReferencePool.Acquire<SCReady>();
-            scReady.PlayerReadyNum = availableRoom.GetCurrCount();
-            session.Send(scReady);
         }
     }
 }

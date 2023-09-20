@@ -25,11 +25,11 @@ namespace GameProto
             // TODO:Get From DB
 
             // Get User。
-            User user = GameEntry.Game.UserManager.GetUser(packetImpl.Account);
+            Server.User user = GameEntry.Game.UserManager.GetUser(packetImpl.Account);
             if (user == null)
             {
                 // Create user。
-                user = ReferencePool.Acquire<User>();
+                user = ReferencePool.Acquire<Server.User>();
                 user.UserId = UserIdGenerator.GenerateId();
                 user.Account = packetImpl.Account;
                 user.Password = packetImpl.Password;
@@ -55,11 +55,11 @@ namespace GameProto
             // TODO:暂定 1 为登录成功, 2 密码不对。
             if(isPasswordCorrect)
             {
-                scLogin.State = 1;
+                scLogin.RetCode = 1;
             }
             else
             {
-                scLogin.State = 2;
+                scLogin.RetCode = 2;
             }
             session.Send(scLogin);
         }

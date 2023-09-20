@@ -6,25 +6,25 @@ using System.Collections.Generic;
 namespace XGame
 {
     /// <summary>
-    /// 准备游戏。
+    /// 加入游戏房间。
     /// </summary>
-    public sealed class SCReadyEventArgs : GameEventArgs
+    public sealed class SCJoinRoomEventArgs : GameEventArgs
     {
         /// <summary>
-        /// 准备游戏事件编号。
+        /// 加入游戏房间事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(SCReadyEventArgs).GetHashCode();
+        public static readonly int EventId = typeof(SCJoinRoomEventArgs).GetHashCode();
 
         /// <summary>
-        /// 初始化准备游戏返回事件的新实例。
+        /// 初始化加入游戏房间返回事件的新实例。
         /// </summary>
-        public SCReadyEventArgs()
+        public SCJoinRoomEventArgs()
         {
             UserData = null;
         }
 
         /// <summary>
-        /// 获取准备游戏成功事件编号。
+        /// 获取加入游戏房间成功事件编号。
         /// </summary>
         public override int Id
         {
@@ -44,19 +44,19 @@ namespace XGame
         }
 
         /// <summary>
-        /// 创建准备游戏成功事件。
+        /// 创建加入游戏房间成功事件。
         /// </summary>
         /// <param name="e">内部事件。</param>
         /// <returns>创建的网络连接成功事件。</returns>
-        public static SCReadyEventArgs Create(object userData = null)
+        public static SCJoinRoomEventArgs Create(object userData = null)
         {
-            SCReadyEventArgs scReadyEventArgs = ReferencePool.Acquire<SCReadyEventArgs>();
+            SCJoinRoomEventArgs scReadyEventArgs = ReferencePool.Acquire<SCJoinRoomEventArgs>();
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;
         }
 
         /// <summary>
-        /// 清理准备游戏成功事件。
+        /// 清理加入游戏房间成功事件。
         /// </summary>
         public override void Clear()
         {

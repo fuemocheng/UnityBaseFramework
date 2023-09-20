@@ -1,30 +1,28 @@
 using BaseFramework;
 using BaseFramework.Event;
-using GameProto;
-using System.Collections.Generic;
 
 namespace XGame
 {
     /// <summary>
-    /// 准备游戏。
+    /// 加载进度。
     /// </summary>
-    public sealed class SCReadyEventArgs : GameEventArgs
+    public sealed class SCLoadingProgressEventArgs : GameEventArgs
     {
         /// <summary>
-        /// 准备游戏事件编号。
+        /// 加载进度事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(SCReadyEventArgs).GetHashCode();
+        public static readonly int EventId = typeof(SCLoadingProgressEventArgs).GetHashCode();
 
         /// <summary>
-        /// 初始化准备游戏返回事件的新实例。
+        /// 初始化加载进度返回事件的新实例。
         /// </summary>
-        public SCReadyEventArgs()
+        public SCLoadingProgressEventArgs()
         {
             UserData = null;
         }
 
         /// <summary>
-        /// 获取准备游戏成功事件编号。
+        /// 获取加载进度事件编号。
         /// </summary>
         public override int Id
         {
@@ -44,19 +42,19 @@ namespace XGame
         }
 
         /// <summary>
-        /// 创建准备游戏成功事件。
+        /// 创建加载进度事件。
         /// </summary>
         /// <param name="e">内部事件。</param>
-        /// <returns>创建的网络连接成功事件。</returns>
-        public static SCReadyEventArgs Create(object userData = null)
+        /// <returns></returns>
+        public static SCLoadingProgressEventArgs Create(object userData = null)
         {
-            SCReadyEventArgs scReadyEventArgs = ReferencePool.Acquire<SCReadyEventArgs>();
-            scReadyEventArgs.UserData = userData;
-            return scReadyEventArgs;
+            SCLoadingProgressEventArgs scLoadingProgressEventArgs = ReferencePool.Acquire<SCLoadingProgressEventArgs>();
+            scLoadingProgressEventArgs.UserData = userData;
+            return scLoadingProgressEventArgs;
         }
 
         /// <summary>
-        /// 清理准备游戏成功事件。
+        /// 清理加载进度事件。
         /// </summary>
         public override void Clear()
         {

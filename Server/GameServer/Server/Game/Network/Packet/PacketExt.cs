@@ -53,37 +53,104 @@ namespace GameProto
 
         public override void Clear()
         {
-            State = 0;
+            RetCode = 0;
         }
     }
 
-    public partial class CSReady : CSPacketBase
+    public partial class CSJoinRoom : CSPacketBase
     {
         public override int Id => 5;
 
         public override void Clear()
         {
+            RoomId = 0;
         }
     }
 
-    public partial class CSReadyHandler : PacketHandlerBase
+    public partial class CSJoinRoomHandler : PacketHandlerBase
     {
         public override int Id => 5;
     }
 
-    public partial class SCReady : SCPacketBase
+    public partial class SCJoinRoom : SCPacketBase
     {
         public override int Id => 6;
 
         public override void Clear()
         {
-            PlayerReadyNum = 0;
+            RoomId = 0;
+            LocalId = 0;
+            UserReadyInfos.Clear();
+        }
+    }
+
+    public partial class CSReady : CSPacketBase
+    {
+        public override int Id => 7;
+
+        public override void Clear()
+        {
+            Status = 0;
+        }
+    }
+
+    public partial class CSReadyHandler : PacketHandlerBase
+    {
+        public override int Id => 7;
+    }
+
+    public partial class SCReady : SCPacketBase
+    {
+        public override int Id => 8;
+
+        public override void Clear()
+        {
+            UserReadyInfos.Clear();
+        }
+    }
+
+    public partial class SCGameStartInfo : SCPacketBase
+    {
+        public override int Id => 9;
+
+        public override void Clear()
+        {
+            RoomId = 0;
+            MapId = 0;
+            UserCount = 0;
+            Seed = 0;
+            Users.Clear();
+        }
+    }
+
+    public partial class CSLoadingProgress : CSPacketBase
+    {
+        public override int Id => 10;
+
+        public override void Clear()
+        {
+            Progress = 0;
+        }
+    }
+
+    public partial class CSLoadingProgressHandler : PacketHandlerBase
+    {
+        public override int Id => 10;
+    }
+
+    public partial class SCLoadingProgress : SCPacketBase
+    {
+        public override int Id => 11;
+
+        public override void Clear()
+        {
+            AllProgress = 0;
         }
     }
 
     public partial class CSStart : CSPacketBase
     {
-        public override int Id => 7;
+        public override int Id => 12;
 
         public override void Clear()
         {
@@ -92,15 +159,41 @@ namespace GameProto
 
     public partial class CSStartHandler : PacketHandlerBase
     {
-        public override int Id => 7;
+        public override int Id => 12;
     }
 
     public partial class SCStart : SCPacketBase
     {
-        public override int Id => 8;
+        public override int Id => 13;
 
         public override void Clear()
         {
+        }
+    }
+
+    public partial class CSInputFrame : CSPacketBase
+    {
+        public override int Id => 14;
+
+        public override void Clear()
+        {
+            InputFrames.Clear();
+        }
+    }
+
+    public partial class CSInputFrameHandler : PacketHandlerBase
+    {
+        public override int Id => 14;
+    }
+
+    public partial class SCServerFrame : SCPacketBase
+    {
+        public override int Id => 15;
+
+        public override void Clear()
+        {
+            Tick = 0;
+            ServerFrames.Clear();
         }
     }
 

@@ -60,7 +60,9 @@ message CSJoinRoom{
 }
 
 message SCJoinRoom{
-	repeated UserReadyInfo UserReadyInfos = 1;
+	int32 RoomId = 1;
+	int32 LocalId = 2;
+	repeated UserReadyInfo UserReadyInfos = 3;
 }
 
 //准备游戏

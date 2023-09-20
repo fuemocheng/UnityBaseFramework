@@ -1,4 +1,5 @@
 using BaseFramework.Event;
+using GameProto;
 using UnityBaseFramework.Runtime;
 using ProcedureOwner = BaseFramework.Fsm.IFsm<BaseFramework.Procedure.IProcedureManager>;
 
@@ -23,7 +24,9 @@ namespace XGame
             base.OnEnter(procedureOwner);
 
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Subscribe(SCJoinRoomEventArgs.EventId, OnJoinRoomResponse);
             GameEntry.Event.Subscribe(SCReadyEventArgs.EventId, OnReadyResponse);
+            GameEntry.Event.Subscribe(SCGameStartInfoEventArgs.EventId, OnGameStartInfoResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.LobbyForm, this);
         }
@@ -33,7 +36,9 @@ namespace XGame
             base.OnLeave(procedureOwner, isShutdown);
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Unsubscribe(SCJoinRoomEventArgs.EventId, OnJoinRoomResponse);
             GameEntry.Event.Unsubscribe(SCReadyEventArgs.EventId, OnReadyResponse);
+            GameEntry.Event.Unsubscribe(SCGameStartInfoEventArgs.EventId, OnGameStartInfoResponse);
 
             if (m_LobbyForm != null)
             {
@@ -68,16 +73,83 @@ namespace XGame
             m_LobbyForm = (LobbyForm)ne.UIForm.Logic;
         }
 
+        private void OnJoinRoomResponse(object sender, GameEventArgs e)
+        {
+            SCJoinRoomEventArgs ne = (SCJoinRoomEventArgs)e;
+            if (ne.UserData == null)
+            {
+                return;
+            }
+            SCJoinRoom scReady = ne.UserData as SCJoinRoom;
+            if (scReady == null)
+            {
+                return;
+            }
+
+            int readyCount = 0;
+            for (int i = 0; i < scReady.UserReadyInfos.Count; i++)
+            {
+                UserReadyInfo userReadyInfo = scReady.UserReadyInfos[i];
+                if (userReadyInfo != null && userReadyInfo.Status == 1)
+                {
+                    readyCount++;
+                }
+            }
+            m_LobbyForm.OnJoinedRoom(scReady.RoomId, readyCount);
+
+            Log.Info($"OnJoinRoomResponse RoomId:{scReady.RoomId} LocalId:{scReady.LocalId}");
+        }
+
         private void OnReadyResponse(object sender, GameEventArgs e)
         {
             SCReadyEventArgs ne = (SCReadyEventArgs)e;
-
-            m_LobbyForm.SetWaitingCount(ne.CurrCount);
-
-            if (ne.CurrCount >= CommonDefinitions.MaxRoomMemberCount)
+            if (ne.UserData == null)
             {
-                m_IsAllReady = true;
+                return;
             }
+            SCReady scReady = ne.UserData as SCReady;
+            if (scReady == null)
+            {
+                return;
+            }
+
+            int readyCount = 0;
+            for (int i = 0; i < scReady.UserReadyInfos.Count; i++)
+            {
+                UserReadyInfo userReadyInfo = scReady.UserReadyInfos[i];
+                if (userReadyInfo != null && userReadyInfo.Status == 1)
+                {
+                    readyCount++;
+                }
+            }
+            
+            m_LobbyForm.RefreshReadyCount(readyCount);
+        }
+
+        private void OnGameStartInfoResponse(object sender, GameEventArgs e)
+        {
+            SCGameStartInfoEventArgs ne = (SCGameStartInfoEventArgs)e;
+            if (ne.UserData == null)
+            {
+                return;
+            }
+            SCGameStartInfo scGameStartInfo = ne.UserData as SCGameStartInfo;
+            if (scGameStartInfo == null)
+            {
+                return;
+            }
+
+            //for (int i = 0; i < scGameStartInfo.Users.Count; i++)
+            //{
+            //    User user = scGameStartInfo.Users[i];
+            //}
+
+            //TODO:
+            //这里用服务器发送的MapId，加载地图；
+            //用服务器发送的玩家数据，加载角色；
+
+            // 所有人都准备完成。
+            m_IsAllReady = true;
         }
     }
 }

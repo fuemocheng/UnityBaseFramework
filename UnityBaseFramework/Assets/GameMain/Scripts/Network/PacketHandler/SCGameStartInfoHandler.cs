@@ -10,14 +10,14 @@ using XGame;
 
 namespace GameProto
 {
-    public partial class SCReadyHandler : PacketHandlerBase
+    public partial class SCGameStartInfoHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            SCReady packetImpl = (SCReady)packet;
+            SCGameStartInfo packetImpl = (SCGameStartInfo)packet;
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
-            GameEntry.Event.Fire(sender, SCReadyEventArgs.Create(packetImpl));
+            GameEntry.Event.Fire(sender, SCGameStartInfoEventArgs.Create(packetImpl));
         }
     }
 }
