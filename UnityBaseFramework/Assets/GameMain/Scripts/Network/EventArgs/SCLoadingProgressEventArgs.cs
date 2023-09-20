@@ -32,6 +32,12 @@ namespace XGame
             }
         }
 
+        public int AllProgress
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
@@ -46,9 +52,10 @@ namespace XGame
         /// </summary>
         /// <param name="e">内部事件。</param>
         /// <returns></returns>
-        public static SCLoadingProgressEventArgs Create(object userData = null)
+        public static SCLoadingProgressEventArgs Create(int loadingProgress, object userData = null)
         {
             SCLoadingProgressEventArgs scLoadingProgressEventArgs = ReferencePool.Acquire<SCLoadingProgressEventArgs>();
+            scLoadingProgressEventArgs.AllProgress = loadingProgress;
             scLoadingProgressEventArgs.UserData = userData;
             return scLoadingProgressEventArgs;
         }
@@ -58,6 +65,7 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
+            AllProgress = 0;
             UserData = null;
         }
     }

@@ -81,22 +81,16 @@ namespace XGame
 
         private void OnLoadingProgressResponse(object sender, GameEventArgs e)
         {
-            SCLoadingProgressEventArgs ne = (SCLoadingProgressEventArgs)e;
-            if (ne.UserData == null)
-            {
-                return;
-            }
-            SCLoadingProgress scLoadingProgress = (SCLoadingProgress)ne.UserData;
-
-            if (scLoadingProgress == null)
+            SCLoadingProgressEventArgs scLoadingProgressEventArgs = (SCLoadingProgressEventArgs)e;
+            if (scLoadingProgressEventArgs == null)
             {
                 return;
             }
 
-            if(scLoadingProgress.AllProgress < 100)
+            if(scLoadingProgressEventArgs.AllProgress < 100)
             {
                 //TODO: Loading 界面 设置加载进度。
-
+                Log.Info($"OnLoadingProgressResponse AllProgress:{scLoadingProgressEventArgs.AllProgress}");
             }
             else
             {

@@ -1,5 +1,7 @@
 using BaseFramework;
 using BaseFramework.Event;
+using GameProto;
+using System.Collections.Generic;
 
 namespace XGame
 {
@@ -18,6 +20,7 @@ namespace XGame
         /// </summary>
         public SCGameStartInfoEventArgs()
         {
+            Users = new();
             UserData = null;
         }
 
@@ -32,6 +35,36 @@ namespace XGame
             }
         }
 
+        public int RoomId
+        {
+            get;
+            private set;
+        }
+
+        public int MapId
+        {
+            get;
+            private set;
+        }
+
+        public int UserCount
+        {
+            get;
+            private set;
+        }
+
+        public int Seed
+        {
+            get;
+            private set;
+        }
+
+        public List<User> Users
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
@@ -44,11 +77,21 @@ namespace XGame
         /// <summary>
         /// 创建游戏开始数据事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="roomId"></param>
+        /// <param name="mapId"></param>
+        /// <param name="userCount"></param>
+        /// <param name="seed"></param>
+        /// <param name="users"></param>
+        /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCGameStartInfoEventArgs Create(object userData = null)
+        public static SCGameStartInfoEventArgs Create(int roomId, int mapId, int userCount, int seed, List<User> users, object userData = null)
         {
             SCGameStartInfoEventArgs scGameStartInfoEventArgs = ReferencePool.Acquire<SCGameStartInfoEventArgs>();
+            scGameStartInfoEventArgs.RoomId = roomId;
+            scGameStartInfoEventArgs.MapId = mapId;
+            scGameStartInfoEventArgs.UserCount = userCount;
+            scGameStartInfoEventArgs.Seed = seed;
+            scGameStartInfoEventArgs.Users.AddRange(users);
             scGameStartInfoEventArgs.UserData = userData;
             return scGameStartInfoEventArgs;
         }
@@ -58,6 +101,12 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
+            RoomId = 0;
+            MapId = 0;
+            UserCount = 0;
+            Seed = 0;
+            Users.Clear();
+            Users = null;
             UserData = null;
         }
     }

@@ -75,48 +75,38 @@ namespace XGame
 
         private void OnJoinRoomResponse(object sender, GameEventArgs e)
         {
-            SCJoinRoomEventArgs ne = (SCJoinRoomEventArgs)e;
-            if (ne.UserData == null)
-            {
-                return;
-            }
-            SCJoinRoom scReady = ne.UserData as SCJoinRoom;
-            if (scReady == null)
+            SCJoinRoomEventArgs scJoinRoomEventArgs = (SCJoinRoomEventArgs)e;
+            if (scJoinRoomEventArgs == null)
             {
                 return;
             }
 
             int readyCount = 0;
-            for (int i = 0; i < scReady.UserReadyInfos.Count; i++)
+            for (int i = 0; i < scJoinRoomEventArgs.UserReadyInfos.Count; i++)
             {
-                UserReadyInfo userReadyInfo = scReady.UserReadyInfos[i];
+                UserReadyInfo userReadyInfo = scJoinRoomEventArgs.UserReadyInfos[i];
                 if (userReadyInfo != null && userReadyInfo.Status == 1)
                 {
                     readyCount++;
                 }
             }
-            m_LobbyForm.OnJoinedRoom(scReady.RoomId, readyCount);
+            m_LobbyForm.OnJoinedRoom(scJoinRoomEventArgs.RoomId, readyCount);
 
-            Log.Info($"OnJoinRoomResponse RoomId:{scReady.RoomId} LocalId:{scReady.LocalId}");
+            Log.Info($"OnJoinRoomResponse RoomId:{scJoinRoomEventArgs.RoomId} LocalId:{scJoinRoomEventArgs.LocalId}");
         }
 
         private void OnReadyResponse(object sender, GameEventArgs e)
         {
-            SCReadyEventArgs ne = (SCReadyEventArgs)e;
-            if (ne.UserData == null)
-            {
-                return;
-            }
-            SCReady scReady = ne.UserData as SCReady;
-            if (scReady == null)
+            SCReadyEventArgs scReadyEventArgs = (SCReadyEventArgs)e;
+            if (scReadyEventArgs == null)
             {
                 return;
             }
 
             int readyCount = 0;
-            for (int i = 0; i < scReady.UserReadyInfos.Count; i++)
+            for (int i = 0; i < scReadyEventArgs.UserReadyInfos.Count; i++)
             {
-                UserReadyInfo userReadyInfo = scReady.UserReadyInfos[i];
+                UserReadyInfo userReadyInfo = scReadyEventArgs.UserReadyInfos[i];
                 if (userReadyInfo != null && userReadyInfo.Status == 1)
                 {
                     readyCount++;
@@ -128,20 +118,15 @@ namespace XGame
 
         private void OnGameStartInfoResponse(object sender, GameEventArgs e)
         {
-            SCGameStartInfoEventArgs ne = (SCGameStartInfoEventArgs)e;
-            if (ne.UserData == null)
-            {
-                return;
-            }
-            SCGameStartInfo scGameStartInfo = ne.UserData as SCGameStartInfo;
-            if (scGameStartInfo == null)
+            SCGameStartInfoEventArgs scGameStartInfoEventArgs = (SCGameStartInfoEventArgs)e;
+            if (scGameStartInfoEventArgs == null)
             {
                 return;
             }
 
-            //for (int i = 0; i < scGameStartInfo.Users.Count; i++)
+            //for (int i = 0; i < scGameStartInfoEventArgs.Users.Count; i++)
             //{
-            //    User user = scGameStartInfo.Users[i];
+            //    User user = scGameStartInfoEventArgs.Users[i];
             //}
 
             //TODO:
@@ -150,6 +135,8 @@ namespace XGame
 
             // 所有人都准备完成。
             m_IsAllReady = true;
+
+            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
         }
     }
 }

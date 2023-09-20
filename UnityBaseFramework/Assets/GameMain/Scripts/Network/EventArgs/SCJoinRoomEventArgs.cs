@@ -21,6 +21,7 @@ namespace XGame
         public SCJoinRoomEventArgs()
         {
             UserData = null;
+            UserReadyInfos = new();
         }
 
         /// <summary>
@@ -32,6 +33,24 @@ namespace XGame
             {
                 return EventId;
             }
+        }
+
+        public int RoomId
+        {
+            get;
+            private set;
+        }
+
+        public int LocalId
+        {
+            get;
+            private set;
+        }
+
+        public List<UserReadyInfo> UserReadyInfos
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -46,11 +65,17 @@ namespace XGame
         /// <summary>
         /// 创建加入游戏房间成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
-        /// <returns>创建的网络连接成功事件。</returns>
-        public static SCJoinRoomEventArgs Create(object userData = null)
+        /// <param name="roomId"></param>
+        /// <param name="localId"></param>
+        /// <param name="userReadyInfos"></param>
+        /// <param name="userData"></param>
+        /// <returns></returns>
+        public static SCJoinRoomEventArgs Create(int roomId, int localId, List<UserReadyInfo> userReadyInfos, object userData = null)
         {
             SCJoinRoomEventArgs scReadyEventArgs = ReferencePool.Acquire<SCJoinRoomEventArgs>();
+            scReadyEventArgs.RoomId = roomId;
+            scReadyEventArgs.LocalId = localId;
+            scReadyEventArgs.UserReadyInfos.AddRange(userReadyInfos);
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;
         }
@@ -60,7 +85,11 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
+            UserReadyInfos.Clear();
+            UserReadyInfos = null;
             UserData = null;
+            RoomId = 0;
+            LocalId = 0;
         }
     }
 }

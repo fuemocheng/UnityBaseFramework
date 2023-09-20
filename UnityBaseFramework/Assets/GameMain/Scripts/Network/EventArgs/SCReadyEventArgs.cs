@@ -11,20 +11,21 @@ namespace XGame
     public sealed class SCReadyEventArgs : GameEventArgs
     {
         /// <summary>
-        /// 准备游戏事件编号。
+        /// 准备事件编号。
         /// </summary>
         public static readonly int EventId = typeof(SCReadyEventArgs).GetHashCode();
 
         /// <summary>
-        /// 初始化准备游戏返回事件的新实例。
+        /// 初始化准备返回事件的新实例。
         /// </summary>
         public SCReadyEventArgs()
         {
+            UserReadyInfos = new();
             UserData = null;
         }
 
         /// <summary>
-        /// 获取准备游戏成功事件编号。
+        /// 获取准备事件编号。
         /// </summary>
         public override int Id
         {
@@ -32,6 +33,12 @@ namespace XGame
             {
                 return EventId;
             }
+        }
+
+        public List<UserReadyInfo> UserReadyInfos
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -44,22 +51,26 @@ namespace XGame
         }
 
         /// <summary>
-        /// 创建准备游戏成功事件。
+        /// 创建准备事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
-        /// <returns>创建的网络连接成功事件。</returns>
-        public static SCReadyEventArgs Create(object userData = null)
+        /// <param name="userReadyInfos"></param>
+        /// <param name="userData"></param>
+        /// <returns></returns>
+        public static SCReadyEventArgs Create(List<UserReadyInfo> userReadyInfos, object userData = null)
         {
             SCReadyEventArgs scReadyEventArgs = ReferencePool.Acquire<SCReadyEventArgs>();
+            scReadyEventArgs.UserReadyInfos.AddRange(userReadyInfos);
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;
         }
 
         /// <summary>
-        /// 清理准备游戏成功事件。
+        /// 清理准备事件。
         /// </summary>
         public override void Clear()
         {
+            UserReadyInfos.Clear();
+            UserReadyInfos = null;
             UserData = null;
         }
     }
