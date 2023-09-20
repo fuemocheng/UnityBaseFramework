@@ -153,32 +153,9 @@ namespace GameProto
         public override int Id => 11;
     }
 
-    public partial class CSStart : CSPacketBase
-    {
-        public override int Id => 12;
-
-        public override void Clear()
-        {
-        }
-    }
-
-    public partial class SCStart : SCPacketBase
-    {
-        public override int Id => 13;
-
-        public override void Clear()
-        {
-        }
-    }
-
-    public partial class SCStartHandler : PacketHandlerBase
-    {
-        public override int Id => 13;
-    }
-
     public partial class CSInputFrame : CSPacketBase
     {
-        public override int Id => 14;
+        public override int Id => 12;
 
         public override void Clear()
         {
@@ -188,7 +165,7 @@ namespace GameProto
 
     public partial class SCServerFrame : SCPacketBase
     {
-        public override int Id => 15;
+        public override int Id => 13;
 
         public override void Clear()
         {
@@ -199,7 +176,7 @@ namespace GameProto
 
     public partial class SCServerFrameHandler : PacketHandlerBase
     {
-        public override int Id => 15;
+        public override int Id => 13;
     }
 
 }

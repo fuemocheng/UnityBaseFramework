@@ -92,13 +92,6 @@ message SCLoadingProgress{
 	int32 AllProgress = 1;			//所有玩家整体加载进度，100为所有人都加载完成；
 }
 
-//开始游戏
-message CSStart{
-}
-
-message SCStart{
-}
-
 //输入帧
 message CSInputFrame{
 	repeated InputFrame InputFrames = 1;	//输入数据
