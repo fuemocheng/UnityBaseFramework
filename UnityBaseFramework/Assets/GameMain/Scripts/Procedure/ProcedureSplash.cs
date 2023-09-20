@@ -31,13 +31,13 @@ namespace XGame
             {
                 // 单机模式
                 Log.Info("Package resource mode detected.");
-                //ChangeState<ProcedureInitResources>(procedureOwner);
+                ChangeState<ProcedureInitResources>(procedureOwner);
             }
             else
             {
                 // 可更新模式
                 Log.Info("Updatable resource mode detected.");
-                //ChangeState<ProcedureCheckVersion>(procedureOwner);
+                ChangeState<ProcedureCheckVersion>(procedureOwner);
             }
         }
     }
