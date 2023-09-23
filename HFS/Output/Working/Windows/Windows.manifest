@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 3928896399
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: configs
+      Dependencies: {}
+    Info_1:
+      Name: datatables
+      Dependencies: {}
+    Info_2:
+      Name: fonts
+      Dependencies: {}
+    Info_3:
+      Name: localization/dictionaries.en-us
+      Dependencies: {}
+    Info_4:
+      Name: localization/dictionaries.zh-cn
+      Dependencies: {}
+    Info_5:
+      Name: scenes
+      Dependencies: {}
+    Info_6:
+      Name: sounds
+      Dependencies: {}
+    Info_7:
+      Name: ui/uiforms
+      Dependencies:
+        Dependency_0: ui/uisprites/common
+    Info_8:
+      Name: ui/uisounds
+      Dependencies: {}
+    Info_9:
+      Name: ui/uisprites/common
+      Dependencies: {}

@@ -12,8 +12,6 @@
       <Resource Name="UI/UIForms" LoadType="0" Packed="True" />
       <Resource Name="UI/UISounds" LoadType="0" Packed="True" />
       <Resource Name="UI/UISprites/Common" LoadType="0" Packed="True" />
-      <Resource Name="UI/UISprites/Icons" LoadType="0" Packed="True" />
-      <Resource Name="UI/UISprites/Logos" LoadType="0" Packed="True" />
     </Resources>
     <Assets>
       <Asset Guid="0179316b5fc7c2946a67c5877c02fc30" ResourceName="UI/UISprites/Common" />

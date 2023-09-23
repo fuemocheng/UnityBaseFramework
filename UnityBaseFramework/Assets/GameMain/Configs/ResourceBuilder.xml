@@ -9,7 +9,7 @@
       <AdditionalCompressionSelected>True</AdditionalCompressionSelected>
       <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
       <BuildEventHandlerTypeName>XGame.Editor.XGameBuildEventHandler</BuildEventHandlerTypeName>
-      <OutputDirectory>D:/GitHub/UnityBaseFramework/HFS</OutputDirectory>
+      <OutputDirectory>D:/Workspace/GitHub/UnityBaseFramework/HFS/Output</OutputDirectory>
       <OutputPackageSelected>True</OutputPackageSelected>
       <OutputFullSelected>True</OutputFullSelected>
       <OutputPackedSelected>True</OutputPackedSelected>

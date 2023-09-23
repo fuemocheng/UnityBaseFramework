@@ -1,7 +1,7 @@
 {
   "GameVersion": "0.1.0",
   "InternalGameVersion": 0,
-  "CheckVersionUrl": "http://127.0.0.1/Full/version.txt",
+  "CheckVersionUrl": "http://2.0.0.1/HFS/version.txt",
   "WindowsAppUrl": "https://github.com/fuemocheng/UnityBaseFramework",
   "MacOSAppUrl": "https://github.com/fuemocheng/UnityBaseFramework",
   "IOSAppUrl": "https://github.com/fuemocheng/UnityBaseFramework",

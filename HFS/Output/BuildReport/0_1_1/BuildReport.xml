@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<UnityBaseFramework>
+  <BuildReport>
+    <Summary>
+      <ProductName>XGame</ProductName>
+      <CompanyName>GameClub</CompanyName>
+      <GameIdentifier>com.GameClub.XGame</GameIdentifier>
+      <BaseFrameworkVersion>2022.07.31</BaseFrameworkVersion>
+      <UnityVersion>2022.1.10f1c1</UnityVersion>
+      <ApplicableGameVersion>0.1</ApplicableGameVersion>
+      <InternalResourceVersion>1</InternalResourceVersion>
+      <Platforms>Windows</Platforms>
+      <AssetBundleCompression>LZ4</AssetBundleCompression>
+      <CompressionHelperTypeName>UnityBaseFramework.Runtime.DefaultCompressionHelper</CompressionHelperTypeName>
+      <AdditionalCompressionSelected>True</AdditionalCompressionSelected>
+      <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
+      <BuildEventHandlerTypeName>XGame.Editor.XGameBuildEventHandler</BuildEventHandlerTypeName>
+      <OutputDirectory>D:/Workspace/GitHub/UnityBaseFramework/HFS/Output</OutputDirectory>
+      <BuildAssetBundleOptions>DeterministicAssetBundle, ChunkBasedCompression</BuildAssetBundleOptions>
+    </Summary>
+    <Resources Count="10">
+      <Resource Name="Configs" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="2">
+          <Asset Guid="aaeeeddccc033794abd71ec597b1854d" Name="Assets/GameMain/Configs/DefaultConfig.txt" Length="200" HashCode="1467516400" />
+          <Asset Guid="f03a8b2715b053e43b40650792f4bac0" Name="Assets/GameMain/Configs/DefaultConfig.bytes" Length="45" HashCode="698598607" />
+        </Assets>
+        <Codes>
+          <Windows Length="1421" HashCode="1060603711" CompressedLength="1169" CompressedHashCode="-2094438804" />
+        </Codes>
+      </Resource>
+      <Resource Name="DataTables" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="10">
+          <Asset Guid="150e4ae4e76f1fe43aa00cd65d0b74a6" Name="Assets/GameMain/DataTables/UIForm.txt" Length="418" HashCode="1466838024" />
+          <Asset Guid="315e8ed2db27c254cb3366ff0793cd90" Name="Assets/GameMain/DataTables/Music.txt" Length="187" HashCode="-1324825117" />
+          <Asset Guid="372a8b1e52bedc64b9207b12d167afaa" Name="Assets/GameMain/DataTables/Sound.txt" Length="604" HashCode="238852060" />
+          <Asset Guid="39615deded012b34488440d6511a6585" Name="Assets/GameMain/DataTables/Scene.txt" Length="309" HashCode="-1986920419" />
+          <Asset Guid="642e831a3d357ba40bfbb2ac416afd07" Name="Assets/GameMain/DataTables/Scene.bytes" Length="92" HashCode="-374808468" />
+          <Asset Guid="84acf572640a7094c9ee95bf40073ef0" Name="Assets/GameMain/DataTables/UIForm.bytes" Length="90" HashCode="773028411" />
+          <Asset Guid="8e114ded6a865324588170636872943c" Name="Assets/GameMain/DataTables/UISound.bytes" Length="29" HashCode="-540465734" />
+          <Asset Guid="9b433f0bb7fef6f4085c316a0d88c307" Name="Assets/GameMain/DataTables/Music.bytes" Length="46" HashCode="-102054710" />
+          <Asset Guid="9c3faac13c8ced84a9f3018303b7bb98" Name="Assets/GameMain/DataTables/Sound.bytes" Length="167" HashCode="-1089466089" />
+          <Asset Guid="f2f97a713beae744181ba934f9c4113a" Name="Assets/GameMain/DataTables/UISound.txt" Length="251" HashCode="-1250392272" />
+        </Assets>
+        <Codes>
+          <Windows Length="2736" HashCode="-1241083708" CompressedLength="2366" CompressedHashCode="-1850970793" />
+        </Codes>
+      </Resource>
+      <Resource Name="Fonts" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="1">
+          <Asset Guid="77cbb7c5404c10242ab59953e0746314" Name="Assets/GameMain/Fonts/MainFont.ttf" Length="7070444" HashCode="-915020890" />
+        </Assets>
+        <Codes>
+          <Windows Length="4628785" HashCode="-239275315" CompressedLength="4052636" CompressedHashCode="1796841412" />
+        </Codes>
+      </Resource>
+      <Resource Name="Localization/Dictionaries" Variant="en-us" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="1">
+          <Asset Guid="14869ac0d4433f04db1704e39d03412e" Name="Assets/GameMain/Localization/English/Dictionaries/Default.xml" Length="2000" HashCode="1146807728" />
+        </Assets>
+        <Codes>
+          <Windows Length="2182" HashCode="582824646" CompressedLength="1816" CompressedHashCode="-395727492" />
+        </Codes>
+      </Resource>
+      <Resource Name="Localization/Dictionaries" Variant="zh-cn" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="1">
+          <Asset Guid="9be2e1e45f4edd74c8764538ad306b78" Name="Assets/GameMain/Localization/ChineseSimplified/Dictionaries/Default.xml" Length="1929" HashCode="906227867" />
+        </Assets>
+        <Codes>
+          <Windows Length="2140" HashCode="1383541931" CompressedLength="1858" CompressedHashCode="1248499015" />
+        </Codes>
+      </Resource>
+      <Resource Name="Scenes" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="4">
+          <Asset Guid="16fc58edfad55b1489c6f3f433672130" Name="Assets/GameMain/Scenes/Map01.unity" Length="8153" HashCode="71421022" />
+          <Asset Guid="5059dbb1942397543843f80246e37f50" Name="Assets/GameMain/Scenes/Map02.unity" Length="8153" HashCode="71421022" />
+          <Asset Guid="90160e3023df3fd45bdefa4972e3b319" Name="Assets/GameMain/Scenes/Login.unity" Length="8167" HashCode="-1347709925" />
+          <Asset Guid="f00001644c5492c4d9cb0dbfe061a86d" Name="Assets/GameMain/Scenes/Lobby.unity" Length="8167" HashCode="724999171" />
+        </Assets>
+        <Codes>
+          <Windows Length="32986" HashCode="-1673381141" CompressedLength="20955" CompressedHashCode="-988505283" />
+        </Codes>
+      </Resource>
+      <Resource Name="Sounds" Extension="dat" LoadType="0" Packed="False">
+        <Assets Count="5">
+          <Asset Guid="1be4472894949437694aead55c6da60f" Name="Assets/GameMain/Sounds/weapon_enemy.wav" Length="51004" HashCode="-1155291960" />
+          <Asset Guid="3dc7455402dfa462b89a4bbd513955e9" Name="Assets/GameMain/Sounds/explosion_asteroid.wav" Length="149216" HashCode="305962817" />
+          <Asset Guid="72e76810224064300b7d32e8322a5d12" Name="Assets/GameMain/Sounds/explosion_enemy.wav" Length="174116" HashCode="-984961901" />
+          <Asset Guid="a019ae3af8e864616b85773c509f5285" Name="Assets/GameMain/Sounds/explosion_player.wav" Length="326536" HashCode="2022881377" />
+          <Asset Guid="bf75b984df8a84987bcf3a8bf6e2862d" Name="Assets/GameMain/Sounds/weapon_player.wav" Length="65792" HashCode="1405407806" />
+        </Assets>
+        <Codes>
+          <Windows Length="46310" HashCode="-1777733949" CompressedLength="45971" CompressedHashCode="-774843940" />
+        </Codes>
+      </Resource>
+      <Resource Name="UI/UIForms" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="4">
+          <Asset Guid="04d7dde7615d71b4db1a0c8d67a62e95" Name="Assets/GameMain/UI/UIForms/DialogForm.prefab" Length="60172" HashCode="1217648887">
+            <DependencyAssets Count="4">
+              <DependencyAsset Name="Assets/GameMain/UI/UISprites/Common/background.png" />
+              <DependencyAsset Name="Assets/GameMain/UI/UISprites/Common/button-outline.png" />
+              <DependencyAsset Name="Assets/GameMain/UI/UISprites/Common/dialog-background.png" />
+              <DependencyAsset Name="Assets/GameMain/UI/UISprites/Common/dialog-title-background.png" />
+            </DependencyAssets>
+          </Asset>
+          <Asset Guid="2deec6345d837d540b8e07a0aedae157" Name="Assets/GameMain/UI/UIForms/LobbyForm.prefab" Length="36001" HashCode="940598852" />
+          <Asset Guid="5c38247664a9e77429ad8bd8e884696f" Name="Assets/GameMain/UI/UIForms/LoginForm.prefab" Length="55562" HashCode="-755170792" />
+          <Asset Guid="7c50ae7a56b585c459af3cd74cca8c29" Name="Assets/GameMain/UI/UIForms/MainUIForm.prefab" Length="11870" HashCode="-2098127305" />
+        </Assets>
+        <Codes>
+          <Windows Length="641819" HashCode="1877874165" CompressedLength="558250" CompressedHashCode="-1965993819" />
+        </Codes>
+      </Resource>
+      <Resource Name="UI/UISounds" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="2">
+          <Asset Guid="c7d1e11dd37634b48a9dd4012b8e4306" Name="Assets/GameMain/UI/UISounds/click.wav" Length="41568" HashCode="-1547829698" />
+          <Asset Guid="e830964cdb85ff3429bca484c16bab44" Name="Assets/GameMain/UI/UISounds/select.wav" Length="41568" HashCode="-1920478215" />
+        </Assets>
+        <Codes>
+          <Windows Length="3719" HashCode="-1578732588" CompressedLength="3373" CompressedHashCode="20741878" />
+        </Codes>
+      </Resource>
+      <Resource Name="UI/UISprites/Common" Extension="dat" LoadType="0" Packed="True">
+        <Assets Count="17">
+          <Asset Guid="0179316b5fc7c2946a67c5877c02fc30" Name="Assets/GameMain/UI/UISprites/Common/info.png" Length="1869" HashCode="1439065304" />
+          <Asset Guid="0a65a68c01a76ea4b8b574827a6467aa" Name="Assets/GameMain/UI/UISprites/Common/dialog-title-background.png" Length="1614" HashCode="-248782138" />
+          <Asset Guid="156d241f796508c4da4fc354a7fbf5a8" Name="Assets/GameMain/UI/UISprites/Common/progressbar-background.png" Length="784" HashCode="-1146856258" />
+          <Asset Guid="236433a27ce40a7429b87d14d8fa3035" Name="Assets/GameMain/UI/UISprites/Common/progress-conner.png" Length="576" HashCode="-1226923544" />
+          <Asset Guid="24ca310f92a6796408f1db7647ec4e55" Name="Assets/GameMain/UI/UISprites/Common/circle.png" Length="1365" HashCode="1330959776" />
+          <Asset Guid="3be3fac3611f4584695662c4889f722d" Name="Assets/GameMain/UI/UISprites/Common/circle-outline.png" Length="20881" HashCode="-260484534" />
+          <Asset Guid="3f54fcfdac53aec42ae18a6a1c6d8cb1" Name="Assets/GameMain/UI/UISprites/Common/checked.png" Length="15921" HashCode="-1098762055" />
+          <Asset Guid="56b8df63bbad60749a69e38bc687fadf" Name="Assets/GameMain/UI/UISprites/Common/circle-filled.png" Length="16998" HashCode="964408779" />
+          <Asset Guid="62af9e5c8f39cfa49af9e10ccf42f1da" Name="Assets/GameMain/UI/UISprites/Common/round-button-outline.png" Length="3345" HashCode="451796798" />
+          <Asset Guid="6cbc2c323b77f804fb958fa4eca33998" Name="Assets/GameMain/UI/UISprites/Common/line.png" Length="797" HashCode="1722275133" />
+          <Asset Guid="9f847ec5e66e03e4ead1d3c5f7b510e8" Name="Assets/GameMain/UI/UISprites/Common/button-filled.png" Length="1467" HashCode="1095020050" />
+          <Asset Guid="a8c07bbe04fdaf04b80e27f651a8edd6" Name="Assets/GameMain/UI/UISprites/Common/button-outline.png" Length="1683" HashCode="-837309841" />
+          <Asset Guid="ab45c3f613f388d43bbf43ec05eb92e2" Name="Assets/GameMain/UI/UISprites/Common/dialog-background.png" Length="7706" HashCode="1348455424" />
+          <Asset Guid="cadd0764941c8b646ae79b51d0ea8285" Name="Assets/GameMain/UI/UISprites/Common/background.png" Length="5175294" HashCode="1806783389" />
+          <Asset Guid="e82837c9099f69a48b48fc44eb8d119d" Name="Assets/GameMain/UI/UISprites/Common/progressbar.png" Length="24724" HashCode="706154886" />
+          <Asset Guid="e85864330b68dde498dcb6e8711815d3" Name="Assets/GameMain/UI/UISprites/Common/round-button-filled.png" Length="2690" HashCode="-105002164" />
+          <Asset Guid="f2f4df0b7211e4c42a5638273525d8ee" Name="Assets/GameMain/UI/UISprites/Common/box.png" Length="1058" HashCode="-2109500730" />
+        </Assets>
+        <Codes>
+          <Windows Length="140847" HashCode="-556420253" CompressedLength="86461" CompressedHashCode="480211923" />
+        </Codes>
+      </Resource>
+    </Resources>
+  </BuildReport>
+</UnityBaseFramework>
