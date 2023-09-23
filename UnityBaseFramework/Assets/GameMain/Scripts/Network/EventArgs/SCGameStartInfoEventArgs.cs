@@ -106,7 +106,6 @@ namespace XGame
             UserCount = 0;
             Seed = 0;
             Users.Clear();
-            Users = null;
             UserData = null;
         }
     }

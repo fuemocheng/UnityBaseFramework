@@ -86,7 +86,6 @@ namespace XGame
         public override void Clear()
         {
             UserReadyInfos.Clear();
-            UserReadyInfos = null;
             UserData = null;
             RoomId = 0;
             LocalId = 0;

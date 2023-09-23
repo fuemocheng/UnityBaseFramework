@@ -70,7 +70,6 @@ namespace XGame
         public override void Clear()
         {
             UserReadyInfos.Clear();
-            UserReadyInfos = null;
             UserData = null;
         }
     }
