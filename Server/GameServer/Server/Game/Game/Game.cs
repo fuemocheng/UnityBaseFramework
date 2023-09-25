@@ -40,7 +40,7 @@ namespace Server
             m_AllHistoryFrames.Clear();
             GameState = EGameState.Idle;
             m_GameStartTimestampMs = -1;
-    }
+        }
 
         public void SetLoading()
         {
