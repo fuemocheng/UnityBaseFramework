@@ -25,7 +25,7 @@ namespace GameProto
             // TODO:Get From DB
 
             // Get User¡£
-            Server.User user = GameEntry.Game.UserManager.GetUser(packetImpl.Account);
+            Server.User user = GameEntry.GameLogic.UserManager.GetUser(packetImpl.Account);
             if (user == null)
             {
                 // Create user¡£
@@ -38,7 +38,7 @@ namespace GameProto
 
                 session.BindInfo = user;
 
-                GameEntry.Game.UserManager.AddUser(user);
+                GameEntry.GameLogic.UserManager.AddUser(user);
             }
             else
             {

@@ -64,7 +64,7 @@ namespace Server
         /// <summary>
         /// 游戏逻辑，不继承 BaseFrameworkComponent。
         /// </summary>
-        public static Game Game
+        public static GameLogicComponent GameLogic
         {
             get;
             private set;
@@ -88,8 +88,8 @@ namespace Server
             Network.Awake();
 
             // 游戏逻辑初始化。
-            Game = new Game();
-            Game.Awake();
+            GameLogic = new GameLogicComponent();
+            GameLogic.Awake();
         }
 
         public static void Start()
@@ -102,7 +102,7 @@ namespace Server
             Network.Start(NetworkProtocolType.TCP, serverIPEndpoint);
 
             // 游戏逻辑 Start。
-            Game.Start();
+            GameLogic.Start();
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Server
         public static void SlowUpdate(float elapseSeconds, float realElapseSeconds)
         {
             // 游戏逻辑更新。
-            Game.Update(elapseSeconds, realElapseSeconds);
+            GameLogic.Update(elapseSeconds, realElapseSeconds);
         }
     }
 }

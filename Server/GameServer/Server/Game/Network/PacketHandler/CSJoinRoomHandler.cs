@@ -24,14 +24,14 @@ namespace GameProto
             Server.User user = (Server.User)session.BindInfo;
 
             // Create Room.
-            Room availableRoom = GameEntry.Game.RoomManager.GetAvailableRoom();
+            Room availableRoom = GameEntry.GameLogic.RoomManager.GetAvailableRoom();
             if (availableRoom == null)
             {
                 availableRoom = ReferencePool.Acquire<Room>();
                 availableRoom.RoomId = RoomIdGenerator.GenerateId();
                 availableRoom.RoomName = user.Account;
                 availableRoom.JoinRoom(user);
-                GameEntry.Game.RoomManager.AddRoom(availableRoom);
+                GameEntry.GameLogic.RoomManager.AddRoom(availableRoom);
             }
             else
             {

@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    public class Game
+    public class GameLogicComponent
     {
         public UserManager UserManager = new UserManager();
         public RoomManager RoomManager = new RoomManager();

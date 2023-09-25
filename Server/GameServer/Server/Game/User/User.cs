@@ -11,7 +11,7 @@ namespace Server
         public string UserName = string.Empty;
         public Session TcpSession = null;
         public Session KcpSession = null;
-        public Game Game = null;
+        public GameLogicComponent GameLogicComponent = null;
         public Room Room = null;
         public int LocalId = -1;
         public bool IsReady = false;
@@ -31,7 +31,7 @@ namespace Server
             KcpSession?.Dispose();
             TcpSession = null;
             KcpSession = null;
-            Game = null;
+            GameLogicComponent = null;
             Room = null;
             LocalId = -1;
             IsReady = false;
