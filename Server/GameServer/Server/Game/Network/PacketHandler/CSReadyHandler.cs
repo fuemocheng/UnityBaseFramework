@@ -53,6 +53,8 @@ namespace GameProto
                     }
                     sUser.TcpSession.Send(gameStartInfo);
                 }
+
+                room.Game.SetLoading();
             }
             else
             {

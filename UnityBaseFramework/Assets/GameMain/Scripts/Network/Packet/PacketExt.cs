@@ -159,7 +159,7 @@ namespace GameProto
 
         public override void Clear()
         {
-            InputFrames.Clear();
+            InputFrame = default;
         }
     }
 
@@ -169,7 +169,7 @@ namespace GameProto
 
         public override void Clear()
         {
-            Tick = 0;
+            StartTick = 0;
             ServerFrames.Clear();
         }
     }

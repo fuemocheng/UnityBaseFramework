@@ -45,6 +45,12 @@ namespace GameProto
                 scLoadingProgress.AllProgress = currProgress;
                 sUser.TcpSession.Send(scLoadingProgress);
             }
+
+            //所有客户端加载完成。
+            if (currProgress >= 100)
+            {
+                room.Game.SetLoadingFinished();
+            }
         }
     }
 }

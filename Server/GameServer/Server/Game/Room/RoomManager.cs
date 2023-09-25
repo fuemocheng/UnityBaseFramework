@@ -18,7 +18,10 @@ namespace Server
 
         public void Update(float elapseSeconds, float realElapseSeconds)
         {
-
+            foreach (KeyValuePair<int, Room> kvp in m_Rooms)
+            {
+                kvp.Value?.Update(elapseSeconds, realElapseSeconds);
+            }
         }
 
         public void Destroy()

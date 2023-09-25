@@ -254,7 +254,7 @@ namespace GameProto
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public global::System.Collections.Generic.List<InputFrame> InputFrames { get; } = new global::System.Collections.Generic.List<InputFrame>();
+        public InputFrame InputFrame { get; set; }
 
     }
 
@@ -266,7 +266,7 @@ namespace GameProto
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public int Tick { get; set; }
+        public int StartTick { get; set; }
 
         [global::ProtoBuf.ProtoMember(2)]
         public global::System.Collections.Generic.List<ServerFrame> ServerFrames { get; } = new global::System.Collections.Generic.List<ServerFrame>();

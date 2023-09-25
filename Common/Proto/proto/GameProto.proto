@@ -94,12 +94,12 @@ message SCLoadingProgress{
 
 //输入帧
 message CSInputFrame{
-	repeated InputFrame InputFrames = 1;	//输入数据
+	InputFrame InputFrame = 1;	//输入数据
 }
 
 //服务器帧数据
 message SCServerFrame{
-	int32 Tick = 1;							//逻辑帧
+	int32 StartTick = 1;							//逻辑帧
 	repeated ServerFrame ServerFrames = 2;	//所有玩家的数据帧
 }
 

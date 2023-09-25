@@ -1,4 +1,5 @@
 ﻿using BaseFramework;
+using Lockstep.Util;
 
 namespace Server
 {
@@ -17,6 +18,7 @@ namespace Server
         {
             UserManager.Start();
             RoomManager.Start();
+            LTime.DoStart();
         }
 
         /// <summary>

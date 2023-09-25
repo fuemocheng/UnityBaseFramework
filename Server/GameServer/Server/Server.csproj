@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BaseFramework\BaseFramework.csproj" />
+    <ProjectReference Include="..\LockstepEngine\LockstepEngine.csproj" />
     <ProjectReference Include="..\Network\Network.csproj" />
   </ItemGroup>
 

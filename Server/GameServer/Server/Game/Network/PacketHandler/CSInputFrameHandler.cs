@@ -6,6 +6,7 @@
 
 using BaseFramework.Runtime;
 using Network;
+using Server;
 
 namespace GameProto
 {
@@ -14,7 +15,14 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSInputFrame packetImpl = (CSInputFrame)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+
+            // Tcp Session¡£
+            Session session = (Session)sender;
+            // Server.User¡£
+            Server.User user = (Server.User)session.BindInfo;
+
+            user.Room.Game.ReceiveInput(user, packetImpl);
         }
     }
 }

@@ -8,8 +8,11 @@ namespace Server
     {
         public int RoomId;
         public string RoomName;
+
         private Dictionary<long, User> m_Users = new Dictionary<long, User>();
         private List<User> m_LocalIds = new List<User>();
+
+        public Game Game;
 
         public Room()
         {
@@ -17,6 +20,13 @@ namespace Server
             {
                 m_LocalIds.Add(null);
             }
+
+            Game = new Game(this);
+        }
+
+        public void Update(double elapseSeconds, double realElapseSeconds)
+        {
+            Game?.Update(elapseSeconds, realElapseSeconds);
         }
 
         public void Clear()
@@ -25,6 +35,7 @@ namespace Server
             RoomName = string.Empty;
             m_Users.Clear();
             m_LocalIds.Clear();
+            Game.Clear();
         }
 
         /// <summary>
@@ -118,6 +129,19 @@ namespace Server
             user.Room = null;
             m_Users.Remove(user.UserId);
             Log.Info("User:{0} leave Room:{1}.", user.UserId, RoomId);
+        }
+
+        public void BroadcastServerFrame(ServerFrame[] serverFrames)
+        {
+            // 广播进度。
+            foreach (KeyValuePair<long, User> kvp in m_Users)
+            {
+                User sUser = kvp.Value;
+                SCServerFrame scServerFrame = ReferencePool.Acquire<SCServerFrame>();
+                scServerFrame.StartTick = serverFrames[0].Tick;
+                scServerFrame.ServerFrames.AddRange(serverFrames);
+                sUser.TcpSession.Send(scServerFrame);
+            }
         }
     }
 }
