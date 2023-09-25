@@ -181,7 +181,7 @@ namespace Server
             {
                 frames[count - i - 1] = m_AllHistoryFrames[Tick - i];
             }
-            Room?.BroadcastServerFrame(frames);
+            BroadcastServerFrame(frames);
 
 
             if (m_FirstFrameTimeStamp <= 0)
@@ -197,6 +197,20 @@ namespace Server
 
             Tick++;
             return true;
+        }
+
+
+        private void BroadcastServerFrame(ServerFrame[] serverFrames)
+        {
+            // 广播进度。
+            foreach (KeyValuePair<long, User> kvp in Room.GetUsersDictionary())
+            {
+                User sUser = kvp.Value;
+                SCServerFrame scServerFrame = ReferencePool.Acquire<SCServerFrame>();
+                scServerFrame.StartTick = serverFrames[0].Tick;
+                scServerFrame.ServerFrames.AddRange(serverFrames);
+                sUser.TcpSession.Send(scServerFrame);
+            }
         }
     }
 }

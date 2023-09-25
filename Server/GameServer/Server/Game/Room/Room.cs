@@ -130,18 +130,5 @@ namespace Server
             m_Users.Remove(user.UserId);
             Log.Info("User:{0} leave Room:{1}.", user.UserId, RoomId);
         }
-
-        public void BroadcastServerFrame(ServerFrame[] serverFrames)
-        {
-            // 广播进度。
-            foreach (KeyValuePair<long, User> kvp in m_Users)
-            {
-                User sUser = kvp.Value;
-                SCServerFrame scServerFrame = ReferencePool.Acquire<SCServerFrame>();
-                scServerFrame.StartTick = serverFrames[0].Tick;
-                scServerFrame.ServerFrames.AddRange(serverFrames);
-                sUser.TcpSession.Send(scServerFrame);
-            }
-        }
     }
 }
