@@ -31,9 +31,37 @@ namespace GameProto
         }
     }
 
-    public partial class CSLogin : CSPacketBase
+    public partial class CSPing : CSPacketBase
     {
         public override int Id => 3;
+
+        public override void Clear()
+        {
+            LocalId = 0;
+            SendTimestamp = default;
+        }
+    }
+
+    public partial class CSPingHandler : PacketHandlerBase
+    {
+        public override int Id => 3;
+    }
+
+    public partial class SCPing : SCPacketBase
+    {
+        public override int Id => 4;
+
+        public override void Clear()
+        {
+            LocalId = 0;
+            SendTimestamp = default;
+            TimeSinceServerStart = default;
+        }
+    }
+
+    public partial class CSLogin : CSPacketBase
+    {
+        public override int Id => 5;
 
         public override void Clear()
         {
@@ -44,12 +72,12 @@ namespace GameProto
 
     public partial class CSLoginHandler : PacketHandlerBase
     {
-        public override int Id => 3;
+        public override int Id => 5;
     }
 
     public partial class SCLogin : SCPacketBase
     {
-        public override int Id => 4;
+        public override int Id => 6;
 
         public override void Clear()
         {
@@ -59,7 +87,7 @@ namespace GameProto
 
     public partial class CSJoinRoom : CSPacketBase
     {
-        public override int Id => 5;
+        public override int Id => 7;
 
         public override void Clear()
         {
@@ -69,12 +97,12 @@ namespace GameProto
 
     public partial class CSJoinRoomHandler : PacketHandlerBase
     {
-        public override int Id => 5;
+        public override int Id => 7;
     }
 
     public partial class SCJoinRoom : SCPacketBase
     {
-        public override int Id => 6;
+        public override int Id => 8;
 
         public override void Clear()
         {
@@ -86,7 +114,7 @@ namespace GameProto
 
     public partial class CSReady : CSPacketBase
     {
-        public override int Id => 7;
+        public override int Id => 9;
 
         public override void Clear()
         {
@@ -96,12 +124,12 @@ namespace GameProto
 
     public partial class CSReadyHandler : PacketHandlerBase
     {
-        public override int Id => 7;
+        public override int Id => 9;
     }
 
     public partial class SCReady : SCPacketBase
     {
-        public override int Id => 8;
+        public override int Id => 10;
 
         public override void Clear()
         {
@@ -111,7 +139,7 @@ namespace GameProto
 
     public partial class SCGameStartInfo : SCPacketBase
     {
-        public override int Id => 9;
+        public override int Id => 11;
 
         public override void Clear()
         {
@@ -125,7 +153,7 @@ namespace GameProto
 
     public partial class CSLoadingProgress : CSPacketBase
     {
-        public override int Id => 10;
+        public override int Id => 12;
 
         public override void Clear()
         {
@@ -135,12 +163,12 @@ namespace GameProto
 
     public partial class CSLoadingProgressHandler : PacketHandlerBase
     {
-        public override int Id => 10;
+        public override int Id => 12;
     }
 
     public partial class SCLoadingProgress : SCPacketBase
     {
-        public override int Id => 11;
+        public override int Id => 13;
 
         public override void Clear()
         {
@@ -150,7 +178,7 @@ namespace GameProto
 
     public partial class CSInputFrame : CSPacketBase
     {
-        public override int Id => 12;
+        public override int Id => 14;
 
         public override void Clear()
         {
@@ -160,12 +188,12 @@ namespace GameProto
 
     public partial class CSInputFrameHandler : PacketHandlerBase
     {
-        public override int Id => 12;
+        public override int Id => 14;
     }
 
     public partial class SCServerFrame : SCPacketBase
     {
-        public override int Id => 13;
+        public override int Id => 15;
 
         public override void Clear()
         {

@@ -44,6 +44,18 @@ message CSHeartBeat{
 message SCHeartBeat{
 }
 
+//Ping
+message CSPing{
+	int32 LocalId = 1;
+	int64 SendTimestamp = 2;
+} 
+
+message SCPing{
+	int32 LocalId = 1;
+	int64 SendTimestamp = 2;
+	int64 TimeSinceServerStart = 3;
+}
+
 //登录
 message CSLogin{
 	string Account = 1;
