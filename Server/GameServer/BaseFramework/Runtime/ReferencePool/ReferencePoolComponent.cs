@@ -7,7 +7,7 @@ namespace BaseFramework.Runtime
     /// </summary>
     public sealed class ReferencePoolComponent : BaseFrameworkComponent
     {
-        private ReferenceStrictCheckType m_EnableStrictCheck = ReferenceStrictCheckType.AlwaysEnable;
+        private ReferenceStrictCheckType m_EnableStrictCheck = ReferenceStrictCheckType.OnlyEnableWhenDevelopment;
 
         /// <summary>
         /// 获取或设置是否开启强制检查。
@@ -45,7 +45,7 @@ namespace BaseFramework.Runtime
                     break;
 
                 case ReferenceStrictCheckType.OnlyEnableWhenDevelopment:
-                    EnableStrictCheck = true;
+                    EnableStrictCheck = false;
                     break;
 
                 case ReferenceStrictCheckType.OnlyEnableInEditor:
