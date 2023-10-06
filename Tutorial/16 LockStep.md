@@ -101,8 +101,69 @@ RoomMsgManager.OnNetMsg -> G2C_FrameData() ->
 服务器在接收到所有人输入或者时间帧到了，则回 G2C_FrameData；
 
 
+MainScript.cs:
+	PingMono
+	InputMono
+	_serviceContainer = UnityServiceContainer :  BaseGameServicesContainer
+							UnityGameViewService   						: BaseGameService	: BaseService
+													RandomService 		: BaseService 	: IService, ITimeMachine
+													CommonStateService	: ITimeMachine
+													ConstStateService	: BaseService 	
+													SimulatorService	: BaseGameService 	: BaseService
+													NetworkService		: BaseService
+													IdService			: ITimeMachine
+													GameResourceService	: BaseGameService
+													GameStateService	: BaseGameService
+													GameConfigService	: BaseGameService
+													GameInputService	: IInputService
+													
+													TimeMachineContainer: 
+													EventRegisterService: 
+	launcher = new Launcher
+
+Launcher.cs
+	_serviceContainer = MainScript._serviceContainer;
+	_registerService = new EventRegisterService();
+	_mgrContainer = new ManagerContainer();
+	_timeMachineContainer = new TimeMachineContainer();
+	
+	_simulatorService = new SimulatorService();
+	_networkService = new NetworkService();
+	
+	_timeMachineContainer.GetAllTimeMachines()
+		RandomService   			engine		.BackUp							.GetHash
+		CommonStateService			engine		.BackUp			.RollbackTo
+		ConstStateService			engine		.BackUp
+		SimulatorService			game
+		NetworkService				game
+		IdService					engine		.BackUp			.RollbackTo		.GetHash
+		GameResourceService			game
+		GameStateService			game		.BackUp			.RollbackTo		.GetHash
+		GameConfigService			game
+		UnityGameViewService		game
+	
+	_mgrContainer.AllMgrs
+		RandomService
+		CommonStateService
+		SimulatorService
+		NetworkService
+		GameResourceService
+		GameStateService
+		GameConfigService
+		UnityGameViewService
+		
+
+SimulatorService.cs
 
 
+
+
+World.cs
+	HeroSystem
+	EnemySystem
+	PhysicSystem
+	HashSystem
+	
 
 	
 

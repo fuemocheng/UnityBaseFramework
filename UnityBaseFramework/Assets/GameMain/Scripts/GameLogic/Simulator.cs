@@ -9,6 +9,17 @@ namespace XGame
 {
     public class Simulator
     {
+        public static Simulator Instance
+        {
+            get;
+            private set;
+        }
+
+        public Simulator()
+        {
+            Instance = this;
+        }
+
         public const long MinMissFrameReqTickDiff = 10;
         public const long MaxSimulationMsPerFrame = 20;
         public const int MaxPredictFrameCount = 30;
@@ -17,8 +28,10 @@ namespace XGame
 
         private FrameBuffer m_FrameBuffer;
 
-        public bool IsRunning { get; set; }
+        public int PingVal => m_FrameBuffer?.PingVal ?? 0;
+        public int DelayVal => m_FrameBuffer?.DelayVal ?? 0;
 
+        public bool IsRunning { get; set; }
 
         public long GameStartTimestampMs = -1; //游戏开始时间戳。
         private int m_TickSinceGameStart = 0; //从游戏开始运行的逻辑帧数。
@@ -40,6 +53,8 @@ namespace XGame
 
         public void Start()
         {
+            Instance = this;
+
             World = new World();
             m_FrameBuffer = new FrameBuffer(this, 2000, m_SnapshotFrameInterval, MaxPredictFrameCount);
 
@@ -59,6 +74,9 @@ namespace XGame
         public void OnGameCreate(int targetFps, int localActorId, int actorCount)
         {
             Log.Info("OnGameCreate");
+
+            // Service 创建。
+
             World.OnGameCreate();
         }
 
@@ -114,7 +132,82 @@ namespace XGame
         private void DoNormalUpdate()
         {
             //make sure client is not move ahead too much than server.
+            var maxContinueServerTick = m_FrameBuffer.MaxContinueServerTick;
+            if ((World.Tick - maxContinueServerTick) > MaxPredictFrameCount)
+            {
+                return;
+            }
 
+            var minTickToBackup = (maxContinueServerTick - (maxContinueServerTick % m_SnapshotFrameInterval));
+
+            // Pursue Server frames
+            var deadline = LTime.realtimeSinceStartupMS + MaxSimulationMsPerFrame;
+            while (World.Tick < m_FrameBuffer.CurTickInServer)
+            {
+                var tick = World.Tick;
+                var sFrame = m_FrameBuffer.GetServerFrame(tick);
+                if (sFrame == null)
+                {
+                    //OnPursuingFrame();
+                    return;
+                }
+
+                m_FrameBuffer.PushLocalFrame(sFrame);
+                Simulate(sFrame, tick == minTickToBackup);
+                if (LTime.realtimeSinceStartupMS > deadline)
+                {
+                    //OnPursuingFrame();
+                    return;
+                }
+            }
+
+            //if (_constStateService.IsPursueFrame)
+            //{
+            //    _constStateService.IsPursueFrame = false;
+            //    EventHelper.Trigger(EEvent.PursueFrameDone);
+            //}
+
+
+            // Roll back
+            if (m_FrameBuffer.IsNeedRollback)
+            {
+                //RollbackTo(m_FrameBuffer.NextTickToCheck, maxContinueServerTick);
+                //CleanUselessSnapshot(System.Math.Min(m_FrameBuffer.NextTickToCheck - 1, World.Tick));
+
+                minTickToBackup = System.Math.Max(minTickToBackup, World.Tick + 1);
+                while (World.Tick <= maxContinueServerTick)
+                {
+                    var sFrame = m_FrameBuffer.GetServerFrame(World.Tick);
+                    //Logging.Debug.Assert(sFrame != null && sFrame.tick == World.Tick,
+                    //    $" logic error: server Frame  must exist tick {World.Tick}");
+                    m_FrameBuffer.PushLocalFrame(sFrame);
+                    Simulate(sFrame, World.Tick == minTickToBackup);
+                }
+            }
+
+
+            //Run frames
+            while (World.Tick <= TargetTick)
+            {
+                var curTick = World.Tick;
+                ServerFrame frame = null;
+                var sFrame = m_FrameBuffer.GetServerFrame(curTick);
+                if (sFrame != null)
+                {
+                    frame = sFrame;
+                }
+                else
+                {
+                    var cFrame = m_FrameBuffer.GetLocalFrame(curTick);
+                    //FillInputWithLastFrame(cFrame);
+                    frame = cFrame;
+                }
+
+                m_FrameBuffer.PushLocalFrame(frame);
+                //Predict(frame, true);
+            }
+
+            //_hashHelper.CheckAndSendHashCodes();
 
         }
 
@@ -149,7 +242,7 @@ namespace XGame
             int tick = World.Tick;
 
             // 备份当前帧。
-            //_timeMachineService.Backup(_world.Tick);
+            //_timeMachineService.Backup(World.Tick);
 
 
             World.Step();
