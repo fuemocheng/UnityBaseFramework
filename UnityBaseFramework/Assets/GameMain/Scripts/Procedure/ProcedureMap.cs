@@ -25,11 +25,11 @@ namespace XGame
 
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
             GameEntry.Event.Subscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
+            GameEntry.Event.Subscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.MainUIForm, this);
 
             // 场景已经加载完成，发送加载进度。
-            // TODO: 加载角色，加载完发送加载进度的消息。
 
             SendLoadingProgress();
         }
@@ -40,6 +40,8 @@ namespace XGame
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
             GameEntry.Event.Unsubscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
+            GameEntry.Event.Unsubscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
+
 
             if (m_MainUIForm != null)
             {
@@ -51,6 +53,9 @@ namespace XGame
         protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+
+            //模拟器更新
+            Simulator.Instance.Update(elapseSeconds, realElapseSeconds);
         }
 
         private void OnOpenUIFormSuccess(object sender, GameEventArgs e)
@@ -96,8 +101,21 @@ namespace XGame
             {
                 // 所有客户端都完成了准备工作。
                 // 开始游戏，发送帧数据
-                Log.Error("Start Game.");
+                Log.Info("Start Game.");
+
+                Simulator.Instance.StartSimulate();
             }
+        }
+
+        private void OnServerFrameResponse(object sender, GameEventArgs e)
+        {
+            SCServerFrameEventArgs scServerFrameEventArgs = (SCServerFrameEventArgs)e;
+            if (scServerFrameEventArgs == null)
+            {
+                return;
+            }
+            //Log.Error("ProcedureMap:OnServerFrameResponse.Tick {0}", scServerFrameEventArgs.ServerFrames[scServerFrameEventArgs.ServerFrames.Count - 1].Tick);
+            Simulator.Instance.OnServerFrame(scServerFrameEventArgs.ServerFrames);
         }
     }
 }

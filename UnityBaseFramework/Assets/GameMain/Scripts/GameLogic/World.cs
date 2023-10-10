@@ -1,10 +1,8 @@
-using Lockstep.Game;
+using GameProto;
 using Lockstep.Math;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityBaseFramework.Runtime;
-using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 
 namespace XGame
 {
@@ -22,6 +20,8 @@ namespace XGame
         }
 
         public int Tick { get; private set; }
+
+        public Input[] PlayerInputs => GameEntry.Service.GetService<GameStateService>().GetPlayers().Select(a => a.input).ToArray();
 
         public static Player MyPlayer;
 
@@ -48,11 +48,23 @@ namespace XGame
         {
             Tick = 0;
 
-            //初始化Service, 初始化系统
+            // 注册系统。
             RegisterSystems();
+
+            // Awake。
+            foreach (BaseSystem system in m_Systems)
+            {
+                system.Awake();
+            }
+
+            // Start。
+            foreach (BaseSystem system in m_Systems)
+            {
+                system.Start();
+            }
         }
 
-        public void StartSimulate()
+        public void StartSimulate(List<User> users, int localActorId)
         {
             if (_hasStart)
             {
@@ -60,6 +72,18 @@ namespace XGame
             }
 
             _hasStart = true;
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                int prefabId = 0;
+                LVector2 initPos = LVector2.zero;
+                Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(prefabId, initPos);
+                player.localId = i;
+            }
+
+            var allPlayers = GameEntry.Service.GetService<GameStateService>().GetPlayers();
+
+            MyPlayer = allPlayers[localActorId];
         }
 
         /// <summary>
@@ -94,8 +118,8 @@ namespace XGame
             }
 
             Log.Info($" Rollback diff:{Tick - tick} From{Tick}->{tick}  maxContinueServerTick:{maxContinueServerTick} {isNeedClear}");
-            //_timeMachineService.RollbackTo(tick);
-            //_commonStateService.SetTick(tick);
+            GameEntry.Service.GetService<TimeMachineService>().RollbackTo(tick);
+            GameEntry.Service.GetService<CommonStateService>().SetTick(tick);
             Tick = tick;
         }
     }

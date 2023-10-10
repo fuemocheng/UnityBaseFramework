@@ -18,16 +18,7 @@ namespace XGame
 
         protected List<CComponent> m_AllComponents;
 
-        //[ReRefBackup] public IGameStateService GameStateService { get; set; }
-        //[ReRefBackup] public IServiceContainer ServiceContainer { get; set; }
-        //[ReRefBackup] public IDebugService DebugService { get; set; }
-
-        //[ReRefBackup] public IEntityView EntityView;
-
-        //public T GetService<T>() where T : IService
-        //{
-        //    return ServiceContainer.GetService<T>();
-        //}
+        [ReRefBackup] public IEntityView EntityView;
 
         public void DoBindRef()
         {
@@ -36,8 +27,8 @@ namespace XGame
 
         public virtual void OnRollbackDestroy()
         {
-            //EntityView?.OnRollbackDestroy();
-            //EntityView = null;
+            EntityView?.OnRollbackDestroy();
+            EntityView = null;
             engineTransform = null;
         }
 

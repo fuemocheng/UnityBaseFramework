@@ -1,4 +1,5 @@
 ﻿using BaseFramework;
+using BaseFramework.Runtime;
 using GameProto;
 using Lockstep.Util;
 
@@ -18,7 +19,7 @@ namespace Server
         private List<ServerFrame> m_AllHistoryFrames;
 
         private long m_GameStartTimestampMs = -1;
-        private int m_ServerTickDealy = 0;
+        private int m_ServerTickDealy = 10;
         private int m_TickSinceGameStart => (int)((LTime.realtimeSinceStartupMS - m_GameStartTimestampMs) / NetworkDefine.UPDATE_DELTATIME);
 
         private float m_TimeSinceLoaded;
@@ -72,6 +73,8 @@ namespace Server
 
         public void ReceiveInput(User user, CSInputFrame input)
         {
+            Log.Info("ReceiveInput CSInputFrame.Tick: {0}", input.InputFrame.Tick);
+
             if (GameState != EGameState.PartLoaded &&
                 GameState != EGameState.Playing)
             {
@@ -181,6 +184,7 @@ namespace Server
             {
                 frames[count - i - 1] = m_AllHistoryFrames[Tick - i];
             }
+            Log.Info("BroadcastServerFrame ServerFrame.Tick: {0}", Tick);
             BroadcastServerFrame(frames);
 
 

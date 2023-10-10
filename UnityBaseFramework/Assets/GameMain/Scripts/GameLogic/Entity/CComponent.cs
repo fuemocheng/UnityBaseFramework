@@ -15,7 +15,13 @@ namespace XGame
             private set;
         }
 
-        public CEntity entity => (CEntity)baseEntity;
+        public CEntity entity
+        {
+            get
+            {
+                return (CEntity)baseEntity;
+            }
+        }
 
         public CTransform2D transform
         {

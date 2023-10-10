@@ -150,8 +150,12 @@ namespace XGame
         public void RegisterEntity(int prefabId, CEntity entity)
         {
             ColliderPrefab prefab = null;
+
+            RigisterPrefab(prefabId, prefabId < 10 ? (int)EColliderLayer.Hero : (int)EColliderLayer.Enemy);
             //var fab = _gameResourceService.LoadPrefab(prefabId) as GameObject;
+
             var fab = new GameObject();
+            fab.name = "Temp";
             if (!_fabId2ColPrefab.TryGetValue(prefabId, out prefab))
             {
                 prefab = CollisionSystem.CreateColliderPrefab(fab, entity.colliderData);

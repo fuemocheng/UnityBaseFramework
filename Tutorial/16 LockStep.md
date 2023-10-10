@@ -164,7 +164,9 @@ World.cs
 	PhysicSystem
 	HashSystem
 	
-
+World.RollbackTo()
+	RandomService		BaseService.RollbackTo()
+	
 	
 
 

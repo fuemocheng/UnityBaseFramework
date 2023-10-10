@@ -29,7 +29,7 @@ namespace XGame
             }
 
 
-            public void DoUpdate(float deltaTime)
+            public void Update(float deltaTime)
             {
                 m_Timer += deltaTime;
                 if (m_Timer > m_CheckInterval)

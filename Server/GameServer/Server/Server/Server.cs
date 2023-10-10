@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Network;
 using BaseFramework.Runtime;
+using Lockstep.Util;
 
 namespace Server
 {
@@ -21,6 +22,8 @@ namespace Server
             GameEntry.Awake();
             // 框架Start。
             GameEntry.Start();
+
+            LTime.DoStart();
 
             m_StartupTimeStamp = m_LastUpdateTimeStamp = m_LastUpdateFrameTimeStamp = DateTime.Now;
         }

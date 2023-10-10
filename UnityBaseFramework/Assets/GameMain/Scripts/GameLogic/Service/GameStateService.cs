@@ -6,16 +6,21 @@ using Lockstep.Math;
 using Lockstep.Game;
 using Lockstep.Serialization;
 using Lockstep.Util;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
-    public partial class GameStateService : IService
+    public partial class GameStateService : IService, ITimeMachine
     {
+        public int CurTick { get; set; }
+
         private Dictionary<int, GameState> _tick2State = new Dictionary<int, GameState>();
         private GameState _curGameState;
         private Dictionary<Type, IList> _type2Entities = new Dictionary<Type, IList>();
         private Dictionary<int, BaseEntity> _id2Entities = new Dictionary<int, BaseEntity>();
         private Dictionary<int, Serializer> _tick2Backup = new Dictionary<int, Serializer>();
+
+        private IdService m_IdService => GameEntry.Service.GetService<IdService>();
 
         private void AddEntity<T>(T e) where T : BaseEntity
         {
@@ -97,25 +102,26 @@ namespace XGame
 
         public T CreateEntity<T>(int prefabId, LVector3 position) where T : BaseEntity, new()
         {
-            var baseEntity = new T();
-            //_gameConfigService.GetEntityConfig(prefabId)?.CopyTo(baseEntity);
-            //baseEntity.EntityId = _idService.GenId();
-            //baseEntity.PrefabId = prefabId;
-            //baseEntity.GameStateService = _gameStateService;
-            //baseEntity.ServiceContainer = _serviceContainer;
-            //baseEntity.DebugService = _debugService;
-            //baseEntity.transform.Pos3 = position;
-            //_debugService.Trace($"CreateEntity {prefabId} pos {prefabId} entityId:{baseEntity.EntityId}");
-            //baseEntity.DoBindRef();
-            //if (baseEntity is Entity entity)
-            //{
-            //    PhysicSystem.Instance.RegisterEntity(prefabId, entity);
-            //}
+            T baseEntity = new T();
 
-            //baseEntity.Awake();
-            //baseEntity.Start();
-            ////_gameViewService.BindView(baseEntity);
-            //AddEntity(baseEntity);
+            //TODO:Config
+            //_gameConfigService.GetEntityConfig(prefabId)?.CopyTo(baseEntity);
+
+            baseEntity.EntityId = m_IdService.GenId();
+            baseEntity.PrefabId = prefabId;
+            baseEntity.transform.Pos3 = position;
+            Log.Info($"CreateEntity {prefabId} pos {prefabId} entityId:{baseEntity.EntityId}");
+
+            baseEntity.DoBindRef();
+            if (baseEntity is CEntity cEntity)
+            {
+                PhysicSystem.Instance.RegisterEntity(prefabId, cEntity);
+            }
+
+            baseEntity.Awake();
+            baseEntity.Start();
+            GameEntry.Service.GetService<GameViewService>().BindView(baseEntity);
+            AddEntity(baseEntity);
             return baseEntity;
         }
 
@@ -127,73 +133,64 @@ namespace XGame
 
         public void Backup(int tick)
         {
-            //base.Backup(tick);
-            //_tick2State[tick] = _curGameState;
-            //Serializer writer = new Serializer();
-            //writer.Write(_commonStateService.Hash); //hash
-            //BackUpEntities(GetPlayers(), writer);
-            //BackUpEntities(GetEnemies(), writer);
-            //BackUpEntities(GetSpawners(), writer);
-            //_tick2Backup[tick] = writer;
+            _tick2State[tick] = _curGameState;
+            Serializer writer = new Serializer();
+            writer.Write(GameEntry.Service.GetService<CommonStateService>().Hash); //hash
+            BackUpEntities(GetPlayers(), writer);
+            _tick2Backup[tick] = writer;
         }
 
         public void RollbackTo(int tick)
         {
-            //base.RollbackTo(tick);
-            //_curGameState = _tick2State[tick];
-            //if (_tick2Backup.TryGetValue(tick, out var backupData))
-            //{
-            //    //.TODO reduce the unnecessary create and destroy 
-            //    var reader = new Deserializer(backupData.Data);
-            //    var hash = reader.ReadInt32();
-            //    _commonStateService.Hash = hash;
+            _curGameState = _tick2State[tick];
+            if (_tick2Backup.TryGetValue(tick, out var backupData))
+            {
+                //TODO reduce the unnecessary create and destroy 
+                var reader = new Deserializer(backupData.Data);
+                var hash = reader.ReadInt32();
+                GameEntry.Service.GetService<CommonStateService>().Hash = hash;
 
-            //    var oldId2Entity = _id2Entities;
-            //    _id2Entities = new Dictionary<int, BaseEntity>();
-            //    _type2Entities.Clear();
+                var oldId2Entity = _id2Entities;
+                _id2Entities = new Dictionary<int, BaseEntity>();
+                _type2Entities.Clear();
 
-            //    //. Recover Entities
-            //    RecoverEntities(new List<Player>(), reader);
-            //    RecoverEntities(new List<Enemy>(), reader);
-            //    RecoverEntities(new List<Spawner>(), reader);
+                // Recover Entities
+                RecoverEntities(new List<Player>(), reader);
 
-            //    //. Rebind Ref
-            //    foreach (var entity in _id2Entities.Values)
-            //    {
-            //        entity.GameStateService = _gameStateService;
-            //        entity.ServiceContainer = _serviceContainer;
-            //        entity.DebugService = _debugService;
-            //        entity.DoBindRef();
-            //    }
+                // Rebind Ref
+                foreach (var entity in _id2Entities.Values)
+                {
+                    entity.DoBindRef();
+                }
 
-            //    //. Rebind Views 
-            //    foreach (var pair in _id2Entities)
-            //    {
-            //        BaseEntity oldEntity = null;
-            //        if (oldId2Entity.TryGetValue(pair.Key, out var poldEntity))
-            //        {
-            //            oldEntity = poldEntity;
-            //            oldId2Entity.Remove(pair.Key);
-            //        }
-            //        _gameViewService.BindView(pair.Value, oldEntity);
-            //    }
+                // Rebind Views 
+                foreach (var pair in _id2Entities)
+                {
+                    BaseEntity oldEntity = null;
+                    if (oldId2Entity.TryGetValue(pair.Key, out var poldEntity))
+                    {
+                        oldEntity = poldEntity;
+                        oldId2Entity.Remove(pair.Key);
+                    }
+                    GameEntry.Service.GetService<GameViewService>().BindView(pair.Value, oldEntity);
+                }
 
-            //    //. Unbind Entity views
-            //    foreach (var pair in oldId2Entity)
-            //    {
-            //        _gameViewService.UnbindView(pair.Value);
-            //    }
-            //}
-            //else
-            //{
-            //    Debug.LogError($"Miss backup data  cannot rollback! {tick}");
-            //}
+                // Unbind Entity views
+                foreach (var pair in oldId2Entity)
+                {
+                    GameEntry.Service.GetService<GameViewService>().UnbindView(pair.Value);
+                }
+            }
+            else
+            {
+                Debug.LogError($"Miss backup data  cannot rollback! {tick}");
+            }
         }
 
 
         public void Clean(int maxVerifiedTick)
         {
-            //base.Clean(maxVerifiedTick);
+
         }
 
         void BackUpEntities<T>(T[] lst, Serializer writer) where T : BaseEntity, IBackup, new()

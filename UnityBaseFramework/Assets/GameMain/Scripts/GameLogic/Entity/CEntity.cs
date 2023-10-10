@@ -13,26 +13,26 @@ namespace XGame
     {
         public CRigidbody rigidbody = new CRigidbody();
         public ColliderData colliderData = new ColliderData();
-        public CAnimator animator = new CAnimator();
-        public CSkillBox skillBox = new CSkillBox();
+        //public CAnimator animator = new CAnimator();
+        //public CSkillBox skillBox = new CSkillBox();
 
         public LFloat moveSpd = 5;
         public LFloat turnSpd = 360;
-        public int curHealth;
-        public int maxHealth = 100;
-        public int damage = 10;
+        //public int curHealth;
+        //public int maxHealth = 100;
+        //public int damage = 10;
 
-        public bool isInvincible;
-        public bool isFire;
+        //public bool isInvincible;
+        //public bool isFire;
 
-        public bool isDead => curHealth <= 0;
+        //public bool isDead => curHealth <= 0;
 
 
         protected override void BindRef()
         {
             base.BindRef();
-            RegisterComponent(animator);
-            RegisterComponent(skillBox);
+            //RegisterComponent(animator);
+            //RegisterComponent(skillBox);
             rigidbody.BindRef(transform);
         }
 
@@ -40,7 +40,7 @@ namespace XGame
         {
             base.Start();
             rigidbody.DoStart();
-            curHealth = maxHealth;
+            //curHealth = maxHealth;
         }
 
         public override void Update(LFloat deltaTime)
@@ -49,36 +49,37 @@ namespace XGame
             base.Update(deltaTime);
         }
 
-        public bool Fire(int idx = 0)
-        {
-            return skillBox.Fire(idx - 1);
-        }
+        //public bool Fire(int idx = 0)
+        //{
+        //    //return skillBox.Fire(idx - 1);
+        //    return false;
+        //}
 
-        public void StopSkill(int idx = -1)
-        {
-            skillBox.ForceStop(idx);
-        }
+        //public void StopSkill(int idx = -1)
+        //{
+        //    //skillBox.ForceStop(idx);
+        //}
 
-        public virtual void TakeDamage(BaseEntity atker, int amount, LVector3 hitPoint)
-        {
-            if (isInvincible || isDead) return;
-            Log.Info($"{atker.EntityId} attack {EntityId}  damage:{amount} hitPos:{hitPoint}");
-            curHealth -= amount;
-            //EntityView?.OnTakeDamage(amount, hitPoint);
-            OnTakeDamage(amount, hitPoint);
-            if (isDead)
-            {
-                OnDead();
-            }
-        }
+        //public virtual void TakeDamage(BaseEntity atker, int amount, LVector3 hitPoint)
+        //{
+        //    if (isInvincible || isDead) return;
+        //    Log.Info($"{atker.EntityId} attack {EntityId}  damage:{amount} hitPos:{hitPoint}");
+        //    curHealth -= amount;
+        //    //EntityView?.OnTakeDamage(amount, hitPoint);
+        //    OnTakeDamage(amount, hitPoint);
+        //    if (isDead)
+        //    {
+        //        OnDead();
+        //    }
+        //}
 
-        protected virtual void OnTakeDamage(int amount, LVector3 hitPoint) { }
+        //protected virtual void OnTakeDamage(int amount, LVector3 hitPoint) { }
 
-        protected virtual void OnDead()
-        {
-            //EntityView?.OnDead();
-            PhysicSystem.Instance.RemoveCollider(this);
-            //GameStateService.DestroyEntity(this);
-        }
+        //protected virtual void OnDead()
+        //{
+        //    //EntityView?.OnDead();
+        //    PhysicSystem.Instance.RemoveCollider(this);
+        //    //GameStateService.DestroyEntity(this);
+        //}
     }
 }

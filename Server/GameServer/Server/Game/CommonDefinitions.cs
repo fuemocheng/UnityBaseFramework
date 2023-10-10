@@ -8,6 +8,6 @@
         /// <summary>
         /// 游戏房间最大人数。
         /// </summary>
-        public const int MaxRoomMemberCount = 1;
+        public const int MaxRoomMemberCount = 2;
     }
 }

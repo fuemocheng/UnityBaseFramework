@@ -1,5 +1,6 @@
 using BaseFramework.Event;
 using GameProto;
+using Lockstep.Util;
 using UnityBaseFramework.Runtime;
 using ProcedureOwner = BaseFramework.Fsm.IFsm<BaseFramework.Procedure.IProcedureManager>;
 
@@ -10,6 +11,8 @@ namespace XGame
         private LobbyForm m_LobbyForm = null;
 
         private bool m_IsAllReady = false;
+
+        private int m_LocalId = 0;
 
         public override bool UseNativeDialog
         {
@@ -81,6 +84,8 @@ namespace XGame
                 return;
             }
 
+            m_LocalId = scJoinRoomEventArgs.LocalId;
+
             int readyCount = 0;
             for (int i = 0; i < scJoinRoomEventArgs.UserReadyInfos.Count; i++)
             {
@@ -103,6 +108,8 @@ namespace XGame
                 return;
             }
 
+            LTime.DoStart();
+
             int readyCount = 0;
             for (int i = 0; i < scReadyEventArgs.UserReadyInfos.Count; i++)
             {
@@ -124,14 +131,11 @@ namespace XGame
                 return;
             }
 
-            //for (int i = 0; i < scGameStartInfoEventArgs.Users.Count; i++)
-            //{
-            //    User user = scGameStartInfoEventArgs.Users[i];
-            //}
-
-            //TODO:
-            //这里用服务器发送的MapId，加载地图；
-            //用服务器发送的玩家数据，加载角色；
+            Simulator simulator = new Simulator();
+            simulator.Start();
+            simulator.OnGameCreate(60, scGameStartInfoEventArgs.MapId,
+                m_LocalId, scGameStartInfoEventArgs.UserCount, 
+                scGameStartInfoEventArgs.Users);
 
             // 所有人都准备完成。
             m_IsAllReady = true;

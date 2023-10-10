@@ -21,10 +21,20 @@ namespace XGame
             private set;
         }
 
+        public static ServiceComponent Service
+        {
+            get;
+            private set;
+        }
+
+        public static GameLogicComponent GameLogic;
+
         private static void InitCustomComponents()
         {
             BuiltinData = UnityBaseFramework.Runtime.BaseEntry.GetComponent<BuiltinDataComponent>();
             NetworkExtended = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkExtendedComponent>();
+            Service = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ServiceComponent>();
+            GameLogic = UnityBaseFramework.Runtime.BaseEntry.GetComponent<GameLogicComponent>();
         }
     }
 }

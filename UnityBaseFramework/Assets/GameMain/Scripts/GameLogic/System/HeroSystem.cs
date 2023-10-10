@@ -6,10 +6,10 @@ namespace XGame
     {
         public override void Update(LFloat deltaTime)
         {
-            //foreach (var player in _gameStateService.GetPlayers())
-            //{
-            //    player.DoUpdate(deltaTime);
-            //}
+            foreach (var player in GameEntry.Service.GetService<GameStateService>().GetPlayers())
+            {
+                player.Update(deltaTime);
+            }
         }
     }
 }

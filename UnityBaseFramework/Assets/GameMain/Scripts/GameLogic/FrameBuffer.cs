@@ -1,3 +1,4 @@
+using BaseFramework.Network;
 using GameProto;
 using Lockstep.Math;
 using Lockstep.Util;
@@ -66,10 +67,10 @@ namespace XGame
         public void PushLocalFrame(ServerFrame frame)
         {
             var sIdx = frame.Tick % _bufferSize;
-            if (_clientBuffer[sIdx] == null || _clientBuffer[sIdx].Tick <= frame.Tick)
-            {
-                Log.Error("Push local frame error!");
-            }
+            //if (_clientBuffer[sIdx] == null || _clientBuffer[sIdx].Tick <= frame.Tick)
+            //{
+            //    Log.Error("Push local frame error!");
+            //}
             _clientBuffer[sIdx] = frame;
         }
 
@@ -88,11 +89,18 @@ namespace XGame
 
         public void PushServerFrames(ServerFrame[] frames, bool isNeedDebugCheck = true)
         {
+            int lastTick = frames[frames.Length - 1].Tick;
+            Log.Error("FrameBuffer:PushServerFrames.Tick {0}", lastTick);
+            if (lastTick == 1 || lastTick == 2 || lastTick == 3)
+            {
+                int t = 1;
+            }
+
             var count = frames.Length;
             for (int i = 0; i < count; i++)
             {
                 var data = frames[i];
-                //Debug.Log("PushServerFrames" + data.tick);
+
                 if (_tick2SendTimestamp.TryGetValue(data.Tick, out var sendTick))
                 {
                     var delay = LTime.realtimeSinceStartupMS - sendTick;
@@ -103,7 +111,7 @@ namespace XGame
                 if (data.Tick < NextTickToCheck)
                 {
                     //the frame is already checked
-                    return;
+                    continue;
                 }
 
                 if (data.Tick > CurTickInServer)
@@ -114,7 +122,7 @@ namespace XGame
                 if (data.Tick >= NextTickToCheck + _maxServerOverFrameCount - 1)
                 {
                     //to avoid ringBuffer override the frame that have not been checked
-                    return;
+                    continue;
                 }
 
                 //Debug.Log("PushServerFramesSucc" + data.tick);
@@ -127,6 +135,7 @@ namespace XGame
                 if (_serverBuffer[targetIdx] == null || _serverBuffer[targetIdx].Tick != data.Tick)
                 {
                     _serverBuffer[targetIdx] = data;
+                    Log.Error("PushServerFrames:" + targetIdx);
                     if (data.Tick > m_PredictCountHelper.NextCheckMissTick && 
                         data.InputFrames[LocalId].IsMiss &&
                         m_PredictCountHelper.MissTick == -1)
@@ -137,10 +146,10 @@ namespace XGame
             }
         }
 
-        public void DoUpdate(float deltaTime)
+        public void Update(float deltaTime)
         {
             //_networkService.SendPing(_simulatorService.LocalActorId, LTime.realtimeSinceStartupMS);
-            m_PredictCountHelper.DoUpdate(deltaTime);
+            m_PredictCountHelper.Update(deltaTime);
             int worldTick = m_Simulator.World.Tick;
             UpdatePingVal(deltaTime);
 
@@ -152,9 +161,11 @@ namespace XGame
                 var sIdx = NextTickToCheck % _bufferSize;
                 var cFrame = _clientBuffer[sIdx];
                 var sFrame = _serverBuffer[sIdx];
-                if (cFrame == null || cFrame.Tick != NextTickToCheck || sFrame == null ||
-                    sFrame.Tick != NextTickToCheck)
+                if (cFrame == null || cFrame.Tick != NextTickToCheck ||
+                    sFrame == null || sFrame.Tick != NextTickToCheck)
+                {
                     break;
+                }
                 //Check client guess input match the real input
                 if (object.ReferenceEquals(sFrame, cFrame) || sFrame.Equals(cFrame))
                 {
@@ -217,9 +228,9 @@ namespace XGame
             }
         }
 
-        public void SendInput(CSInputFrame input)
+        public void SendInput(CSInputFrame csInputFrame)
         {
-            _tick2SendTimestamp[input.InputFrame.Tick] = LTime.realtimeSinceStartupMS;
+            _tick2SendTimestamp[csInputFrame.InputFrame.Tick] = LTime.realtimeSinceStartupMS;
 #if DEBUG_SHOW_INPUT
             var cmd = input.Commands[0];
             var playerInput = new Deserializer(cmd.content).Parse<Lockstep.Game. PlayerInput>();
@@ -228,6 +239,14 @@ namespace XGame
             }
 #endif
             //_networkService.SendInput(input);
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot SendInput, tcpChannel is null.");
+                return;
+            }
+            //发送Input
+            tcpChannel.Send(csInputFrame);
         }
 
         public ServerFrame GetFrame(int tick)

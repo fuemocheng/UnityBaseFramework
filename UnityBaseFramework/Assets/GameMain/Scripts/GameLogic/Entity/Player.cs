@@ -8,7 +8,7 @@ namespace XGame
     public partial class Player : CEntity
     {
         public int localId;
-        //public PlayerInput input = new PlayerInput();
+        public GameProto.Input input = new GameProto.Input();
         public CMover mover = new CMover();
 
         protected override void BindRef()
@@ -16,13 +16,10 @@ namespace XGame
             base.BindRef();
             RegisterComponent(mover);
         }
+
         public override void Update(LFloat deltaTime)
         {
             base.Update(deltaTime);
-            //if (input.skillId != 0)
-            //{
-            //    Fire(input.skillId);
-            //}
         }
     }
 }

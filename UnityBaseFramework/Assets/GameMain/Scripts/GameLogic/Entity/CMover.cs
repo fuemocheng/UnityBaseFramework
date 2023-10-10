@@ -1,8 +1,7 @@
 using System;
-using Lockstep;
 using Lockstep.Collision2D;
 using Lockstep.Math;
-using UnityEngine;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
@@ -10,8 +9,7 @@ namespace XGame
     public partial class CMover : CComponent
     {
         public Player player => (Player)baseEntity;
-        //public PlayerInput input => player.input;
-
+        public GameProto.Input input => player.input;
 
         static LFloat _sqrStopDist = new LFloat(true, 40);
         public LFloat speed => player.moveSpd;
@@ -25,16 +23,22 @@ namespace XGame
                 return;
             }
 
-            //var needChase = input.inputUV.sqrMagnitude > new LFloat(true, 10);
-            //if (needChase)
-            //{
-            //    var dir = input.inputUV.normalized;
-            //    transform.pos = transform.pos + dir * speed * deltaTime;
-            //    var targetDeg = dir.ToDeg();
-            //    transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
-            //}
+            //input.InputV = 1000;
+            //input.InputH = 1000;
 
-            //hasReachTarget = !needChase;
+            LVector2 inputUV = new LVector2(new LFloat(true, input.InputH), new LFloat(true, input.InputV));
+
+            var needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
+            if (needChase)
+            {
+                //Log.Error("needChase" + inputUV.x + " " + inputUV.y);
+                var dir = inputUV.normalized;
+                transform.pos = transform.pos + dir * speed * deltaTime;
+                var targetDeg = dir.ToDeg();
+                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+            }
+
+            hasReachTarget = !needChase;
         }
     }
 }

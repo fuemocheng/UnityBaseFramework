@@ -14,7 +14,6 @@ namespace XGame
             base.Awake();
         }
 
-
         void Start()
         {
             NetworkChannelHelper = new NetworkChannelHelper();

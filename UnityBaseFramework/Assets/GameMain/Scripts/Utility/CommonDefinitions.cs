@@ -8,7 +8,7 @@ namespace XGame
         /// <summary>
         /// 游戏房间最大人数。
         /// </summary>
-        public const int MaxRoomMemberCount = 1;
+        public const int MaxRoomMemberCount = 2;
 
         /// <summary>
         /// 游戏逻辑帧更新间隔。
