@@ -145,6 +145,7 @@ namespace GameProto
         {
             RoomId = 0;
             MapId = 0;
+            LocalId = 0;
             UserCount = 0;
             Seed = 0;
             Users.Clear();

@@ -95,7 +95,7 @@ namespace Server
 
             ServerFrame frame = GetOrCreateFrame(Tick);
 
-            int localId = input.InputFrame.ActorId;
+            int localId = input.InputFrame.LocalId;
             frame.InputFrames[localId] = input.InputFrame;
 
             // 不强制广播，等所有人数据都到了再广播。
@@ -171,7 +171,7 @@ namespace Server
                 {
                     InputFrame tInput = new InputFrame();
                     tInput.Tick = Tick;
-                    tInput.ActorId = i;
+                    tInput.LocalId = i;
                     tInput.IsMiss = true;
                     inputs[i] = tInput;
                 }

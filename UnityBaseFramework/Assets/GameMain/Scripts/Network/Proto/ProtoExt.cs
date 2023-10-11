@@ -32,7 +32,7 @@ namespace GameProto
                 return false;
             }
 
-            if (this.ActorId != tInputFrame.ActorId)
+            if (this.LocalId != tInputFrame.LocalId)
             {
                 return false;
             }

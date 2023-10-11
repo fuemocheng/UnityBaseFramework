@@ -23,15 +23,11 @@ namespace XGame
                 return;
             }
 
-            //input.InputV = 1000;
-            //input.InputH = 1000;
-
             LVector2 inputUV = new LVector2(new LFloat(true, input.InputH), new LFloat(true, input.InputV));
 
             var needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
             if (needChase)
             {
-                //Log.Error("needChase" + inputUV.x + " " + inputUV.y);
                 var dir = inputUV.normalized;
                 transform.pos = transform.pos + dir * speed * deltaTime;
                 var targetDeg = dir.ToDeg();

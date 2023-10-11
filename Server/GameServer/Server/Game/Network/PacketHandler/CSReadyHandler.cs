@@ -41,6 +41,7 @@ namespace GameProto
                     SCGameStartInfo gameStartInfo = ReferencePool.Acquire<SCGameStartInfo>();
                     gameStartInfo.RoomId = room.RoomId;
                     gameStartInfo.MapId = 1;
+                    gameStartInfo.LocalId = sUser.LocalId;
                     gameStartInfo.UserCount = room.GetCurrCount();
                     gameStartInfo.Seed = 0;
                     // 遍历添加所有人信息，添加到 SCGameStartInfo

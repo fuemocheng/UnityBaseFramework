@@ -40,12 +40,6 @@ namespace XGame
                 //    }
                 //}
 
-                if (h != 0 || v != 0)
-                {
-                    Log.Error("Raw:" + h + " " + v);
-                    Log.Error("Trans:" + inputUV.x._val + " " + inputUV.y._val);
-                }
-
                 GameProto.Input currInput = GameEntry.Service.GetService<GameInputService>().CurrInput;
                 currInput.InputH = inputUV.x._val;
                 currInput.InputV = inputUV.y._val;

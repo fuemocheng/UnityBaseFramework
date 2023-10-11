@@ -90,7 +90,6 @@ namespace XGame
         public void PushServerFrames(ServerFrame[] frames, bool isNeedDebugCheck = true)
         {
             int lastTick = frames[frames.Length - 1].Tick;
-            Log.Error("FrameBuffer:PushServerFrames.Tick {0}", lastTick);
             if (lastTick == 1 || lastTick == 2 || lastTick == 3)
             {
                 int t = 1;

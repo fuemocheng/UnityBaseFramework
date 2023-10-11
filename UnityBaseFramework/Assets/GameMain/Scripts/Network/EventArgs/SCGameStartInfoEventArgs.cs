@@ -47,6 +47,12 @@ namespace XGame
             private set;
         }
 
+        public int LocalId
+        {
+            get;
+            private set;
+        }
+
         public int UserCount
         {
             get;
@@ -84,11 +90,12 @@ namespace XGame
         /// <param name="users"></param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCGameStartInfoEventArgs Create(int roomId, int mapId, int userCount, int seed, List<User> users, object userData = null)
+        public static SCGameStartInfoEventArgs Create(int roomId, int mapId, int localId, int userCount, int seed, List<User> users, object userData = null)
         {
             SCGameStartInfoEventArgs scGameStartInfoEventArgs = ReferencePool.Acquire<SCGameStartInfoEventArgs>();
             scGameStartInfoEventArgs.RoomId = roomId;
             scGameStartInfoEventArgs.MapId = mapId;
+            scGameStartInfoEventArgs.LocalId = localId;
             scGameStartInfoEventArgs.UserCount = userCount;
             scGameStartInfoEventArgs.Seed = seed;
             scGameStartInfoEventArgs.Users.AddRange(users);

@@ -17,7 +17,6 @@ namespace GameProto
             SCServerFrame packetImpl = (SCServerFrame)packet;
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
-            //Log.Error("SCServerFrame.Tick {0}", packetImpl.ServerFrames[packetImpl.ServerFrames.Count - 1].Tick);
             GameEntry.Event.Fire(sender, SCServerFrameEventArgs.Create(packetImpl.StartTick, packetImpl.ServerFrames));
         }
     }

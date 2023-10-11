@@ -25,7 +25,7 @@ message Input{
 //输入帧
 message InputFrame{
 	int32 Tick = 1;					//逻辑帧
-	int32 ActorId = 2;				//ActorId, LocalId
+	int32 LocalId = 2;				//ActorId, LocalId
 	bool IsMiss = 3;				//是否丢失
 	Input Input = 4;				//输入数据
 }
@@ -90,9 +90,10 @@ message SCReady{
 message SCGameStartInfo{
 	int32 RoomId = 1;				//RoomId
 	int32 MapId = 2;				//地图Id
-	int32 UserCount = 3;			//房间人数
-	int32 Seed = 4;					//随机因子
-	repeated User Users = 5;		//玩家数据
+	int32 LocalId = 3;				//LocalId
+	int32 UserCount = 4;			//房间人数
+	int32 Seed = 5;					//随机因子
+	repeated User Users = 6;		//玩家数据
 }
 
 //加载进度

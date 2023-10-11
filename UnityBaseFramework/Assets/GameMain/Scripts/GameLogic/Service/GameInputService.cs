@@ -6,6 +6,5 @@ namespace XGame
     public class GameInputService : IService
     {
         public Input CurrInput = new Input();
-
     }
 }

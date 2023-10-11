@@ -72,7 +72,7 @@ namespace GameProto
         public int Tick { get; set; }
 
         [global::ProtoBuf.ProtoMember(2)]
-        public int ActorId { get; set; }
+        public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
         public bool IsMiss { get; set; }
@@ -245,12 +245,15 @@ namespace GameProto
         public int MapId { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
-        public int UserCount { get; set; }
+        public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(4)]
-        public int Seed { get; set; }
+        public int UserCount { get; set; }
 
         [global::ProtoBuf.ProtoMember(5)]
+        public int Seed { get; set; }
+
+        [global::ProtoBuf.ProtoMember(6)]
         public global::System.Collections.Generic.List<User> Users { get; } = new global::System.Collections.Generic.List<User>();
 
     }

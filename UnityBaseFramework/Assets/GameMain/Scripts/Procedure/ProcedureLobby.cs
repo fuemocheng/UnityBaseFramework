@@ -12,8 +12,6 @@ namespace XGame
 
         private bool m_IsAllReady = false;
 
-        private int m_LocalId = 0;
-
         public override bool UseNativeDialog
         {
             get
@@ -84,8 +82,6 @@ namespace XGame
                 return;
             }
 
-            m_LocalId = scJoinRoomEventArgs.LocalId;
-
             int readyCount = 0;
             for (int i = 0; i < scJoinRoomEventArgs.UserReadyInfos.Count; i++)
             {
@@ -133,8 +129,10 @@ namespace XGame
 
             Simulator simulator = new Simulator();
             simulator.Start();
-            simulator.OnGameCreate(60, scGameStartInfoEventArgs.MapId,
-                m_LocalId, scGameStartInfoEventArgs.UserCount, 
+            simulator.OnGameCreate(60, 
+                scGameStartInfoEventArgs.MapId,
+                scGameStartInfoEventArgs.LocalId, 
+                scGameStartInfoEventArgs.UserCount, 
                 scGameStartInfoEventArgs.Users);
 
             // 所有人都准备完成。

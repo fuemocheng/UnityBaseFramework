@@ -30,7 +30,7 @@ namespace XGame
         private DumpHelper _dumpHelper;
 
         private int m_MapId = 0;
-        private int m_LocalId = 0;
+        private int m_LocalId = -1;
         private List<User> m_Users = new List<User>();
 
         public GameProto.Input[] PlayerInputs => World.PlayerInputs;
@@ -78,11 +78,11 @@ namespace XGame
         }
 
 
-        public void OnGameCreate(int targetFps, int mapId, int localActorId, int actorCount, List<User> users)
+        public void OnGameCreate(int targetFps, int mapId, int localId, int actorCount, List<User> users)
         {
-            Log.Info("OnGameCreate");
+            Log.Info($"OnGameCreate:{localId}");
             m_MapId = mapId;
-            m_LocalId = localActorId;
+            m_LocalId = localId;
             m_Users.AddRange(users);
 
             // Service 创建。
@@ -254,7 +254,7 @@ namespace XGame
             GameProto.Input input = GameEntry.Service.GetService<GameInputService>().CurrInput;
             InputFrame inputFrame = new();
             inputFrame.Tick = curTick;
-            inputFrame.ActorId = m_LocalId;
+            inputFrame.LocalId = m_LocalId;
             inputFrame.Input = input;
             CSInputFrame csInputFrame = new();
             csInputFrame.InputFrame = inputFrame;
@@ -367,12 +367,12 @@ namespace XGame
                 inputs[i].Tick = tick;
                 if(lastServerInputs!=null && lastServerInputs[i] !=null)
                 {
-                    inputs[i].ActorId = lastServerInputs[i].ActorId;
+                    inputs[i].LocalId = lastServerInputs[i].LocalId;
                     inputs[i].Input = lastServerInputs[i].Input;
                 }
                 else
                 {
-                    inputs[i].ActorId = i;
+                    inputs[i].LocalId = i;
                     inputs[i].Input = new Input();
                 }
             }
@@ -393,8 +393,8 @@ namespace XGame
             foreach (var inputFrame in inputFrames)
             {
                 if (inputFrame.Input == null) continue;
-                if (inputFrame.ActorId >= PlayerInputs.Length) continue;
-                var inputEntity = PlayerInputs[inputFrame.ActorId];
+                if (inputFrame.LocalId >= PlayerInputs.Length) continue;
+                var inputEntity = PlayerInputs[inputFrame.LocalId];
                 //foreach (var command in inputFrame.Commands)
                 //{
                 //    Log.Info(inputFrame.ActorId + " >> " + inputFrame.Tick + ": " + inputFrame);
