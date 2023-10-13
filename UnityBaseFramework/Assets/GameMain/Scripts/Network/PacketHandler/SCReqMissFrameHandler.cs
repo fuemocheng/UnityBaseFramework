@@ -10,14 +10,14 @@ using XGame;
 
 namespace GameProto
 {
-    public partial class SCLoadingProgressHandler : PacketHandlerBase
+    public partial class SCReqMissFrameHandler : PacketHandlerBase
     {
         public override void Handle(object sender, Packet packet)
         {
-            SCLoadingProgress packetImpl = (SCLoadingProgress)packet;
-            Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
+            SCReqMissFrame packetImpl = (SCReqMissFrame)packet;
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
-            GameEntry.Event.Fire(sender, SCLoadingProgressEventArgs.Create(packetImpl.AllProgress));
+            GameEntry.Event.Fire(sender, SCReqMissFrameEventArgs.Create(packetImpl.StartTick, packetImpl.ServerFrames));
         }
     }
 }

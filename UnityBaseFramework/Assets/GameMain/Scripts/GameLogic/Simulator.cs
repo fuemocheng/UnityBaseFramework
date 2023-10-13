@@ -84,6 +84,7 @@ namespace XGame
             m_MapId = mapId;
             m_LocalId = localId;
             m_Users.AddRange(users);
+            m_FrameBuffer.LocalId = localId;
 
             // Service 创建。
             GameEntry.Service.RegisterService(new CommonStateService());
@@ -405,6 +406,7 @@ namespace XGame
             }
         }
 
+
         private void OnPursuingFrame()
         {
             GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = true;
@@ -414,10 +416,20 @@ namespace XGame
             //EventHelper.Trigger(EEvent.PursueFrameProcess, progress);
         }
 
+        public void OnPing(SCPingEventArgs scPingEventArgs)
+        {
+            m_FrameBuffer?.OnPing(scPingEventArgs);
+        }
+
         public void OnServerFrame(List<ServerFrame> serverFrames)
         {
             m_HasRecvInputMsg = true;
             m_FrameBuffer?.PushServerFrames(serverFrames.ToArray());
+        }
+
+        public void ReqMissFrame(List<ServerFrame> serverFrames)
+        {
+            m_FrameBuffer?.PushMissServerFrames(serverFrames.ToArray());
         }
     }
 }

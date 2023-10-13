@@ -16,7 +16,7 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSLoadingProgress packetImpl = (CSLoadingProgress)packet;
-            Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
             // Tcp Session¡£
             Session session = (Session)sender;

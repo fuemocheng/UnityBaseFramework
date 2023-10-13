@@ -28,8 +28,10 @@ namespace XGame
             base.OnEnter(procedureOwner);
 
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Subscribe(SCPingEventArgs.EventId, OnPingResponse);
             GameEntry.Event.Subscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
             GameEntry.Event.Subscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
+            GameEntry.Event.Subscribe(SCReqMissFrameEventArgs.EventId, OnReqMissFrameResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.MainUIForm, this);
 
@@ -50,9 +52,10 @@ namespace XGame
             base.OnLeave(procedureOwner, isShutdown);
 
             GameEntry.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            GameEntry.Event.Unsubscribe(SCPingEventArgs.EventId, OnPingResponse);
             GameEntry.Event.Unsubscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
             GameEntry.Event.Unsubscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
-
+            GameEntry.Event.Unsubscribe(SCReqMissFrameEventArgs.EventId, OnReqMissFrameResponse);
 
             if (m_MainUIForm != null)
             {
@@ -128,6 +131,16 @@ namespace XGame
             }
         }
 
+        private void OnPingResponse(object sender, GameEventArgs e)
+        {
+            SCPingEventArgs scPingEventArgs = (SCPingEventArgs)e;
+            if (scPingEventArgs == null)
+            {
+                return;
+            }
+            Simulator.Instance.OnPing(scPingEventArgs);
+        }
+
         private void OnServerFrameResponse(object sender, GameEventArgs e)
         {
             SCServerFrameEventArgs scServerFrameEventArgs = (SCServerFrameEventArgs)e;
@@ -137,6 +150,17 @@ namespace XGame
             }
             //Log.Error("ProcedureMap:OnServerFrameResponse.Tick {0}", scServerFrameEventArgs.ServerFrames[scServerFrameEventArgs.ServerFrames.Count - 1].Tick);
             Simulator.Instance.OnServerFrame(scServerFrameEventArgs.ServerFrames);
+        }
+
+        private void OnReqMissFrameResponse(object sender, GameEventArgs e)
+        {
+            SCReqMissFrameEventArgs scReqMissFrameEventArgs = (SCReqMissFrameEventArgs)e;
+            if (scReqMissFrameEventArgs == null)
+            {
+                return;
+            }
+            //Log.Error("ProcedureMap:OnReqMissFrameResponse.Tick {0}", scReqMissFrameEventArgs.ServerFrames[scReqMissFrameEventArgs.ServerFrames.Count - 1].Tick);
+            Simulator.Instance.ReqMissFrame(scReqMissFrameEventArgs.ServerFrames);
         }
     }
 }

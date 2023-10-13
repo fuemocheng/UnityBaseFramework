@@ -37,7 +37,7 @@ namespace XGame
                     m_Timer = 0;
                     if (!HasMissTick)
                     {
-                        float preSend = m_FrameBuffer._maxPing * 1.0f / CommonDefinitions.UpdateDeltatime;
+                        float preSend = m_FrameBuffer.m_MaxPing * 1.0f / CommonDefinitions.UpdateDeltatime;
                         m_TargetPreSendTick = m_TargetPreSendTick * m_OldPercent + preSend * (1 - m_OldPercent);
 
                         int targetPreSendTick = LMath.Clamp((int)System.Math.Ceiling(m_TargetPreSendTick), 1, 60);
@@ -45,7 +45,7 @@ namespace XGame
                         //if (targetPreSendTick != m_Simulator.PreSendInputCount) 
                         {
                             Log.Warning($"Shrink preSend buffer old:{m_Simulator.PreSendInputCount} new:{m_TargetPreSendTick} " +
-                                $"PING: min:{m_FrameBuffer._minPing} max:{m_FrameBuffer._maxPing} avg:{m_FrameBuffer.PingVal}");
+                                $"PING: min:{m_FrameBuffer.m_MinPing} max:{m_FrameBuffer.m_MaxPing} avg:{m_FrameBuffer.PingVal}");
                         }
 #endif
                         m_Simulator.PreSendInputCount = targetPreSendTick;

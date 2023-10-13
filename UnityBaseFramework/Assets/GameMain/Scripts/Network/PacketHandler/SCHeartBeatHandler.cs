@@ -15,7 +15,7 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             SCHeartBeat packetImpl = (SCHeartBeat)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+            Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
         }
     }
 }

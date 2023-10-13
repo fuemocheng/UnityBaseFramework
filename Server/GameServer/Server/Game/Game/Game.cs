@@ -21,10 +21,13 @@ namespace Server
         private int m_DelayServerTick = 10;
 
         private long m_GameStartTimestampMs = -1;
-        private int m_TickSinceGameStart => (int)((LTime.realtimeSinceStartupMS - m_GameStartTimestampMs) / NetworkDefine.UPDATE_DELTATIME);
 
         private float m_TimeSinceLoaded;
         private float m_FirstFrameTimeStamp = 0;
+
+        private int m_TickSinceGameStart => (int)((LTime.realtimeSinceStartupMS - m_GameStartTimestampMs) / NetworkDefine.UPDATE_DELTATIME);
+
+        public const int MaxRepMissFrameCountPerPack = 600;
 
         public Game(Room room)
         {
@@ -35,13 +38,20 @@ namespace Server
             m_GameStartTimestampMs = -1;
         }
 
-
         public void Clear()
         {
             Tick = 0;
             m_AllHistoryFrames.Clear();
             GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
+        }
+
+        public long GameStartTimestampMs
+        {
+            get
+            {
+                return m_GameStartTimestampMs;
+            }
         }
 
         public void SetLoading()
@@ -74,7 +84,7 @@ namespace Server
 
         public void ReceiveInput(User user, CSInputFrame input)
         {
-            Log.Info("ReceiveInput CSInputFrame.Tick: {0}", input.InputFrame.Tick);
+            //Log.Info("ReceiveInput CSInputFrame.Tick: {0}", input.InputFrame.Tick);
 
             if (GameState != EGameState.Loaded &&
                 GameState != EGameState.Playing)
@@ -185,7 +195,7 @@ namespace Server
             {
                 frames[count - i - 1] = m_AllHistoryFrames[Tick - i];
             }
-            Log.Info("BroadcastServerFrame ServerFrame.Tick: {0}", Tick);
+            //Log.Info("BroadcastServerFrame ServerFrame.Tick: {0}", Tick);
             BroadcastServerFrame(frames);
 
 
@@ -204,22 +214,53 @@ namespace Server
             return true;
         }
 
-
         private void BroadcastServerFrame(ServerFrame[] serverFrames)
         {
             // 广播进度。
             foreach (KeyValuePair<long, User> kvp in Room.GetUsersDictionary())
             {
                 User sUser = kvp.Value;
-                if(sUser == null || sUser.TcpSession == null)
+                if (sUser == null || sUser.TcpSession == null)
                 {
                     continue;
                 }
                 SCServerFrame scServerFrame = ReferencePool.Acquire<SCServerFrame>();
                 scServerFrame.StartTick = serverFrames[0].Tick;
                 scServerFrame.ServerFrames.AddRange(serverFrames);
-                sUser.TcpSession.Send(scServerFrame);
+                sUser.TcpSession?.Send(scServerFrame);
             }
+        }
+
+        public void OnReqMissFrame(Session session, int startTick)
+        {
+            if (session == null)
+            {
+                return;
+            }
+
+            int nextCheckTick = startTick;
+            Log.Info($"OnReqMissFrame NextCheckTick: {nextCheckTick}");
+
+            int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - nextCheckTick), MaxRepMissFrameCountPerPack);
+            if (count <= 0)
+            {
+                return;
+            }
+
+            SCReqMissFrame scReqMissFrame = ReferencePool.Acquire<SCReqMissFrame>();
+            scReqMissFrame.StartTick = startTick;
+
+            var frames = new ServerFrame[count];
+            for (int i = 0; i < count; i++)
+            {
+                frames[i] = m_AllHistoryFrames[nextCheckTick + i];
+                if (frames[i] == null)
+                {
+                    throw new Exception($"HistoryFrames[i] is null.");
+                }
+            }
+            scReqMissFrame.ServerFrames.AddRange(frames);
+            session?.Send(scReqMissFrame);
         }
     }
 }

@@ -211,4 +211,30 @@ namespace GameProto
         public override int Id => 15;
     }
 
+    public partial class CSReqMissFrame : CSPacketBase
+    {
+        public override int Id => 16;
+
+        public override void Clear()
+        {
+            StartTick = 0;
+        }
+    }
+
+    public partial class SCReqMissFrame : SCPacketBase
+    {
+        public override int Id => 17;
+
+        public override void Clear()
+        {
+            StartTick = 0;
+            ServerFrames.Clear();
+        }
+    }
+
+    public partial class SCReqMissFrameHandler : PacketHandlerBase
+    {
+        public override int Id => 17;
+    }
+
 }

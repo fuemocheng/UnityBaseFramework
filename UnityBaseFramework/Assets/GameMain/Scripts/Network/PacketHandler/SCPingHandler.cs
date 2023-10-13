@@ -15,7 +15,9 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             SCPing packetImpl = (SCPing)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
+
+            GameEntry.Event.Fire(sender, SCPingEventArgs.Create(packetImpl.LocalId, packetImpl.SendTimestamp, packetImpl.TimeSinceServerStart));
         }
     }
 }

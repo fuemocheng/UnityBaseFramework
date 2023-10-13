@@ -4,8 +4,11 @@
 //   You need to implement the 'Handle' function yourself.
 // </auto-generated>
 
+using BaseFramework;
 using BaseFramework.Runtime;
+using Lockstep.Util;
 using Network;
+using Server;
 
 namespace GameProto
 {
@@ -14,7 +17,18 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSPing packetImpl = (CSPing)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            //Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
+
+            // Tcp Session¡£
+            Session session = (Session)sender;
+            // Server.User¡£
+            Server.User user = (Server.User)session.BindInfo;
+
+            SCPing ping = ReferencePool.Acquire<SCPing>();
+            ping.LocalId = user.LocalId;
+            ping.SendTimestamp = packetImpl.SendTimestamp;
+            ping.TimeSinceServerStart = LTime.realtimeSinceStartupMS - user.Room.Game.GameStartTimestampMs;
+            user.TcpSession?.Send(ping);
         }
     }
 }

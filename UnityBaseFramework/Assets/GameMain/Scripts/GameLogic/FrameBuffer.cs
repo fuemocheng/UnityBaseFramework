@@ -1,3 +1,4 @@
+using BaseFramework;
 using BaseFramework.Network;
 using GameProto;
 using Lockstep.Math;
@@ -15,28 +16,28 @@ namespace XGame
         private PredictCountHelper m_PredictCountHelper;
 
         //buffers
-        private int _maxClientPredictFrameCount;
-        private int _bufferSize;
-        private int _spaceRollbackNeed;
-        private int _maxServerOverFrameCount;
+        private int m_MaxClientPredictFrameCount;
+        private int m_BufferSize;
+        private int m_SpaceRollbackNeed;
+        private int m_MaxServerOverFrameCount;
 
-        private ServerFrame[] _serverBuffer;
-        private ServerFrame[] _clientBuffer;
+        private ServerFrame[] m_ServerBuffer;
+        private ServerFrame[] m_ClientBuffer;
 
         //ping 
         public int PingVal { get; private set; }
-        private List<long> _pings = new List<long>();
-        private long _guessServerStartTimestamp = Int64.MaxValue;
-        private long _historyMinPing = Int64.MaxValue;
-        private long _minPing = Int64.MaxValue;
-        private long _maxPing = Int64.MinValue;
+        private long m_GuessServerStartTimestamp = Int64.MaxValue;
+        private long m_MinPing = Int64.MaxValue;
+        private long m_MaxPing = Int64.MinValue;
+        private long m_HistoryMinPing = Int64.MaxValue;
+        private float m_PingTimer;
+        private List<long> m_Pings = new List<long>();
         public int DelayVal { get; private set; }
-        private float _pingTimer;
-        private List<long> _delays = new List<long>();
-        Dictionary<int, long> _tick2SendTimestamp = new Dictionary<int, long>();
+        private List<long> m_Delays = new List<long>();
+        Dictionary<int, long> m_Tick2SendTimestamp = new Dictionary<int, long>();
 
         // the tick client need run in next update
-        private int _nextClientTick;
+        private int m_NextClientTick;
 
         public int CurTickInServer { get; private set; }
         public int NextTickToCheck { get; private set; }
@@ -44,67 +45,72 @@ namespace XGame
         public bool IsNeedRollback { get; private set; }
         public int MaxContinueServerTick { get; private set; }
 
-        public byte LocalId;
+        public int LocalId;
 
         public FrameBuffer(Simulator simulator, int bufferSize, int snapshotFrameInterval, int maxClientPredictFrameCount)
         {
             m_Simulator = simulator;
             m_PredictCountHelper = new PredictCountHelper(m_Simulator, this);
 
-            _bufferSize = bufferSize;
-            _maxClientPredictFrameCount = maxClientPredictFrameCount;
-            _spaceRollbackNeed = snapshotFrameInterval * 2;
-            _maxServerOverFrameCount = bufferSize - _spaceRollbackNeed;
-            _serverBuffer = new ServerFrame[bufferSize];
-            _clientBuffer = new ServerFrame[bufferSize];
+            m_BufferSize = bufferSize;
+            m_MaxClientPredictFrameCount = maxClientPredictFrameCount;
+            m_SpaceRollbackNeed = snapshotFrameInterval * 2;
+            m_MaxServerOverFrameCount = bufferSize - m_SpaceRollbackNeed;
+            m_ServerBuffer = new ServerFrame[bufferSize];
+            m_ClientBuffer = new ServerFrame[bufferSize];
         }
 
         public void SetClientTick(int tick)
         {
-            _nextClientTick = tick + 1;
+            m_NextClientTick = tick + 1;
+        }
+
+        public void OnPing(SCPingEventArgs scPingEventArgs)
+        {
+            long ping = LTime.realtimeSinceStartupMS - scPingEventArgs.SendTimestamp;
+            m_Pings.Add(ping);
+            if (ping > m_MaxPing)
+            {
+                m_MaxPing = ping;
+            }
+            if (ping < m_MinPing)
+            {
+                m_MinPing = ping;
+                m_GuessServerStartTimestamp = (LTime.realtimeSinceStartupMS - scPingEventArgs.TimeSinceServerStart) - m_MinPing / 2;
+            }
         }
 
         public void PushLocalFrame(ServerFrame frame)
         {
-            var sIdx = frame.Tick % _bufferSize;
-            //if (_clientBuffer[sIdx] == null || _clientBuffer[sIdx].Tick <= frame.Tick)
+            var sIdx = frame.Tick % m_BufferSize;
+            //if (m_ClientBuffer[sIdx] == null || m_ClientBuffer[sIdx].Tick <= frame.Tick)
             //{
             //    Log.Error("Push local frame error!");
             //}
-            _clientBuffer[sIdx] = frame;
+            m_ClientBuffer[sIdx] = frame;
         }
 
-        public void OnPlayerPing(SCPing scPing)
+        public void PushMissServerFrames(ServerFrame[] frames, bool isNeedDebugCheck = true)
         {
-            //PushServerFrames(frames, isNeedDebugCheck);
-            var ping = LTime.realtimeSinceStartupMS - scPing.SendTimestamp;
-            _pings.Add(ping);
-            if (ping > _maxPing) _maxPing = ping;
-            if (ping < _minPing)
-            {
-                _minPing = ping;
-                _guessServerStartTimestamp = (LTime.realtimeSinceStartupMS - scPing.TimeSinceServerStart) - _minPing / 2;
-            }
+            PushServerFrames(frames, isNeedDebugCheck);
+
+            //不断发送，追帧。
+            Log.Error($"SendReqMissFrame: {MaxContinueServerTick}");
+            SendReqMissFrame(MaxContinueServerTick + 1);
         }
 
         public void PushServerFrames(ServerFrame[] frames, bool isNeedDebugCheck = true)
         {
-            int lastTick = frames[frames.Length - 1].Tick;
-            if (lastTick == 1 || lastTick == 2 || lastTick == 3)
-            {
-                int t = 1;
-            }
-
             var count = frames.Length;
             for (int i = 0; i < count; i++)
             {
                 var data = frames[i];
 
-                if (_tick2SendTimestamp.TryGetValue(data.Tick, out var sendTick))
+                if (m_Tick2SendTimestamp.TryGetValue(data.Tick, out var sendTick))
                 {
                     var delay = LTime.realtimeSinceStartupMS - sendTick;
-                    _delays.Add(delay);
-                    _tick2SendTimestamp.Remove(data.Tick);
+                    m_Delays.Add(delay);
+                    m_Tick2SendTimestamp.Remove(data.Tick);
                 }
 
                 if (data.Tick < NextTickToCheck)
@@ -118,24 +124,25 @@ namespace XGame
                     CurTickInServer = data.Tick;
                 }
 
-                if (data.Tick >= NextTickToCheck + _maxServerOverFrameCount - 1)
+                if (data.Tick >= NextTickToCheck + m_MaxServerOverFrameCount - 1)
                 {
                     //to avoid ringBuffer override the frame that have not been checked
                     continue;
                 }
 
-                //Debug.Log("PushServerFramesSucc" + data.tick);
                 if (data.Tick > MaxServerTickInBuffer)
                 {
                     MaxServerTickInBuffer = data.Tick;
                 }
 
-                var targetIdx = data.Tick % _bufferSize;
-                if (_serverBuffer[targetIdx] == null || _serverBuffer[targetIdx].Tick != data.Tick)
+                var targetIdx = data.Tick % m_BufferSize;
+                if (m_ServerBuffer[targetIdx] == null || m_ServerBuffer[targetIdx].Tick != data.Tick)
                 {
-                    _serverBuffer[targetIdx] = data;
-                    Log.Error("PushServerFrames:" + targetIdx);
-                    if (data.Tick > m_PredictCountHelper.NextCheckMissTick && 
+                    m_ServerBuffer[targetIdx] = data;
+
+                    //Log.Error($"PushServerFrame: {targetIdx}");
+
+                    if (data.Tick > m_PredictCountHelper.NextCheckMissTick &&
                         data.InputFrames[LocalId].IsMiss &&
                         m_PredictCountHelper.MissTick == -1)
                     {
@@ -147,19 +154,21 @@ namespace XGame
 
         public void Update(float deltaTime)
         {
-            //_networkService.SendPing(_simulatorService.LocalActorId, LTime.realtimeSinceStartupMS);
+            SendPing();
+
             m_PredictCountHelper.Update(deltaTime);
             int worldTick = m_Simulator.World.Tick;
-            UpdatePingVal(deltaTime);
+
+            UpdatePing(deltaTime);
 
             //Debug.Assert(nextTickToCheck <= nextClientTick, "localServerTick <= localClientTick ");
             //Confirm frames
             IsNeedRollback = false;
             while (NextTickToCheck <= MaxServerTickInBuffer && NextTickToCheck < worldTick)
             {
-                var sIdx = NextTickToCheck % _bufferSize;
-                var cFrame = _clientBuffer[sIdx];
-                var sFrame = _serverBuffer[sIdx];
+                var sIdx = NextTickToCheck % m_BufferSize;
+                var cFrame = m_ClientBuffer[sIdx];
+                var sFrame = m_ServerBuffer[sIdx];
                 if (cFrame == null || cFrame.Tick != NextTickToCheck ||
                     sFrame == null || sFrame.Tick != NextTickToCheck)
                 {
@@ -181,55 +190,70 @@ namespace XGame
             int tick = NextTickToCheck;
             for (; tick <= MaxServerTickInBuffer; tick++)
             {
-                var idx = tick % _bufferSize;
-                if (_serverBuffer[idx] == null || _serverBuffer[idx].Tick != tick)
+                var idx = tick % m_BufferSize;
+                if (m_ServerBuffer[idx] == null || m_ServerBuffer[idx].Tick != tick)
                 {
                     break;
                 }
             }
 
             MaxContinueServerTick = tick - 1;
-            if (MaxContinueServerTick <= 0) return;
-            if (MaxContinueServerTick < CurTickInServer // has some middle frame pack was lost
-                || _nextClientTick >
-                MaxContinueServerTick + (_maxClientPredictFrameCount - 3) //client has predict too much
-            )
+            if (MaxContinueServerTick <= 0)
             {
-                Log.Info("SendMissFrameReq " + MaxContinueServerTick);
-                //_networkService.SendMissFrameReq(MaxContinueServerTick);
+                return;
+            }
+
+            // has some middle frame pack was lost, or client has predict too much.
+            if (MaxContinueServerTick < CurTickInServer || m_NextClientTick > MaxContinueServerTick + (m_MaxClientPredictFrameCount - 3))
+            {
+                Log.Error($"SendReqMissFrame: {MaxContinueServerTick}");
+                SendReqMissFrame(MaxContinueServerTick);
             }
         }
 
-        private void UpdatePingVal(float deltaTime)
+        private void UpdatePing(float deltaTime)
         {
-            _pingTimer += deltaTime;
-            if (_pingTimer > 0.5f)
+            m_PingTimer += deltaTime;
+            if (m_PingTimer > 0.5f)
             {
-                _pingTimer = 0;
-                DelayVal = (int)(_delays.Sum() / LMath.Max(_delays.Count, 1));
-                _delays.Clear();
-                PingVal = (int)(_pings.Sum() / LMath.Max(_pings.Count, 1));
-                _pings.Clear();
+                m_PingTimer = 0;
 
-                if (_minPing < _historyMinPing && m_Simulator.GameStartTimestampMs != -1)
+                DelayVal = (int)(m_Delays.Sum() / LMath.Max(m_Delays.Count, 1));
+                m_Delays.Clear();
+
+                PingVal = (int)(m_Pings.Sum() / LMath.Max(m_Pings.Count, 1));
+                m_Pings.Clear();
+
+                if (m_MinPing < m_HistoryMinPing && m_Simulator.GameStartTimestampMs != -1)
                 {
-                    _historyMinPing = _minPing;
-#if UNITY_EDITOR
-                    Log.Warning(
-                        $"Recalc _gameStartTimestampMs {m_Simulator.GameStartTimestampMs} _guessServerStartTimestamp:{_guessServerStartTimestamp}");
-#endif
-                    m_Simulator.GameStartTimestampMs = LMath.Min(_guessServerStartTimestamp,
-                        m_Simulator.GameStartTimestampMs);
+                    m_HistoryMinPing = m_MinPing;
+                    m_Simulator.GameStartTimestampMs = LMath.Min(m_GuessServerStartTimestamp, m_Simulator.GameStartTimestampMs);
+                    //Log.Info($"Recalculate m_GameStartTimestampMs {m_Simulator.GameStartTimestampMs} m_GuessServerStartTimestamp:{m_GuessServerStartTimestamp}");
                 }
 
-                _minPing = Int64.MaxValue;
-                _maxPing = Int64.MinValue;
+                m_MinPing = Int64.MaxValue;
+                m_MaxPing = Int64.MinValue;
             }
+        }
+
+        private void SendPing()
+        {
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot SendPing, tcpChannel is null.");
+                return;
+            }
+            CSPing csPing = ReferencePool.Acquire<CSPing>();
+            csPing.LocalId = LocalId;
+            csPing.SendTimestamp = LTime.realtimeSinceStartupMS;
+            tcpChannel.Send(csPing);
         }
 
         public void SendInput(CSInputFrame csInputFrame)
         {
-            _tick2SendTimestamp[csInputFrame.InputFrame.Tick] = LTime.realtimeSinceStartupMS;
+            m_Tick2SendTimestamp[csInputFrame.InputFrame.Tick] = LTime.realtimeSinceStartupMS;
+
 #if DEBUG_SHOW_INPUT
             var cmd = input.Commands[0];
             var playerInput = new Deserializer(cmd.content).Parse<Lockstep.Game. PlayerInput>();
@@ -246,6 +270,19 @@ namespace XGame
             }
             //发送Input
             tcpChannel.Send(csInputFrame);
+        }
+
+        private void SendReqMissFrame(int startTick)
+        {
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot SendReqMissFrame, tcpChannel is null.");
+                return;
+            }
+            CSReqMissFrame csReqMissFrame = ReferencePool.Acquire<CSReqMissFrame>();
+            csReqMissFrame.StartTick = startTick;
+            tcpChannel.Send(csReqMissFrame);
         }
 
         public ServerFrame GetFrame(int tick)
@@ -266,25 +303,31 @@ namespace XGame
                 return null;
             }
 
-            return _GetFrame(_serverBuffer, tick);
+            return GetFrame(m_ServerBuffer, tick);
         }
 
         public ServerFrame GetLocalFrame(int tick)
         {
-            if (tick >= _nextClientTick)
+            if (tick >= m_NextClientTick)
             {
                 return null;
             }
 
-            return _GetFrame(_clientBuffer, tick);
+            return GetFrame(m_ClientBuffer, tick);
         }
 
-        private ServerFrame _GetFrame(ServerFrame[] buffer, int tick)
+        private ServerFrame GetFrame(ServerFrame[] buffer, int tick)
         {
-            var idx = tick % _bufferSize;
+            var idx = tick % m_BufferSize;
             var frame = buffer[idx];
-            if (frame == null) return null;
-            if (frame.Tick != tick) return null;
+            if (frame == null)
+            {
+                return null;
+            }
+            if (frame.Tick != tick)
+            {
+                return null;
+            }
             return frame;
         }
     }

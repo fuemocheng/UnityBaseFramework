@@ -108,18 +108,24 @@ message SCLoadingProgress{
 	int32 AllProgress = 1;			//所有玩家整体加载进度，100为所有人都加载完成；
 }
 
-//输入帧
+//C2S输入帧
 message CSInputFrame{
-	InputFrame InputFrame = 1;	//输入数据
+	InputFrame InputFrame = 1;		//输入数据
 }
 
-//服务器帧数据
+//S2C帧数据
 message SCServerFrame{
 	int32 StartTick = 1;							//逻辑帧
-	repeated ServerFrame ServerFrames = 2;	//所有玩家的数据帧
+	repeated ServerFrame ServerFrames = 2;			//玩家的数据帧
 }
 
+//请求丢失的帧数据
+message CSReqMissFrame{
+	int32 StartTick = 1;			
+}
 
-
-
+message SCReqMissFrame{
+	int32 StartTick = 1;							//逻辑帧
+	repeated ServerFrame ServerFrames = 2;			//丢失的帧数据
+}
 
