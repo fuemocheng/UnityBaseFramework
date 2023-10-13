@@ -16,7 +16,7 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSJoinRoom packetImpl = (CSJoinRoom)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
             // Tcp Session¡£
             Session session = (Session)sender;
@@ -42,6 +42,10 @@ namespace GameProto
             foreach (KeyValuePair<long, Server.User> kvp in availableRoom.GetUsersDictionary())
             {
                 Server.User sUser = kvp.Value;
+                if (sUser == null || sUser.TcpSession == null)
+                {
+                    continue;
+                }
                 SCJoinRoom scJoinRoom = ReferencePool.Acquire<SCJoinRoom>();
                 scJoinRoom.RoomId = availableRoom.RoomId;
                 scJoinRoom.LocalId = user.LocalId;
@@ -50,13 +54,13 @@ namespace GameProto
                 {
                     UserReadyInfo userReadyInfo = new UserReadyInfo();
                     userReadyInfo.LocalId = kvp2.Value.LocalId;
-                    userReadyInfo.Status = kvp2.Value.IsReady ? 1 : 0;
+                    userReadyInfo.UserState = (int)kvp2.Value.UserState;
                     userReadyInfo.User = new User();
                     userReadyInfo.User.UserId = kvp2.Value.UserId;
                     userReadyInfo.User.UserName = kvp2.Value.UserName;
                     scJoinRoom.UserReadyInfos.Add(userReadyInfo);
                 }
-                sUser.TcpSession.Send(scJoinRoom);
+                sUser.TcpSession?.Send(scJoinRoom);
             }
         }
     }

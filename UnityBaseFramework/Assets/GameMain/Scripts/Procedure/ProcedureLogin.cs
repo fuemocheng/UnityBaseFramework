@@ -9,6 +9,7 @@ namespace XGame
     {
         private bool m_Connected = false;
         private bool m_LoggedIn = false;
+        private EUserState m_UserState = EUserState.Default;
         private LoginForm m_LoginForm = null;
 
         public override bool UseNativeDialog
@@ -51,8 +52,29 @@ namespace XGame
 
             if(m_Connected && m_LoggedIn)
             {
-                procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Lobby"));
-                ChangeState<ProcedureChangeScene>(procedureOwner);
+                // 登录或者重连的不同的处理。
+                switch (m_UserState)
+                {
+                    case EUserState.LoggedIn:
+                    case EUserState.NotReady:
+                    case EUserState.Ready:
+                        procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Lobby"));
+                        procedureOwner.SetData<VarInt32>("UserState", (int)m_UserState);
+                        ChangeState<ProcedureChangeScene>(procedureOwner);
+                        break;
+                    case EUserState.Loading:
+                        procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Lobby"));
+                        procedureOwner.SetData<VarInt32>("UserState", (int)m_UserState);
+                        ChangeState<ProcedureChangeScene>(procedureOwner);
+                        break;
+                    case EUserState.Playing:
+                        procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Map01"));
+                        procedureOwner.SetData<VarInt32>("UserState", (int)m_UserState);
+                        ChangeState<ProcedureChangeScene>(procedureOwner);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -82,15 +104,18 @@ namespace XGame
         {
             SCLoginEventArgs ne = (SCLoginEventArgs)e;
 
-            // TODO：暂定 1 为成功, 2 为密码错误
-            if (ne.RetCode == 1)
-            {
-                m_LoggedIn = true;
-            }
-            else if(ne.RetCode == 2)
+            if(ne.RetCode == (int)EErrorCode.IncorrectPassword)
             {
                 m_LoggedIn = false;
+                // TODO: Show Tips
                 Log.Error("Password incorrect.");
+                return;
+            }
+
+            if (ne.RetCode == (int)EErrorCode.Success)
+            {
+                m_LoggedIn = true;
+                m_UserState = (EUserState)ne.UserState;
             }
         }
     }

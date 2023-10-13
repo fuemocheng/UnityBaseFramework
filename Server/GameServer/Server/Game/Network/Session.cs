@@ -11,8 +11,10 @@ namespace Server
         public long Id;
 
         private NetworkComponent m_NetworkComponent; //网络代理
-        private NetworkChannelBase m_Channel; //网络信道
+        private NetworkChannelBase m_Channel; //网络信道u
         private NetworkChannelHelper m_ChannelHelper; //网络信道处理
+
+        public Action NetworkChannelError;
 
         public object BindInfo; //会话绑定信息，一般是User;
 
@@ -41,7 +43,7 @@ namespace Server
 
         public void Dispose()
         {
-            if(m_Disposed)
+            if (m_Disposed)
             {
                 return;
             }
@@ -52,8 +54,20 @@ namespace Server
             m_Channel = null;
         }
 
+        public NetworkChannelBase Channel
+        {
+            get
+            {
+                return m_Channel;
+            }
+            set
+            {
+                m_Channel = value;
+            }
+        }
+
         #region Receive & Handle
-        
+
         /// <summary>
         /// 消息包处理。
         /// </summary>
@@ -73,6 +87,21 @@ namespace Server
 
             IPacketHandler handler = m_ChannelHelper.GetPacketHandler(packet.Id);
             handler.Handle(this, packet);
+        }
+
+        public void OnNetworkChannelError()
+        {
+            if (NetworkChannelError != null)
+            {
+                NetworkChannelError();
+            }
+
+            User user = (User)BindInfo;
+            if (user != null)
+            {
+                user.TcpSession = null;
+                user.KcpSession = null;
+            }
         }
 
         #endregion

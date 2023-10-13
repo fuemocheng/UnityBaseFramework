@@ -77,6 +77,7 @@ namespace GameProto
         public override void Clear()
         {
             RetCode = 0;
+            UserState = 0;
         }
     }
 
@@ -118,7 +119,7 @@ namespace GameProto
 
         public override void Clear()
         {
-            Status = 0;
+            UserState = 0;
         }
     }
 
@@ -128,6 +129,8 @@ namespace GameProto
 
         public override void Clear()
         {
+            RoomId = 0;
+            LocalId = 0;
             UserReadyInfos.Clear();
         }
     }

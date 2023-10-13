@@ -42,6 +42,15 @@ namespace XGame
         }
 
         /// <summary>
+        /// 用户状态。
+        /// </summary>
+        public int UserState
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
         public object UserData
@@ -55,11 +64,12 @@ namespace XGame
         /// </summary>
         /// <param name="e">内部事件。</param>
         /// <returns>创建的网络连接成功事件。</returns>
-        public static SCLoginEventArgs Create(int retCode, object userData = null)
+        public static SCLoginEventArgs Create(int retCode, int userState, object userData = null)
         {
             SCLoginEventArgs scLoginEventArgs = ReferencePool.Acquire<SCLoginEventArgs>();
             scLoginEventArgs.RetCode = retCode;
             scLoginEventArgs.UserData = userData;
+            scLoginEventArgs.UserState = userState;
             return scLoginEventArgs;
         }
 

@@ -1,4 +1,6 @@
+using BaseFramework;
 using BaseFramework.Event;
+using BaseFramework.Network;
 using GameProto;
 using Lockstep.Util;
 using UnityBaseFramework.Runtime;
@@ -9,6 +11,8 @@ namespace XGame
     public class ProcedureLobby : ProcedureBase
     {
         private LobbyForm m_LobbyForm = null;
+
+        private EUserState m_UserState = EUserState.Default;
 
         private bool m_IsAllReady = false;
 
@@ -30,6 +34,12 @@ namespace XGame
             GameEntry.Event.Subscribe(SCGameStartInfoEventArgs.EventId, OnGameStartInfoResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.LobbyForm, this);
+
+            if (procedureOwner.HasData("UserState"))
+            {
+                int tUserState = procedureOwner.GetData<VarInt32>("UserState");
+                m_UserState = (EUserState)tUserState;
+            }
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -72,6 +82,40 @@ namespace XGame
             }
 
             m_LobbyForm = (LobbyForm)ne.UIForm.Logic;
+
+            CheckReconnected();
+        }
+
+        private void CheckReconnected()
+        {
+            switch (m_UserState)
+            {
+                case EUserState.NotReady:
+                    //重连，在房间未准备状态。
+                    Ready((int)EUserState.LoggedIn);
+                    break;
+                case EUserState.Ready:
+                    //重连，在房间已准备状态。
+                    Ready((int)EUserState.LoggedIn);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void JoinRoom()
+        {
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot JoinRoom, tcpChannel is null.");
+                return;
+            }
+            // JoinRoom；
+            CSJoinRoom csJoinRoom = ReferencePool.Acquire<CSJoinRoom>();
+            // RoomId为0，随机加入房间；重连的话也用默认Id。
+            csJoinRoom.RoomId = 0;
+            tcpChannel.Send(csJoinRoom);
         }
 
         private void OnJoinRoomResponse(object sender, GameEventArgs e)
@@ -86,14 +130,29 @@ namespace XGame
             for (int i = 0; i < scJoinRoomEventArgs.UserReadyInfos.Count; i++)
             {
                 UserReadyInfo userReadyInfo = scJoinRoomEventArgs.UserReadyInfos[i];
-                if (userReadyInfo != null && userReadyInfo.Status == 1)
+                if (userReadyInfo != null && userReadyInfo.UserState == (int)EUserState.Ready)
                 {
                     readyCount++;
                 }
             }
-            m_LobbyForm.OnJoinedRoom(scJoinRoomEventArgs.RoomId, readyCount);
+            m_LobbyForm.OnJoinedRoom(scJoinRoomEventArgs.RoomId, scJoinRoomEventArgs.LocalId, readyCount);
 
             Log.Info($"OnJoinRoomResponse RoomId:{scJoinRoomEventArgs.RoomId} LocalId:{scJoinRoomEventArgs.LocalId}");
+        }
+
+        public void Ready(int readyState)
+        {
+            // readyState
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot Ready, tcpChannel is null.");
+                return;
+            }
+            // 准备游戏
+            CSReady csReady = ReferencePool.Acquire<CSReady>();
+            csReady.UserState = readyState;
+            tcpChannel.Send(csReady);
         }
 
         private void OnReadyResponse(object sender, GameEventArgs e)
@@ -104,19 +163,20 @@ namespace XGame
                 return;
             }
 
+            // 开始计时。
             LTime.DoStart();
 
             int readyCount = 0;
             for (int i = 0; i < scReadyEventArgs.UserReadyInfos.Count; i++)
             {
                 UserReadyInfo userReadyInfo = scReadyEventArgs.UserReadyInfos[i];
-                if (userReadyInfo != null && userReadyInfo.Status == 1)
+                if (userReadyInfo != null && userReadyInfo.UserState == (int)EUserState.Ready)
                 {
                     readyCount++;
                 }
             }
-            
-            m_LobbyForm.RefreshReadyCount(readyCount);
+
+            m_LobbyForm.OnReadyState(scReadyEventArgs.RoomId, scReadyEventArgs.LocalId, readyCount);
         }
 
         private void OnGameStartInfoResponse(object sender, GameEventArgs e)
@@ -129,10 +189,10 @@ namespace XGame
 
             Simulator simulator = new Simulator();
             simulator.Start();
-            simulator.OnGameCreate(60, 
+            simulator.OnGameCreate(60,
                 scGameStartInfoEventArgs.MapId,
-                scGameStartInfoEventArgs.LocalId, 
-                scGameStartInfoEventArgs.UserCount, 
+                scGameStartInfoEventArgs.LocalId,
+                scGameStartInfoEventArgs.UserCount,
                 scGameStartInfoEventArgs.Users);
 
             // 所有人都准备完成。

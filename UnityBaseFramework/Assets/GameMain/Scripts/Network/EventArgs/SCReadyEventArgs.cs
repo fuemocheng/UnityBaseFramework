@@ -35,6 +35,18 @@ namespace XGame
             }
         }
 
+        public int RoomId
+        {
+            get;
+            private set;
+        }
+
+        public int LocalId
+        {
+            get;
+            private set;
+        }
+
         public List<UserReadyInfo> UserReadyInfos
         {
             get;
@@ -56,9 +68,11 @@ namespace XGame
         /// <param name="userReadyInfos"></param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCReadyEventArgs Create(List<UserReadyInfo> userReadyInfos, object userData = null)
+        public static SCReadyEventArgs Create(int roomId, int localId, List<UserReadyInfo> userReadyInfos, object userData = null)
         {
             SCReadyEventArgs scReadyEventArgs = ReferencePool.Acquire<SCReadyEventArgs>();
+            scReadyEventArgs.RoomId = roomId;
+            scReadyEventArgs.LocalId = localId;
             scReadyEventArgs.UserReadyInfos.AddRange(userReadyInfos);
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;

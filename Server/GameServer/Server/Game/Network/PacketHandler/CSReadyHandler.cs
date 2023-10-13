@@ -16,66 +16,101 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSReady packetImpl = (CSReady)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
             // Tcp Session。
             Session session = (Session)sender;
             // User。
             Server.User user = (Server.User)session.BindInfo;
-            // 设置为准备状态。
-            user.IsReady = packetImpl.Status == 1;
 
-            Room room = user.Room;
-            if(room == null)
+            if (packetImpl.UserState == (int)EUserState.LoggedIn)
             {
-                Log.Error("CSReadyHandler Error : Room is null.");
-                return;
-            }
+                Log.Error("CSReadyHandler Reconnected...");
 
-            if (room.IsAllReady())
-            {
-                // 全部准备，广播客户端开始游戏的消息。
-                foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                // 重连，只给自己重新同步信息。
+                SCReady scReady = ReferencePool.Acquire<SCReady>();
+                scReady.RoomId = user.Room.RoomId;
+                scReady.LocalId = user.LocalId;
+                // 遍历添加所有人信息，添加到 SCReady
+                foreach (KeyValuePair<long, Server.User> kvp2 in user.Room.GetUsersDictionary())
                 {
-                    Server.User sUser = kvp.Value;
-                    SCGameStartInfo gameStartInfo = ReferencePool.Acquire<SCGameStartInfo>();
-                    gameStartInfo.RoomId = room.RoomId;
-                    gameStartInfo.MapId = 1;
-                    gameStartInfo.LocalId = sUser.LocalId;
-                    gameStartInfo.UserCount = room.GetCurrCount();
-                    gameStartInfo.Seed = 0;
-                    // 遍历添加所有人信息，添加到 SCGameStartInfo
-                    foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
-                    {
-                        GameProto.User tUser = new GameProto.User();
-                        tUser.UserId = kvp2.Value.UserId;
-                        tUser.UserName = kvp2.Value.UserName;
-                        gameStartInfo.Users.Add(tUser);
-                    }
-                    sUser.TcpSession.Send(gameStartInfo);
+                    UserReadyInfo userReadyInfo = new UserReadyInfo();
+                    userReadyInfo.LocalId = kvp2.Value.LocalId;
+                    userReadyInfo.UserState = (int)kvp2.Value.UserState;
+                    userReadyInfo.User = new User();
+                    userReadyInfo.User.UserId = kvp2.Value.UserId;
+                    userReadyInfo.User.UserName = kvp2.Value.UserName;
+                    scReady.UserReadyInfos.Add(userReadyInfo);
                 }
-
-                room.Game.SetLoading();
+                user.TcpSession?.Send(scReady);
             }
             else
             {
-                // 非全部准备，广播客户端有人准备。
-                foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                // 设置为准备状态或者非准备状态。
+                user.UserState = (EUserState)packetImpl.UserState;
+
+                Room room = user.Room;
+                if (room == null)
                 {
-                    Server.User sUser = kvp.Value;
-                    SCReady scReady = ReferencePool.Acquire<SCReady>();
-                    // 遍历添加所有人信息，添加到 SCReady
-                    foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
+                    Log.Error("CSReadyHandler Error : Room is null.");
+                    return;
+                }
+
+                if (room.IsAllReady())
+                {
+                    // 全部准备，广播客户端开始游戏的消息。
+                    foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
                     {
-                        UserReadyInfo userReadyInfo = new UserReadyInfo();
-                        userReadyInfo.LocalId = kvp2.Value.LocalId;
-                        userReadyInfo.Status = kvp2.Value.IsReady ? 1 : 0;
-                        userReadyInfo.User = new User();
-                        userReadyInfo.User.UserId = kvp2.Value.UserId;
-                        userReadyInfo.User.UserName = kvp2.Value.UserName;
-                        scReady.UserReadyInfos.Add(userReadyInfo);
+                        Server.User sUser = kvp.Value;
+                        if (sUser == null || sUser.TcpSession == null)
+                        {
+                            continue;
+                        }
+                        SCGameStartInfo gameStartInfo = ReferencePool.Acquire<SCGameStartInfo>();
+                        gameStartInfo.RoomId = room.RoomId;
+                        gameStartInfo.MapId = 1;
+                        gameStartInfo.LocalId = sUser.LocalId;
+                        gameStartInfo.UserCount = room.GetCurrCount();
+                        gameStartInfo.Seed = 0;
+                        // 遍历添加所有人信息，添加到 SCGameStartInfo
+                        foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
+                        {
+                            GameProto.User tUser = new GameProto.User();
+                            tUser.UserId = kvp2.Value.UserId;
+                            tUser.UserName = kvp2.Value.UserName;
+                            gameStartInfo.Users.Add(tUser);
+                        }
+                        sUser.TcpSession?.Send(gameStartInfo);
                     }
-                    sUser.TcpSession.Send(scReady);
+
+                    room.Game.SetLoading();
+                }
+                else
+                {
+                    // 非全部准备，广播客户端有人准备或取消准备。
+                    foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                    {
+                        Server.User sUser = kvp.Value;
+                        if (sUser == null || sUser.TcpSession == null)
+                        {
+                            continue;
+                        }
+                        SCReady scReady = ReferencePool.Acquire<SCReady>();
+                        scReady.RoomId = sUser.Room.RoomId;
+                        scReady.LocalId = sUser.LocalId;
+                        // 遍历添加所有人信息，添加到 SCReady
+                        foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
+                        {
+                            UserReadyInfo userReadyInfo = new UserReadyInfo();
+                            userReadyInfo.LocalId = kvp2.Value.LocalId;
+                            userReadyInfo.UserState = (int)kvp2.Value.UserState;
+                            userReadyInfo.User = new User();
+                            userReadyInfo.User.UserId = kvp2.Value.UserId;
+                            userReadyInfo.User.UserName = kvp2.Value.UserName;
+                            scReady.UserReadyInfos.Add(userReadyInfo);
+                        }
+                        sUser.TcpSession?.Send(scReady);
+                    }
                 }
             }
         }

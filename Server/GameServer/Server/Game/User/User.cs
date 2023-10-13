@@ -9,15 +9,17 @@ namespace Server
         public string Account = string.Empty;
         public string Password = string.Empty;
         public string UserName = string.Empty;
+
+        public int LocalId = -1;
+        public int LoadingProgress = 0;
+        public EUserState UserState = EUserState.Default;
+        public Room Room = null;
+
         public Session TcpSession = null;
         public Session KcpSession = null;
         public GameLogicComponent GameLogicComponent = null;
-        public Room Room = null;
-        public int LocalId = -1;
-        public bool IsReady = false;
-        public int LoadingProgress = 0;
 
-        public User() 
+        public User()
         {
         }
 
@@ -27,15 +29,17 @@ namespace Server
             Account = string.Empty;
             Password = string.Empty;
             UserName = string.Empty;
+
+            LocalId = -1;
+            LoadingProgress = 0;
+            UserState = EUserState.Default;
+            Room = null;
+
             TcpSession?.Dispose();
             KcpSession?.Dispose();
             TcpSession = null;
             KcpSession = null;
             GameLogicComponent = null;
-            Room = null;
-            LocalId = -1;
-            IsReady = false;
-            LoadingProgress = 0;
         }
     }
 }

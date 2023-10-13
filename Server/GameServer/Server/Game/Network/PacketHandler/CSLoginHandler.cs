@@ -16,25 +16,27 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSLogin packetImpl = (CSLogin)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+            //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
             // Tcp Session。
             Session session = (Session)sender;
             bool isPasswordCorrect = true;
 
-            // TODO:Get From DB
-
+            // TODO:Get From DB，这里应该从数据中获取User信息。
             // Get User。
             Server.User user = GameEntry.GameLogic.UserManager.GetUser(packetImpl.Account);
+
             if (user == null)
             {
+                // 离线后的登录。
                 // Create user。
                 user = ReferencePool.Acquire<Server.User>();
-                user.UserId = UserIdGenerator.GenerateId();
+                user.UserId = UserIdGenerator.GenerateId();     //Get From DB.
                 user.Account = packetImpl.Account;
                 user.Password = packetImpl.Password;
                 user.UserName = packetImpl.Account;
                 user.TcpSession = session;
+                user.UserState = EUserState.LoggedIn;
 
                 session.BindInfo = user;
 
@@ -42,8 +44,14 @@ namespace GameProto
             }
             else
             {
+                // 重新登录或者短线重连。
+                Log.Error("CSLoginHandler Reconnected...");
+
                 // Reset Session。
                 user.TcpSession = session;
+
+                session.BindInfo = user;
+
                 if (packetImpl.Password != user.Password)
                 {
                     isPasswordCorrect = false;
@@ -52,15 +60,16 @@ namespace GameProto
 
             // 回客户端消息。
             SCLogin scLogin = ReferencePool.Acquire<SCLogin>();
-            // TODO:暂定 1 为登录成功, 2 密码不对。
             if(isPasswordCorrect)
             {
-                scLogin.RetCode = 1;
+                scLogin.RetCode = (int)EErrorCode.Success;
             }
             else
             {
-                scLogin.RetCode = 2;
+                scLogin.RetCode = (int)EErrorCode.IncorrectPassword;
             }
+            scLogin.UserState = (int)user.UserState;
+            
             session.Send(scLogin);
         }
     }

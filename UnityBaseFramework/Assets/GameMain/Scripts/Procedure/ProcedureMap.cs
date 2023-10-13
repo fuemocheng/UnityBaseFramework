@@ -11,6 +11,10 @@ namespace XGame
     {
         private MainUIForm m_MainUIForm = null;
 
+        private EUserState m_UserState = EUserState.Default;
+
+        private float m_Time = 0;
+
         public override bool UseNativeDialog
         {
             get
@@ -29,9 +33,16 @@ namespace XGame
 
             GameEntry.UI.OpenUIForm(UIFormId.MainUIForm, this);
 
-            // 场景已经加载完成，发送加载进度。
+            if (procedureOwner.HasData("UserState"))
+            {
+                int tUserState = procedureOwner.GetData<VarInt32>("UserState");
+                m_UserState = (EUserState)tUserState;
+            }
 
-            SendLoadingProgress();
+            m_Time = 0;
+
+            // 场景已经加载完成，延迟发送加载进度。
+            //SendLoadingProgress();
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -53,6 +64,16 @@ namespace XGame
         protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+
+            if (m_Time < CommonDefinitions.DelaySendLoadingProgressTime)
+            {
+                m_Time += elapseSeconds;
+                if(m_Time >= CommonDefinitions.DelaySendLoadingProgressTime)
+                {
+                    // 延迟发送加载进度。
+                    SendLoadingProgress();
+                }
+            }
 
             //模拟器更新
             Simulator.Instance.Update(elapseSeconds, realElapseSeconds);

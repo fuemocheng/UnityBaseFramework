@@ -55,7 +55,7 @@ namespace Server
             }
             foreach (var kvp in m_Users)
             {
-                if (!kvp.Value.IsReady)
+                if (kvp.Value.UserState != EUserState.Ready)
                 {
                     return false;
                 }
@@ -108,6 +108,8 @@ namespace Server
                     break;
                 }
             }
+            user.UserState = EUserState.NotReady;
+
             Log.Info("User:{0} join Room:{1}.", user.UserId, RoomId);
         }
 
@@ -127,6 +129,7 @@ namespace Server
                 }
             }
             user.Room = null;
+            user.UserState = EUserState.LoggedIn;
             m_Users.Remove(user.UserId);
             Log.Info("User:{0} leave Room:{1}.", user.UserId, RoomId);
         }

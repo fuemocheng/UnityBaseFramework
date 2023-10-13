@@ -53,35 +53,20 @@ namespace XGame
 
         private void OnClickBtnJoin()
         {
-            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
-            if (tcpChannel == null)
-            {
-                Log.Error("Cannot Start, tcpChannel is null.");
-                return;
-            }
-            // JoinRoom；
-            CSJoinRoom csJoinRoom = ReferencePool.Acquire<CSJoinRoom>();
-            // RoomId为0，随机加入房间；
-            csJoinRoom.RoomId = 0;  
-            tcpChannel.Send(csJoinRoom);
+            m_ProcedureLobby.JoinRoom();
         }
 
         private void OnClickBtnReady()
         {
-            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
-            if (tcpChannel == null)
-            {
-                Log.Error("Cannot Start, tcpChannel is null.");
-                return;
-            }
-            // 准备游戏
-            CSReady csReady = ReferencePool.Acquire<CSReady>();
-            // 0:取消准备，1:准备
-            csReady.Status = 1;
-            tcpChannel.Send(csReady);
+            m_ProcedureLobby.Ready((int)EUserState.Ready);
         }
 
-        public void OnJoinedRoom(int roomId, int readyCount)
+        private void OnClickBtnCancelReady()
+        {
+            m_ProcedureLobby.Ready((int)EUserState.NotReady);
+        }
+
+        public void OnJoinedRoom(int roomId, int localId, int readyCount)
         {
             m_BtnJoin.gameObject.SetActive(false);
             m_BtnReady.gameObject.SetActive(true);
@@ -89,15 +74,18 @@ namespace XGame
             m_ReadyCount.text = $"ReadyCount: {readyCount}/{CommonDefinitions.MaxRoomMemberCount}";
         }
 
-        public void RefreshReadyCount(int count)
+        public void OnReadyState(int roomId, int localId, int readyCount)
         {
-            if (count <= 0)
+            m_BtnJoin.gameObject.SetActive(false);
+            m_BtnReady.gameObject.SetActive(true);
+            m_RoomText.text = $"RoomId: {roomId}";
+            if (readyCount <= 0)
             {
                 m_ReadyCount.text = "ReadyCount ...";
             }
             else
             {
-                m_ReadyCount.text = $"ReadyCount... {count}/{CommonDefinitions.MaxRoomMemberCount}";
+                m_ReadyCount.text = $"ReadyCount... {readyCount}/{CommonDefinitions.MaxRoomMemberCount}";
             }
         }
     }

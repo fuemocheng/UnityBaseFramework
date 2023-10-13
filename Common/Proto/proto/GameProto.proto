@@ -11,7 +11,7 @@ message User{
 //房间角色准备信息
 message UserReadyInfo{
 	int32 LocalId = 1;				//LocalId
-	int32 Status = 2;				//准备状态  0:未准备 1:已准备
+	int32 UserState = 2;			//准备状态  UserState
 	User User = 3;					//角色信息
 }
 
@@ -64,6 +64,7 @@ message CSLogin{
 
 message SCLogin{
 	int32 RetCode = 1;
+	int32 UserState = 2;
 }
 
 //加入游戏房间
@@ -74,16 +75,18 @@ message CSJoinRoom{
 message SCJoinRoom{
 	int32 RoomId = 1;
 	int32 LocalId = 2;
-	repeated UserReadyInfo UserReadyInfos = 3;
+	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
 }
 
 //准备游戏
 message CSReady{
-	int32 Status = 1;				//准备状态  0:取消准备 1:已准备
+	int32 UserState = 1;							//准备状态  UserState
 }
 
 message SCReady{
-	repeated UserReadyInfo UserReadyInfos = 1;		//玩家准备状态数据
+	int32 RoomId = 1;
+	int32 LocalId = 2;
+	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
 }
 
 //游戏开始基础信息

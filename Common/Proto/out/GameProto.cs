@@ -36,7 +36,7 @@ namespace GameProto
         public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(2)]
-        public int Status { get; set; }
+        public int UserState { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
         public User User { get; set; }
@@ -175,6 +175,9 @@ namespace GameProto
         [global::ProtoBuf.ProtoMember(1)]
         public int RetCode { get; set; }
 
+        [global::ProtoBuf.ProtoMember(2)]
+        public int UserState { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -215,7 +218,7 @@ namespace GameProto
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public int Status { get; set; }
+        public int UserState { get; set; }
 
     }
 
@@ -227,6 +230,12 @@ namespace GameProto
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
+        public int RoomId { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2)]
+        public int LocalId { get; set; }
+
+        [global::ProtoBuf.ProtoMember(3)]
         public global::System.Collections.Generic.List<UserReadyInfo> UserReadyInfos { get; } = new global::System.Collections.Generic.List<UserReadyInfo>();
 
     }

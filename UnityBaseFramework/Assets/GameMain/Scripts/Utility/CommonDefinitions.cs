@@ -14,5 +14,10 @@ namespace XGame
         /// 游戏逻辑帧更新间隔。
         /// </summary>
         public const int UpdateDeltatime = 30;
+
+        /// <summary>
+        /// 延迟发送加载进度时间。
+        /// </summary>
+        public const float DelaySendLoadingProgressTime = 5;
     }
 }

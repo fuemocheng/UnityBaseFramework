@@ -18,8 +18,9 @@ namespace Server
         /// </summary>
         private List<ServerFrame> m_AllHistoryFrames;
 
+        private int m_DelayServerTick = 10;
+
         private long m_GameStartTimestampMs = -1;
-        private int m_ServerTickDealy = 10;
         private int m_TickSinceGameStart => (int)((LTime.realtimeSinceStartupMS - m_GameStartTimestampMs) / NetworkDefine.UPDATE_DELTATIME);
 
         private float m_TimeSinceLoaded;
@@ -30,7 +31,7 @@ namespace Server
             Room = room;
             Tick = 0;
             m_AllHistoryFrames = new();
-            GameState = EGameState.Idle;
+            GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
         }
 
@@ -39,7 +40,7 @@ namespace Server
         {
             Tick = 0;
             m_AllHistoryFrames.Clear();
-            GameState = EGameState.Idle;
+            GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
         }
 
@@ -50,7 +51,7 @@ namespace Server
 
         public void SetLoadingFinished()
         {
-            GameState = EGameState.PartLoaded;
+            GameState = EGameState.Loaded;
         }
 
         public void Update(double elapseSeconds, double realElapseSeconds)
@@ -75,14 +76,14 @@ namespace Server
         {
             Log.Info("ReceiveInput CSInputFrame.Tick: {0}", input.InputFrame.Tick);
 
-            if (GameState != EGameState.PartLoaded &&
+            if (GameState != EGameState.Loaded &&
                 GameState != EGameState.Playing)
             {
                 return;
             }
 
             // 收到第一个输入，即开始。
-            if (GameState == EGameState.PartLoaded)
+            if (GameState == EGameState.Loaded)
             {
                 GameState = EGameState.Playing;
             }
@@ -196,7 +197,7 @@ namespace Server
             // 所有人的第一帧都收到了，进行广播时，才开始赋值。
             if (m_GameStartTimestampMs < 0)
             {
-                m_GameStartTimestampMs = LTime.realtimeSinceStartupMS + NetworkDefine.UPDATE_DELTATIME * m_ServerTickDealy;
+                m_GameStartTimestampMs = LTime.realtimeSinceStartupMS + NetworkDefine.UPDATE_DELTATIME * m_DelayServerTick;
             }
 
             Tick++;
@@ -210,6 +211,10 @@ namespace Server
             foreach (KeyValuePair<long, User> kvp in Room.GetUsersDictionary())
             {
                 User sUser = kvp.Value;
+                if(sUser == null || sUser.TcpSession == null)
+                {
+                    continue;
+                }
                 SCServerFrame scServerFrame = ReferencePool.Acquire<SCServerFrame>();
                 scServerFrame.StartTick = serverFrames[0].Tick;
                 scServerFrame.ServerFrames.AddRange(serverFrames);

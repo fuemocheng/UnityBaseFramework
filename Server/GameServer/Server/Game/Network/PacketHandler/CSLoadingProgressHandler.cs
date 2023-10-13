@@ -16,7 +16,7 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSLoadingProgress packetImpl = (CSLoadingProgress)packet;
-            Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
+            Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
             // Tcp Session。
             Session session = (Session)sender;
@@ -32,6 +32,10 @@ namespace GameProto
             foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
             {
                 Server.User sUser = kvp.Value;
+                if (sUser == null || sUser.TcpSession == null)
+                {
+                    continue;
+                }
                 currProgress += sUser.LoadingProgress;
             }
 
@@ -41,9 +45,13 @@ namespace GameProto
             foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
             {
                 Server.User sUser = kvp.Value;
+                if(sUser == null || sUser.TcpSession == null)
+                {
+                    continue;
+                }    
                 SCLoadingProgress scLoadingProgress = ReferencePool.Acquire<SCLoadingProgress>();
                 scLoadingProgress.AllProgress = currProgress;
-                sUser.TcpSession.Send(scLoadingProgress);
+                sUser.TcpSession?.Send(scLoadingProgress);
             }
 
             //所有客户端加载完成。

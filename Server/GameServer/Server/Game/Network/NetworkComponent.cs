@@ -77,6 +77,18 @@ namespace Server
             session.Dispose();
         }
 
+        public Session GetSession(long channelId)
+        {
+            foreach (var kvp in m_Sessions)
+            {
+                if (kvp.Value != null && kvp.Value.Channel != null && kvp.Value.Channel.Id == channelId)
+                {
+                    return kvp.Value;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// 接受连接。
         /// </summary>
@@ -110,7 +122,7 @@ namespace Server
         public void OnNetworkChannelMissHeartBeat(NetworkChannelBase channel, int missHeartBeatCount)
         {
             Log.Error($"OnNetworkChannelMissHeartBeat Channel:{channel.Id}  MissHeartBeatCount:{missHeartBeatCount}");
-            if(missHeartBeatCount < 2)
+            if (missHeartBeatCount < 2)
             {
                 return;
             }
@@ -130,7 +142,11 @@ namespace Server
             Log.Info($"Network channel '{channel.Id}' Error, ErrorCode:{errorCode}, SocketError:{socketError}, ErrorMessage:{error}");
             Log.Info($"Network channel '{channel.Id}' closed.");
 
+            Session tSession = GetSession(channel.Id);
+            tSession?.OnNetworkChannelError();
+
             m_Service.RemoveChannel(channel.Id);
+            RemoveSession(tSession.Id);
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace GameProto
             SCLogin packetImpl = (SCLogin)packet;
             Log.Info("Receive Packet Type:'{0}', Id:{1}", packetImpl.GetType().ToString(), packetImpl.Id.ToString());
 
-            GameEntry.Event.Fire(sender, SCLoginEventArgs.Create(packetImpl.RetCode, null));
+            GameEntry.Event.Fire(sender, SCLoginEventArgs.Create(packetImpl.RetCode, packetImpl.UserState));
         }
     }
 }
