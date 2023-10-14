@@ -140,9 +140,18 @@ namespace GameProto
         public override int Id => 10;
     }
 
-    public partial class SCGameStartInfo : SCPacketBase
+    public partial class CSGameStartInfo : CSPacketBase
     {
         public override int Id => 11;
+
+        public override void Clear()
+        {
+        }
+    }
+
+    public partial class SCGameStartInfo : SCPacketBase
+    {
+        public override int Id => 12;
 
         public override void Clear()
         {
@@ -157,12 +166,12 @@ namespace GameProto
 
     public partial class SCGameStartInfoHandler : PacketHandlerBase
     {
-        public override int Id => 11;
+        public override int Id => 12;
     }
 
     public partial class CSLoadingProgress : CSPacketBase
     {
-        public override int Id => 12;
+        public override int Id => 13;
 
         public override void Clear()
         {
@@ -172,7 +181,7 @@ namespace GameProto
 
     public partial class SCLoadingProgress : SCPacketBase
     {
-        public override int Id => 13;
+        public override int Id => 14;
 
         public override void Clear()
         {
@@ -182,12 +191,12 @@ namespace GameProto
 
     public partial class SCLoadingProgressHandler : PacketHandlerBase
     {
-        public override int Id => 13;
+        public override int Id => 14;
     }
 
     public partial class CSInputFrame : CSPacketBase
     {
-        public override int Id => 14;
+        public override int Id => 15;
 
         public override void Clear()
         {
@@ -197,7 +206,7 @@ namespace GameProto
 
     public partial class SCServerFrame : SCPacketBase
     {
-        public override int Id => 15;
+        public override int Id => 16;
 
         public override void Clear()
         {
@@ -208,12 +217,12 @@ namespace GameProto
 
     public partial class SCServerFrameHandler : PacketHandlerBase
     {
-        public override int Id => 15;
+        public override int Id => 16;
     }
 
     public partial class CSReqMissFrame : CSPacketBase
     {
-        public override int Id => 16;
+        public override int Id => 17;
 
         public override void Clear()
         {
@@ -223,7 +232,7 @@ namespace GameProto
 
     public partial class SCReqMissFrame : SCPacketBase
     {
-        public override int Id => 17;
+        public override int Id => 18;
 
         public override void Clear()
         {
@@ -234,7 +243,7 @@ namespace GameProto
 
     public partial class SCReqMissFrameHandler : PacketHandlerBase
     {
-        public override int Id => 17;
+        public override int Id => 18;
     }
 
 }

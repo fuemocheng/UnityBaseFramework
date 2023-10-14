@@ -89,6 +89,10 @@ message SCReady{
 	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
 }
 
+//向服务器获取游戏信息（一般重连时用）
+message CSGameStartInfo{
+}
+
 //游戏开始基础信息
 message SCGameStartInfo{
 	int32 RoomId = 1;				//RoomId

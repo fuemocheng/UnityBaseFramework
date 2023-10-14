@@ -238,10 +238,9 @@ namespace Server
                 return;
             }
 
-            int nextCheckTick = startTick;
-            Log.Info($"OnReqMissFrame NextCheckTick: {nextCheckTick}");
+            Log.Info($"OnReqMissFrame : {startTick}");
 
-            int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - nextCheckTick), MaxRepMissFrameCountPerPack);
+            int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - startTick), MaxRepMissFrameCountPerPack);
             if (count <= 0)
             {
                 return;
@@ -253,7 +252,7 @@ namespace Server
             var frames = new ServerFrame[count];
             for (int i = 0; i < count; i++)
             {
-                frames[i] = m_AllHistoryFrames[nextCheckTick + i];
+                frames[i] = m_AllHistoryFrames[startTick + i];
                 if (frames[i] == null)
                 {
                     throw new Exception($"HistoryFrames[i] is null.");

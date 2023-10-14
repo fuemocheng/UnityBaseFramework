@@ -34,7 +34,7 @@ namespace XGame
         private List<long> m_Pings = new List<long>();
         public int DelayVal { get; private set; }
         private List<long> m_Delays = new List<long>();
-        Dictionary<int, long> m_Tick2SendTimestamp = new Dictionary<int, long>();
+        private Dictionary<int, long> m_Tick2SendTimestamp = new Dictionary<int, long>();
 
         // the tick client need run in next update
         private int m_NextClientTick;
@@ -228,7 +228,7 @@ namespace XGame
                 {
                     m_HistoryMinPing = m_MinPing;
                     m_Simulator.GameStartTimestampMs = LMath.Min(m_GuessServerStartTimestamp, m_Simulator.GameStartTimestampMs);
-                    //Log.Info($"Recalculate m_GameStartTimestampMs {m_Simulator.GameStartTimestampMs} m_GuessServerStartTimestamp:{m_GuessServerStartTimestamp}");
+                    //Log.Error($"Recalculate m_GameStartTimestampMs {m_Simulator.GameStartTimestampMs} m_GuessServerStartTimestamp:{m_GuessServerStartTimestamp}");
                 }
 
                 m_MinPing = Int64.MaxValue;

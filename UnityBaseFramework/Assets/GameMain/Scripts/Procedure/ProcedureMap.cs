@@ -2,6 +2,7 @@ using BaseFramework;
 using BaseFramework.Event;
 using BaseFramework.Network;
 using GameProto;
+using Lockstep.Util;
 using UnityBaseFramework.Runtime;
 using ProcedureOwner = BaseFramework.Fsm.IFsm<BaseFramework.Procedure.IProcedureManager>;
 
@@ -13,7 +14,10 @@ namespace XGame
 
         private EUserState m_UserState = EUserState.Default;
 
+        private float m_DelaySendLoadingProgressTime = CommonDefinitions.DelaySendLoadingProgressTime;
         private float m_Time = 0;
+
+        private bool m_IsReconnected = false;
 
         public override bool UseNativeDialog
         {
@@ -32,13 +36,24 @@ namespace XGame
             GameEntry.Event.Subscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
             GameEntry.Event.Subscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
             GameEntry.Event.Subscribe(SCReqMissFrameEventArgs.EventId, OnReqMissFrameResponse);
+            GameEntry.Event.Subscribe(SCGameStartInfoEventArgs.EventId, OnGameStartInfoResponse);
 
             GameEntry.UI.OpenUIForm(UIFormId.MainUIForm, this);
 
+            // 重连逻辑。
             if (procedureOwner.HasData("UserState"))
             {
-                int tUserState = procedureOwner.GetData<VarInt32>("UserState");
-                m_UserState = (EUserState)tUserState;
+                m_UserState = (EUserState)(int)(procedureOwner.GetData<VarInt32>("UserState"));
+                switch (m_UserState)
+                {
+                    case EUserState.Loading:
+                    case EUserState.Playing:
+                        m_IsReconnected = true;
+                        break;
+                    default:
+                        m_IsReconnected = false;
+                        break;
+                }
             }
 
             m_Time = 0;
@@ -56,6 +71,7 @@ namespace XGame
             GameEntry.Event.Unsubscribe(SCLoadingProgressEventArgs.EventId, OnLoadingProgressResponse);
             GameEntry.Event.Unsubscribe(SCServerFrameEventArgs.EventId, OnServerFrameResponse);
             GameEntry.Event.Unsubscribe(SCReqMissFrameEventArgs.EventId, OnReqMissFrameResponse);
+            GameEntry.Event.Unsubscribe(SCGameStartInfoEventArgs.EventId, OnGameStartInfoResponse);
 
             if (m_MainUIForm != null)
             {
@@ -68,18 +84,21 @@ namespace XGame
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
-            if (m_Time < CommonDefinitions.DelaySendLoadingProgressTime)
+            if (!m_IsReconnected)
             {
-                m_Time += elapseSeconds;
-                if(m_Time >= CommonDefinitions.DelaySendLoadingProgressTime)
+                if (m_Time < m_DelaySendLoadingProgressTime)
                 {
-                    // 延迟发送加载进度。
-                    SendLoadingProgress();
+                    m_Time += elapseSeconds;
+                    if (m_Time >= m_DelaySendLoadingProgressTime)
+                    {
+                        // 延迟发送加载进度。
+                        SendLoadingProgress();
+                    }
                 }
             }
 
             //模拟器更新
-            Simulator.Instance.Update(elapseSeconds, realElapseSeconds);
+            Simulator.Instance?.Update(elapseSeconds, realElapseSeconds);
         }
 
         private void OnOpenUIFormSuccess(object sender, GameEventArgs e)
@@ -91,6 +110,9 @@ namespace XGame
             }
 
             m_MainUIForm = (MainUIForm)ne.UIForm.Logic;
+
+            //检查是否重连。
+            CheckReconnected();
         }
 
 
@@ -127,7 +149,7 @@ namespace XGame
                 // 开始游戏，发送帧数据
                 Log.Info("Start Game.");
 
-                Simulator.Instance.StartSimulate();
+                Simulator.Instance?.StartSimulate();
             }
         }
 
@@ -138,7 +160,7 @@ namespace XGame
             {
                 return;
             }
-            Simulator.Instance.OnPing(scPingEventArgs);
+            Simulator.Instance?.OnPing(scPingEventArgs);
         }
 
         private void OnServerFrameResponse(object sender, GameEventArgs e)
@@ -149,7 +171,7 @@ namespace XGame
                 return;
             }
             //Log.Error("ProcedureMap:OnServerFrameResponse.Tick {0}", scServerFrameEventArgs.ServerFrames[scServerFrameEventArgs.ServerFrames.Count - 1].Tick);
-            Simulator.Instance.OnServerFrame(scServerFrameEventArgs.ServerFrames);
+            Simulator.Instance?.OnServerFrame(scServerFrameEventArgs.ServerFrames);
         }
 
         private void OnReqMissFrameResponse(object sender, GameEventArgs e)
@@ -160,7 +182,68 @@ namespace XGame
                 return;
             }
             //Log.Error("ProcedureMap:OnReqMissFrameResponse.Tick {0}", scReqMissFrameEventArgs.ServerFrames[scReqMissFrameEventArgs.ServerFrames.Count - 1].Tick);
-            Simulator.Instance.ReqMissFrame(scReqMissFrameEventArgs.ServerFrames);
+            Simulator.Instance?.ReqMissFrame(scReqMissFrameEventArgs.ServerFrames);
         }
+
+        #region Reconnect
+        private void CheckReconnected()
+        {
+            switch (m_UserState)
+            {
+                case EUserState.Loading:
+                    Log.Error("Reconnected - Loading.");
+
+                    // 重连是加载状态，则立即发送加载完成信息，不在延迟。
+                    m_DelaySendLoadingProgressTime = 0;
+                    break;
+                case EUserState.Playing:
+                    Log.Error("Reconnected - Playing.");
+
+                    // 重连是游戏中，则向服务器获取游戏基础信息。
+                    SendCSGameStartInfo();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SendCSGameStartInfo()
+        {
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot Ready, tcpChannel is null.");
+                return;
+            }
+            CSGameStartInfo csGameStartInfo = ReferencePool.Acquire<CSGameStartInfo>();
+            tcpChannel.Send(csGameStartInfo);
+        }
+
+        private void OnGameStartInfoResponse(object sender, GameEventArgs e)
+        {
+            SCGameStartInfoEventArgs scGameStartInfoEventArgs = (SCGameStartInfoEventArgs)e;
+            if (scGameStartInfoEventArgs == null)
+            {
+                return;
+            }
+            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
+
+            // 开始计时。
+            LTime.DoStart();
+
+            Simulator simulator = new Simulator();
+            simulator.Start();
+            simulator.OnGameCreate(60,
+                scGameStartInfoEventArgs.MapId,
+                scGameStartInfoEventArgs.LocalId,
+                scGameStartInfoEventArgs.UserCount,
+                scGameStartInfoEventArgs.Users);
+
+            // 因为是重连，则直接开始游戏。
+            Log.Error("Reconnected - Start Game.");
+
+            Simulator.Instance.StartSimulate();
+        }
+        #endregion
     }
 }

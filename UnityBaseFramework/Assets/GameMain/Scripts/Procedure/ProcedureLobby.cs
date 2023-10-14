@@ -163,9 +163,6 @@ namespace XGame
                 return;
             }
 
-            // 开始计时。
-            LTime.DoStart();
-
             int readyCount = 0;
             for (int i = 0; i < scReadyEventArgs.UserReadyInfos.Count; i++)
             {
@@ -186,6 +183,10 @@ namespace XGame
             {
                 return;
             }
+            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
+            
+            // 开始计时。
+            LTime.DoStart();
 
             Simulator simulator = new Simulator();
             simulator.Start();
@@ -197,8 +198,6 @@ namespace XGame
 
             // 所有人都准备完成。
             m_IsAllReady = true;
-
-            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
         }
     }
 }

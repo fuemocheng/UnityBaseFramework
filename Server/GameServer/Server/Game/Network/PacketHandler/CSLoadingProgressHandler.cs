@@ -22,6 +22,7 @@ namespace GameProto
             Session session = (Session)sender;
             // User。
             Server.User user = (Server.User)session.BindInfo;
+            user.UserState = EUserState.Loading;
             user.LoadingProgress = packetImpl.Progress;
 
             Room room = user.Room;
@@ -57,7 +58,18 @@ namespace GameProto
             //所有客户端加载完成。
             if (currProgress >= 100)
             {
+                // 广播加载完成，开始游戏。
                 room.Game.SetLoadingFinished();
+                
+                // 设置为Playing状态。
+                foreach (KeyValuePair<long, Server.User> kvp in room.GetUsersDictionary())
+                {
+                    Server.User sUser = kvp.Value;
+                    if (sUser != null)
+                    {
+                        sUser.UserState = EUserState.Playing;
+                    }
+                }
             }
         }
     }

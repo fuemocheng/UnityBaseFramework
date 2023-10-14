@@ -139,6 +139,7 @@ namespace XGame
                 return;
             }
 
+            // 收到第一帧的消息，记录时间。
             if (m_HasRecvInputMsg)
             {
                 if (GameStartTimestampMs == -1)
@@ -147,6 +148,7 @@ namespace XGame
                 }
             }
 
+            // 未收到第一帧的消息，则不继续。
             if (GameStartTimestampMs <= 0)
             {
                 return;
@@ -198,10 +200,8 @@ namespace XGame
 
             if (GameEntry.Service.GetService<ConstStateService>().IsPursueFrame)
             {
-                GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = false;
-
                 // 追帧结束。
-                //EventHelper.Trigger(EEvent.PursueFrameDone);
+                GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = false;
             }
 
 
@@ -406,12 +406,11 @@ namespace XGame
             }
         }
 
-
         private void OnPursuingFrame()
         {
             GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = true;
 
-            Log.Info($"PurchaseServering curTick:" + World.Tick);
+            Log.Error($"PurchaseServering curTick:" + World.Tick);
             var progress = World.Tick * 1.0f / m_FrameBuffer.CurTickInServer;
             //EventHelper.Trigger(EEvent.PursueFrameProcess, progress);
         }

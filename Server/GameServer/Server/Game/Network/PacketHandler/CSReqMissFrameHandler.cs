@@ -15,7 +15,7 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSReqMissFrame packetImpl = (CSReqMissFrame)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            //Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
 
             // Tcp Session¡£
             Session session = (Session)sender;
