@@ -67,7 +67,7 @@ namespace XGame
 
         public void OnPing(SCPingEventArgs scPingEventArgs)
         {
-            long ping = LTime.realtimeSinceStartupMS - scPingEventArgs.SendTimestamp;
+            long ping = GameTime.CurrTimeStamp - scPingEventArgs.SendTimestamp;
             m_Pings.Add(ping);
             if (ping > m_MaxPing)
             {
@@ -76,7 +76,9 @@ namespace XGame
             if (ping < m_MinPing)
             {
                 m_MinPing = ping;
-                m_GuessServerStartTimestamp = (LTime.realtimeSinceStartupMS - scPingEventArgs.TimeSinceServerStart) - m_MinPing / 2;
+
+                // 推测服务器开始的时间戳。
+                m_GuessServerStartTimestamp = GameTime.CurrTimeStamp - scPingEventArgs.TimeSinceServerStart - m_MinPing / 2;
             }
         }
 
@@ -108,7 +110,7 @@ namespace XGame
 
                 if (m_Tick2SendTimestamp.TryGetValue(data.Tick, out var sendTick))
                 {
-                    var delay = LTime.realtimeSinceStartupMS - sendTick;
+                    var delay = GameTime.CurrTimeStamp - sendTick;
                     m_Delays.Add(delay);
                     m_Tick2SendTimestamp.Remove(data.Tick);
                 }
@@ -227,7 +229,12 @@ namespace XGame
                 if (m_MinPing < m_HistoryMinPing && m_Simulator.GameStartTimestampMs != -1)
                 {
                     m_HistoryMinPing = m_MinPing;
-                    m_Simulator.GameStartTimestampMs = LMath.Min(m_GuessServerStartTimestamp, m_Simulator.GameStartTimestampMs);
+
+                    //服务器开始时间要减去延迟执行的帧。
+                    long guessClientStartTimestampMs = m_GuessServerStartTimestamp - CommonDefinitions.UpdateDeltatime * CommonDefinitions.ServerDelayTick;
+
+                    //有可能断线重连。
+                    m_Simulator.GameStartTimestampMs = LMath.Min(guessClientStartTimestampMs, m_Simulator.GameStartTimestampMs);
                     //Log.Error($"Recalculate m_GameStartTimestampMs {m_Simulator.GameStartTimestampMs} m_GuessServerStartTimestamp:{m_GuessServerStartTimestamp}");
                 }
 
@@ -246,13 +253,13 @@ namespace XGame
             }
             CSPing csPing = ReferencePool.Acquire<CSPing>();
             csPing.LocalId = LocalId;
-            csPing.SendTimestamp = LTime.realtimeSinceStartupMS;
+            csPing.SendTimestamp = GameTime.CurrTimeStamp;
             tcpChannel.Send(csPing);
         }
 
         public void SendInput(CSInputFrame csInputFrame)
         {
-            m_Tick2SendTimestamp[csInputFrame.InputFrame.Tick] = LTime.realtimeSinceStartupMS;
+            m_Tick2SendTimestamp[csInputFrame.InputFrame.Tick] = GameTime.CurrTimeStamp;
 
 #if DEBUG_SHOW_INPUT
             var cmd = input.Commands[0];
@@ -272,7 +279,7 @@ namespace XGame
             tcpChannel.Send(csInputFrame);
         }
 
-        private void SendReqMissFrame(int startTick)
+        public void SendReqMissFrame(int startTick)
         {
             INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
             if (tcpChannel == null)

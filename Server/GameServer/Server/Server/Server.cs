@@ -7,25 +7,21 @@ namespace Server
 {
     public class Server
     {
-        private const double UpdateInterval = NetworkDefine.UPDATE_DELTATIME / 1000.0f; //更新间隔
+        private const double UpdateInterval = CommonDefinitions.UpdateDeltatime / 1000f; //更新间隔
         private DateTime m_LastUpdateTimeStamp; //最后一次更新的时间戳
         private DateTime m_LastUpdateFrameTimeStamp; //最后一帧更新的时间戳
-        private DateTime m_StartupTimeStamp; //开始时间戳
-        private double m_RealtimeSinceStartup;
         private double m_DeltaTime;
 
         public void Start()
         {
             Console.WriteLine("ServerStart");
 
+            GameTime.InitStartTimeStamp();
+
             // 框架初始化。
             GameEntry.Awake();
             // 框架Start。
             GameEntry.Start();
-
-            LTime.DoStart();
-
-            m_StartupTimeStamp = m_LastUpdateTimeStamp = m_LastUpdateFrameTimeStamp = DateTime.Now;
         }
 
         public void Update()
@@ -36,7 +32,6 @@ namespace Server
             if (m_DeltaTime > UpdateInterval)
             {
                 m_LastUpdateFrameTimeStamp = now;
-                m_RealtimeSinceStartup = (now - m_StartupTimeStamp).TotalSeconds;
                 DoSlowUpdate(m_DeltaTime, m_DeltaTime);
             }
 

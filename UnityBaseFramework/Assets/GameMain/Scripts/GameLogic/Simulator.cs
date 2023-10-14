@@ -40,8 +40,8 @@ namespace XGame
 
         public bool IsRunning { get; set; }
 
-        public long GameStartTimestampMs = -1; //游戏开始时间戳。
-        private int m_TickSinceGameStart = 0; //从游戏开始运行的逻辑帧数。
+        public long GameStartTimestampMs = -1;      //游戏开始时间戳。
+        private int m_TickSinceGameStart = 0;       //从游戏开始运行的逻辑帧数。
 
         private int m_InputTick = 0;
 
@@ -144,7 +144,7 @@ namespace XGame
             {
                 if (GameStartTimestampMs == -1)
                 {
-                    GameStartTimestampMs = LTime.realtimeSinceStartupMS;
+                    GameStartTimestampMs = GameTime.CurrTimeStamp;
                 }
             }
 
@@ -154,7 +154,7 @@ namespace XGame
                 return;
             }
 
-            m_TickSinceGameStart = (int)((LTime.realtimeSinceStartupMS - GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
+            m_TickSinceGameStart = (int)((GameTime.CurrTimeStamp - GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
 
             m_FrameBuffer.Update(elapseSeconds);
 
@@ -178,7 +178,8 @@ namespace XGame
             var minTickToBackup = (maxContinueServerTick - (maxContinueServerTick % m_SnapshotFrameInterval));
 
             // Pursue Server frames
-            var deadline = LTime.realtimeSinceStartupMS + MaxSimulationMsPerFrame;
+            //var deadline = LTime.realtimeSinceStartupMS + MaxSimulationMsPerFrame;
+            var deadline = GameTime.CurrTimeStamp + MaxSimulationMsPerFrame;
             while (World.Tick < m_FrameBuffer.CurTickInServer)
             {
                 var tick = World.Tick;
@@ -191,7 +192,8 @@ namespace XGame
 
                 m_FrameBuffer.PushLocalFrame(sFrame);
                 Simulate(sFrame, tick == minTickToBackup);
-                if (LTime.realtimeSinceStartupMS > deadline)
+                //if (LTime.realtimeSinceStartupMS > deadline)
+                if (GameTime.CurrTimeStamp > deadline)
                 {
                     OnPursuingFrame();
                     return;
@@ -426,9 +428,14 @@ namespace XGame
             m_FrameBuffer?.PushServerFrames(serverFrames.ToArray());
         }
 
-        public void ReqMissFrame(List<ServerFrame> serverFrames)
+        public void OnReqMissFrame(List<ServerFrame> serverFrames)
         {
             m_FrameBuffer?.PushMissServerFrames(serverFrames.ToArray());
+        }
+
+        public void SendReqMissFrame(int startTick)
+        {
+            m_FrameBuffer?.SendReqMissFrame(startTick);
         }
     }
 }

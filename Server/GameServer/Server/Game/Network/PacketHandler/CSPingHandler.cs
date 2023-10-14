@@ -27,7 +27,7 @@ namespace GameProto
             SCPing ping = ReferencePool.Acquire<SCPing>();
             ping.LocalId = user.LocalId;
             ping.SendTimestamp = packetImpl.SendTimestamp;
-            ping.TimeSinceServerStart = LTime.realtimeSinceStartupMS - user.Room.Game.GameStartTimestampMs;
+            ping.TimeSinceServerStart = GameTime.CurrTimeStamp - user.Room.Game.GameStartTimestampMs;
             user.TcpSession?.Send(ping);
         }
     }

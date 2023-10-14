@@ -18,7 +18,6 @@ namespace Server
         {
             UserManager.Start();
             RoomManager.Start();
-            LTime.DoStart();
         }
 
         /// <summary>

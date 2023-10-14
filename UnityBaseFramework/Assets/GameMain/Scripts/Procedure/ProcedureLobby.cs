@@ -186,7 +186,9 @@ namespace XGame
             Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
             
             // 开始计时。
-            LTime.DoStart();
+            //LTime.DoStart();
+            // 初始化时间戳。
+            GameTime.InitStartTimeStamp();
 
             Simulator simulator = new Simulator();
             simulator.Start();

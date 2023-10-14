@@ -182,7 +182,7 @@ namespace XGame
                 return;
             }
             //Log.Error("ProcedureMap:OnReqMissFrameResponse.Tick {0}", scReqMissFrameEventArgs.ServerFrames[scReqMissFrameEventArgs.ServerFrames.Count - 1].Tick);
-            Simulator.Instance?.ReqMissFrame(scReqMissFrameEventArgs.ServerFrames);
+            Simulator.Instance?.OnReqMissFrame(scReqMissFrameEventArgs.ServerFrames);
         }
 
         #region Reconnect
@@ -229,7 +229,9 @@ namespace XGame
             Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
 
             // 开始计时。
-            LTime.DoStart();
+            //LTime.DoStart();
+            // 初始化时间戳。
+            GameTime.InitStartTimeStamp();
 
             Simulator simulator = new Simulator();
             simulator.Start();
@@ -242,7 +244,9 @@ namespace XGame
             // 因为是重连，则直接开始游戏。
             Log.Error("Reconnected - Start Game.");
 
-            Simulator.Instance.StartSimulate();
+            simulator.StartSimulate();
+
+            simulator.SendReqMissFrame(0);
         }
         #endregion
     }

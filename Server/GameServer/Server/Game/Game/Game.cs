@@ -18,14 +18,12 @@ namespace Server
         /// </summary>
         private List<ServerFrame> m_AllHistoryFrames;
 
-        private int m_DelayServerTick = 10;
-
         private long m_GameStartTimestampMs = -1;
 
         private float m_TimeSinceLoaded;
         private float m_FirstFrameTimeStamp = 0;
 
-        private int m_TickSinceGameStart => (int)((LTime.realtimeSinceStartupMS - m_GameStartTimestampMs) / NetworkDefine.UPDATE_DELTATIME);
+        private int m_TickSinceGameStart => (int)((GameTime.CurrTimeStamp - m_GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
 
         public const int MaxRepMissFrameCountPerPack = 600;
 
@@ -207,7 +205,7 @@ namespace Server
             // 所有人的第一帧都收到了，进行广播时，才开始赋值。
             if (m_GameStartTimestampMs < 0)
             {
-                m_GameStartTimestampMs = LTime.realtimeSinceStartupMS + NetworkDefine.UPDATE_DELTATIME * m_DelayServerTick;
+                m_GameStartTimestampMs = GameTime.CurrTimeStamp + CommonDefinitions.UpdateDeltatime * CommonDefinitions.ServerDelayTick;
             }
 
             Tick++;
