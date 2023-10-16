@@ -25,7 +25,7 @@ namespace Server
 
         private int m_TickSinceGameStart => (int)((GameTime.CurrTimeStamp - m_GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
 
-        public const int MaxRepMissFrameCountPerPack = 600;
+        public const int MaxRepMissFrameCountPerPack = 500;
 
         public Game(Room room)
         {
@@ -236,7 +236,7 @@ namespace Server
                 return;
             }
 
-            Log.Info($"OnReqMissFrame : {startTick}");
+            //Log.Info($"OnReqMissFrame : {startTick}");
 
             int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - startTick), MaxRepMissFrameCountPerPack);
             if (count <= 0)

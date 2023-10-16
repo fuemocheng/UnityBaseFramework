@@ -191,13 +191,13 @@ namespace XGame
             switch (m_UserState)
             {
                 case EUserState.Loading:
-                    Log.Error("Reconnected - Loading.");
+                    Log.Info("Reconnected - Loading.");
 
                     // 重连是加载状态，则立即发送加载完成信息，不在延迟。
                     m_DelaySendLoadingProgressTime = 0;
                     break;
                 case EUserState.Playing:
-                    Log.Error("Reconnected - Playing.");
+                    Log.Info("Reconnected - Playing.");
 
                     // 重连是游戏中，则向服务器获取游戏基础信息。
                     SendCSGameStartInfo();
@@ -242,12 +242,13 @@ namespace XGame
                 scGameStartInfoEventArgs.Users);
 
             // 因为是重连，则直接开始游戏。
-            Log.Error("Reconnected - Start Game.");
+            Log.Info("Reconnected - Start Game.");
 
             simulator.StartSimulate();
 
             simulator.SendReqMissFrame(0);
         }
+
         #endregion
     }
 }

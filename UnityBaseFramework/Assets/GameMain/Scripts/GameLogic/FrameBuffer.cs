@@ -97,7 +97,7 @@ namespace XGame
             PushServerFrames(frames, isNeedDebugCheck);
 
             //不断发送，追帧。
-            Log.Error($"SendReqMissFrame: {MaxContinueServerTick}");
+            Log.Info($"SendReqMissFrame: {MaxContinueServerTick}");
             SendReqMissFrame(MaxContinueServerTick + 1);
         }
 
@@ -208,7 +208,7 @@ namespace XGame
             // has some middle frame pack was lost, or client has predict too much.
             if (MaxContinueServerTick < CurTickInServer || m_NextClientTick > MaxContinueServerTick + (m_MaxClientPredictFrameCount - 3))
             {
-                Log.Error($"SendReqMissFrame: {MaxContinueServerTick}");
+                Log.Info($"SendReqMissFrame: {MaxContinueServerTick}");
                 SendReqMissFrame(MaxContinueServerTick);
             }
         }

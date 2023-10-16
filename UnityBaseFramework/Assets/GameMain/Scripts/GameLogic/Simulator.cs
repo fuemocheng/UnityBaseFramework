@@ -412,7 +412,7 @@ namespace XGame
         {
             GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = true;
 
-            Log.Error($"PurchaseServering curTick:" + World.Tick);
+            Log.Info($"PurchaseServering curTick:" + World.Tick);
             var progress = World.Tick * 1.0f / m_FrameBuffer.CurTickInServer;
             //EventHelper.Trigger(EEvent.PursueFrameProcess, progress);
         }

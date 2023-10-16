@@ -23,6 +23,7 @@ namespace Network
         //private readonly PacketParser m_Parser;
 
         // V2 使用 MemoryStream。
+        private readonly Queue<Packet> m_SendPacketPool;
         private readonly SendState m_SendState;
         private readonly ReceiveState m_ReceiveState;
 
@@ -64,6 +65,7 @@ namespace Network
             //m_Parser = new PacketParser(m_RecvBuffer);
 
             // V2 使用 MemoryStream。
+            m_SendPacketPool = new();
             m_SendState = new();
             m_ReceiveState = new();
             m_SendState.Reset();
@@ -109,6 +111,7 @@ namespace Network
             //m_Parser = new PacketParser(m_RecvBuffer);
 
             // V2 使用 MemoryStream。
+            m_SendPacketPool = new();
             m_SendState = new();
             m_ReceiveState = new();
             m_SendState.Reset();
@@ -155,8 +158,18 @@ namespace Network
             m_OutArgs = null;
             m_Socket = null;
 
-            m_IsConnected = false;
 
+            lock (m_SendPacketPool)
+            {
+                m_SendPacketPool?.Clear();
+            }
+
+            lock (m_HeartBeatState)
+            {
+                m_HeartBeatState?.Reset(true);
+            }
+
+            m_IsConnected = false;
         }
 
         public override void Update(float elapseSeconds, float realElapseSeconds)
@@ -578,37 +591,11 @@ namespace Network
                 throw new Exception(errorMessage);
             }
 
-            // 将消息序列化到 m_SendState.Stream
-            bool serializeResult = false;
-            try
+            // 缓存发送包。
+            lock (m_SendPacketPool)
             {
-                serializeResult = m_NetworkChannelHelper.Serialize(packet, m_SendState.Stream);
+                m_SendPacketPool.Enqueue(packet);
             }
-            catch (Exception exception)
-            {
-                if (NetworkChannelError != null)
-                {
-                    SocketException socketException = exception as SocketException;
-                    NetworkChannelError(this, NetworkErrorCode.SerializeError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
-                    return false;
-                }
-
-                throw;
-            }
-
-            if (!serializeResult)
-            {
-                string errorMessage = "TChannel.Send Serialized packet failure.";
-                if (NetworkChannelError != null)
-                {
-                    NetworkChannelError(this, NetworkErrorCode.SerializeError, SocketError.Success, errorMessage);
-                    return false;
-                }
-
-                throw new Exception(errorMessage);
-            }
-
-            m_SendState.Stream.Position = 0L;
 
             if (!m_IsSending)
             {
@@ -654,7 +641,7 @@ namespace Network
 
                     // V2 使用 MemoryStream。
                     // 没有数据需要发送
-                    if (m_SendState.Stream.Length == 0)
+                    if (m_SendState.Stream.Length == 0 && m_SendPacketPool.Count == 0)
                     {
                         m_IsSending = false;
                         return;
@@ -671,6 +658,47 @@ namespace Network
                     //m_OutArgs.SetBuffer(m_SendBuffer.First, m_SendBuffer.FirstIndex, sendSize);
 
                     // V2 使用 MemoryStream。
+                    // TODO:这里要考虑一次性发送数据超过缓存区大小的问题。
+                    while(m_SendPacketPool.Count > 0)
+                    {
+                        Packet packet = null;
+                        lock(m_SendPacketPool)
+                        {
+                            packet = m_SendPacketPool.Dequeue();
+                        }
+
+                        // 将消息序列化到 m_SendState.Stream
+                        bool serializeResult = false;
+                        try
+                        {
+                            serializeResult = m_NetworkChannelHelper.Serialize(packet, m_SendState.Stream);
+                        }
+                        catch (Exception exception)
+                        {
+                            if (NetworkChannelError != null)
+                            {
+                                SocketException socketException = exception as SocketException;
+                                NetworkChannelError(this, NetworkErrorCode.SerializeError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                                return;
+                            }
+                            throw;
+                        }
+
+                        if (!serializeResult)
+                        {
+                            string errorMessage = "TChannel.Send Serialized packet failure.";
+                            if (NetworkChannelError != null)
+                            {
+                                NetworkChannelError(this, NetworkErrorCode.SerializeError, SocketError.Success, errorMessage);
+                                return;
+                            }
+
+                            throw new Exception(errorMessage);
+                        }
+                    }
+                    
+                    m_SendState.Stream.Position = 0;
+
                     m_OutArgs.SetBuffer(m_SendState.Stream.GetBuffer(), (int)m_SendState.Stream.Position,
                         (int)(m_SendState.Stream.Length - m_SendState.Stream.Position));
 

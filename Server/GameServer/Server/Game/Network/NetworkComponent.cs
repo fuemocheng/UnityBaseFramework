@@ -60,7 +60,7 @@ namespace Server
 
         public Session CreateSession(NetworkComponent networkProxy, NetworkChannelBase channel)
         {
-            Session session = new Session(NetworkIdGenerator.GenerateId());
+            Session session = new Session(NetworkIdGenerator.GenerateSessionId());
             session.Awake(networkProxy, channel, m_NetworkChannelHelper);
             return session;
         }

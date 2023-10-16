@@ -129,7 +129,7 @@ namespace Network
 
             try
             {
-                long id = CreateAcceptChannelId(0);
+                long id = NetworkIdGenerator.GenerateChannelId();
                 TcpChannel channel = new TcpChannel(id, e.AcceptSocket, this, m_ChannelHelper);
                 channel.NetworkChannelConnected += OnNetworkChannelConnected;
                 channel.NetworkChannelMissHeartBeat += OnNetworkChannelMissHeartBeat;
