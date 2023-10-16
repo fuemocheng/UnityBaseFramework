@@ -56,6 +56,15 @@ message SCPing{
 	int64 TimeSinceServerStart = 3;
 }
 
+//自定义数据 Json
+message CSCustomData{
+	string CustomData = 1;
+}
+
+message SCCustomData{
+	string CustomData = 1;
+}
+
 //登录
 message CSLogin{
 	string Account = 1;
