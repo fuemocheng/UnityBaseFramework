@@ -4,30 +4,30 @@ package GameProto;
 
 //账号角色信息
 message User{
-	int64 UserId = 1; 				//玩家ID
-	string UserName = 2;			//角色昵称
+	int64 UserId = 1; 						//玩家ID
+	string UserName = 2;					//角色昵称
 }
 
 //房间角色准备信息
 message UserReadyInfo{
-	int32 LocalId = 1;				//LocalId
-	int32 UserState = 2;			//准备状态  UserState
-	User User = 3;					//角色信息
+	int32 LocalId = 1;						//LocalId
+	int32 UserState = 2;					//准备状态  UserState
+	User User = 3;							//角色信息
 }
 
 //输入数据
 message Input{
-	int32 InputH = 1;				//水平输入
-	int32 InputV = 2;				//垂直输入
-	int32 SkillId = 3;				//技能Id
+	int32 InputH = 1;						//水平输入
+	int32 InputV = 2;						//垂直输入
+	int32 SkillId = 3;						//技能Id
 }
 
 //输入帧
 message InputFrame{
-	int32 Tick = 1;					//逻辑帧
-	int32 LocalId = 2;				//ActorId, LocalId
-	bool IsMiss = 3;				//是否丢失
-	Input Input = 4;				//输入数据
+	int32 Tick = 1;							//逻辑帧
+	int32 LocalId = 2;						//ActorId, LocalId
+	bool IsMiss = 3;						//是否丢失
+	Input Input = 4;						//输入数据
 }
 
 //服务器帧
@@ -98,38 +98,38 @@ message SCReady{
 	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
 }
 
-//向服务器获取游戏信息（一般重连时用）
+//获取游戏开始基础信息（一般重连时用）
 message CSGameStartInfo{
 }
 
 //游戏开始基础信息
 message SCGameStartInfo{
-	int32 RoomId = 1;				//RoomId
-	int32 MapId = 2;				//地图Id
-	int32 LocalId = 3;				//LocalId
-	int32 UserCount = 4;			//房间人数
-	int32 Seed = 5;					//随机因子
-	repeated User Users = 6;		//玩家数据
+	int32 RoomId = 1;						//RoomId
+	int32 MapId = 2;						//地图Id
+	int32 LocalId = 3;						//LocalId
+	int32 UserCount = 4;					//房间人数
+	int32 Seed = 5;							//随机因子
+	repeated User Users = 6;				//玩家数据
 }
 
 //加载进度
 message CSLoadingProgress{
-	int32 Progress = 1;				//玩家加载进度，1-100；
+	int32 Progress = 1;						//玩家加载进度，1-100；
 }
 
 message SCLoadingProgress{
-	int32 AllProgress = 1;			//所有玩家整体加载进度，100为所有人都加载完成；
+	int32 AllProgress = 1;					//所有玩家整体加载进度，100为所有人都加载完成；
 }
 
 //C2S输入帧
 message CSInputFrame{
-	InputFrame InputFrame = 1;		//输入数据
+	InputFrame InputFrame = 1;				//输入数据
 }
 
 //S2C帧数据
 message SCServerFrame{
-	int32 StartTick = 1;							//逻辑帧
-	repeated ServerFrame ServerFrames = 2;			//玩家的数据帧
+	int32 StartTick = 1;					//逻辑帧
+	repeated ServerFrame ServerFrames = 2;	//玩家的数据帧
 }
 
 //请求丢失的帧数据
@@ -138,7 +138,17 @@ message CSReqMissFrame{
 }
 
 message SCReqMissFrame{
-	int32 StartTick = 1;							//逻辑帧
-	repeated ServerFrame ServerFrames = 2;			//丢失的帧数据
+	int32 StartTick = 1;					//逻辑帧
+	repeated ServerFrame ServerFrames = 2;	//丢失的帧数据
 }
 
+//发送HashCode验证
+message CSHashCode{
+	int32 StartTick = 1;
+	repeated int32 HashCodes = 2;
+}
+
+message SCHashCode{
+	int32 RetCode = 1;
+	int32 MismatchedTick = 2;				//不匹配的帧HashCode
+}

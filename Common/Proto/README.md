@@ -12,5 +12,8 @@ protogen
 
 ## 根据 .proto 生成 .cs 文件
 
-protogen Common.proto --csharp_out=""
+protogen Game.proto --csharp_out=""
+
+添加Option，所有Repeated字段生成List，并且带有Set访问器。
+protogen +repeatedaslist=yes +listset=yes Game.proto --csharp_out=""
 

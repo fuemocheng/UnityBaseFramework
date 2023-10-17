@@ -13,7 +13,8 @@ REM 如果 --csharp_out 输出路径为空，则会在原proto目录生成;
 REM 所以按照以下方式生成结束后，再拷贝到输出目录;
 
 for %%i in (proto\\*.proto) do (
-	protogen\\protogen %%i --csharp_out=""
+	protogen\\protogen +repeatedaslist=yes %%i --csharp_out=""
+REM	protogen\\protogen +repeatedaslist=yes +listset=yes %%i --csharp_out=""
 )
 
 

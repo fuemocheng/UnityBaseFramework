@@ -271,4 +271,31 @@ namespace GameProto
         }
     }
 
+    public partial class CSHashCode : CSPacketBase
+    {
+        public override int Id => 21;
+
+        public override void Clear()
+        {
+            StartTick = 0;
+            HashCodes.Clear();
+        }
+    }
+
+    public partial class CSHashCodeHandler : PacketHandlerBase
+    {
+        public override int Id => 21;
+    }
+
+    public partial class SCHashCode : SCPacketBase
+    {
+        public override int Id => 22;
+
+        public override void Clear()
+        {
+            RetCode = 0;
+            MismatchedTick = 0;
+        }
+    }
+
 }
