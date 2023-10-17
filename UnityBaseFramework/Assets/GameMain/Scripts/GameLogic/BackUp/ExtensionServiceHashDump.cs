@@ -1,5 +1,6 @@
 using Lockstep.Game;
 using Lockstep.Math;
+using Lockstep.Util;
 using System.Text;
 
 namespace XGame
@@ -37,8 +38,8 @@ namespace XGame
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            //sb.AppendLine("Hash ------: " + _commonStateService.Hash);
-            //BackUpUtil.DumpList("GetPlayers", GetPlayers(), sb, prefix);
+            sb.AppendLine("Hash ------ : " + GameEntry.Service.GetService<CommonStateService>().Hash);
+            BackUpUtil.DumpList("GetPlayers", GetPlayers(), sb, prefix);
             //BackUpUtil.DumpList("GetEnemies", GetEnemies(), sb, prefix);
             //BackUpUtil.DumpList("GetSpawners", GetSpawners(), sb, prefix);
             sb.AppendLine(prefix + "EntityId" + ":" + _curGameState.ToString());
@@ -52,7 +53,7 @@ namespace XGame
             return Id * PrimerLUT.GetPrimer(idx++);
         }
 
-        public void DumpStr(System.Text.StringBuilder sb, string prefix)
+        public void DumpStr(StringBuilder sb, string prefix)
         {
             sb.AppendLine(prefix + "Id" + ":" + Id.ToString());
         }

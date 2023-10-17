@@ -43,10 +43,10 @@ namespace XGame
                         int targetPreSendTick = LMath.Clamp((int)System.Math.Ceiling(m_TargetPreSendTick), 1, 60);
 #if UNITY_EDITOR
                         //if (targetPreSendTick != m_Simulator.PreSendInputCount) 
-                        {
-                            Log.Warning($"Shrink preSend buffer old:{m_Simulator.PreSendInputCount} new:{m_TargetPreSendTick} " +
-                                $"PING: min:{m_FrameBuffer.m_MinPing} max:{m_FrameBuffer.m_MaxPing} avg:{m_FrameBuffer.PingVal}");
-                        }
+                        //{
+                        //    Log.Warning($"Shrink preSend buffer old:{m_Simulator.PreSendInputCount} new:{m_TargetPreSendTick} " +
+                        //        $"PING: min:{m_FrameBuffer.m_MinPing} max:{m_FrameBuffer.m_MaxPing} avg:{m_FrameBuffer.PingVal}");
+                        //}
 #endif
                         m_Simulator.PreSendInputCount = targetPreSendTick;
                     }

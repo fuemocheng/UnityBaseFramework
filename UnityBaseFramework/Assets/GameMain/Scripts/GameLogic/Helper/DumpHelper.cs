@@ -7,147 +7,129 @@ namespace XGame
 {
     public class DumpHelper
     {
-        public int Tick => _world.Tick;
-        protected World _world;
+        public bool Enable = false;
 
-        private HashHelper _hashHelper;
-        private StringBuilder _curSb;
-        public bool enable = false;
+        private int Tick => m_World.Tick;
+        private World m_World;
+        private HashHelper m_HashHelper;
 
-        public Dictionary<int, StringBuilder> _tick2RawFrameData = new Dictionary<int, StringBuilder>();
-        public Dictionary<int, StringBuilder> _tick2OverrideFrameData = new Dictionary<int, StringBuilder>();
+        private StringBuilder m_CurSb;
 
-#if UNITY_EDITOR
-        private string dumpPath => "d:\\Log\\DumpLog"; //Path.Combine(UnityEngine.Application.dataPath, GameEntry.Service.GetService<ConstStateService>().DumpStrPath);
-#endif
-#if UNITY_STANDALONE_WIN
-        private string dumpAllPath => "d:\\Log\\DumpLog";
-#else
-        private string dumpAllPath => "/tmp/Tutorial/LockstepTutorial/DumpLog";
-#endif  
+        private Dictionary<int, StringBuilder> m_Tick2RawFrameData = new Dictionary<int, StringBuilder>();
+        private Dictionary<int, StringBuilder> m_Tick2OverrideFrameData = new Dictionary<int, StringBuilder>();
+
+        private string m_DumpPath => Path.Combine(UnityEngine.Application.dataPath, CommonDefinitions.DumpPath);
+
+        private string m_DumpAllPath => Path.Combine(UnityEngine.Application.dataPath, CommonDefinitions.DumpPath);
 
         public DumpHelper(World world, HashHelper hashHelper)
         {
-            _world = world;
-            _hashHelper = hashHelper;
+            m_World = world;
+            m_HashHelper = hashHelper;
         }
 
         public void DumpFrame(bool isNewFrame)
         {
-            if (!enable) return;
-            _curSb = DumpFrame();
+            if (!Enable)
+            {
+                return;
+            }
+
+            m_CurSb = new StringBuilder();
+            DumpCurrFrame(m_CurSb);
+
+            //把每一帧的StringBuilder都缓存下来。
             if (isNewFrame)
             {
-                _tick2RawFrameData[Tick] = _curSb;
-                _tick2OverrideFrameData[Tick] = _curSb;
+                m_Tick2RawFrameData[Tick] = m_CurSb;
+                m_Tick2OverrideFrameData[Tick] = m_CurSb;
             }
             else
             {
-                _tick2OverrideFrameData[Tick] = _curSb;
+                m_Tick2OverrideFrameData[Tick] = m_CurSb;
             }
+        }
+
+        private void DumpCurrFrame(StringBuilder sb, string prefix = "")
+        {
+            sb.AppendLine($"Tick: {Tick} --------------------");
+            foreach (var svc in GameEntry.Service.GetAllServices())
+            {
+                if (svc is IDumpStr dump)
+                {
+                    sb.AppendLine($"{svc.GetType()} --------------------");
+                    dump.DumpStr(sb, "\t" + prefix);
+                }
+            }
+        }
+
+        public void OnFrameEnd()
+        {
+            m_CurSb = null;
         }
 
         public void DumpToFile(bool withCurFrame = false)
         {
-            if (!enable) return;
+            if (!Enable)
+            {
+                return;
+            }
+
 #if UNITY_EDITOR
-            var path = dumpPath + "/cur.txt";
-            var dir = Path.GetDirectoryName(path);
+            string path = m_DumpPath + "/resume.txt";
+            string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
-            //var minTick = _tick2OverrideFrameData.Keys.Min();
+
             StringBuilder sbResume = new StringBuilder();
             StringBuilder sbRaw = new StringBuilder();
             for (int i = 0; i <= Tick; i++)
             {
-                sbRaw.AppendLine(_tick2RawFrameData[i].ToString());
-                sbResume.AppendLine(_tick2OverrideFrameData[i].ToString());
+                sbRaw.AppendLine(m_Tick2RawFrameData[i].ToString());
+                sbResume.AppendLine(m_Tick2OverrideFrameData[i].ToString());
             }
 
-            File.WriteAllText(dumpPath + "/resume.txt", sbResume.ToString());
-            File.WriteAllText(dumpPath + "/raw.txt", sbRaw.ToString());
+            File.WriteAllText(m_DumpPath + "/raw.txt", sbRaw.ToString());
+            File.WriteAllText(m_DumpPath + "/resume.txt", sbResume.ToString());
             if (withCurFrame)
             {
-                _curSb = DumpFrame();
-                var curHash = _hashHelper.CalculateHash(true);
-                File.WriteAllText(dumpPath + "/cur_single.txt", _curSb.ToString());
-                File.WriteAllText(dumpPath + "/raw_single.txt", _tick2RawFrameData[Tick].ToString());
+                m_CurSb = new StringBuilder();
+                DumpCurrFrame(m_CurSb);
+                int curHash = m_HashHelper.CalculateHash(true);
+                File.WriteAllText(m_DumpPath + "/raw_single.txt", m_Tick2RawFrameData[Tick].ToString());
+                File.WriteAllText(m_DumpPath + "/cur_single.txt", m_CurSb.ToString());
             }
 
             UnityEngine.Debug.Break();
 #endif 
         }
 
-
-        public void OnFrameEnd()
-        {
-            _curSb = null;
-        }
-
-        //public void Trace(string msg, bool isNewLine = false, bool isNeedLogTrace = false)
-        //{
-        //    if (_curSb == null) return;
-        //    if (isNewLine)
-        //    {
-        //        _curSb.AppendLine(msg);
-        //    }
-        //    else
-        //    {
-        //        _curSb.Append(msg);
-        //    }
-
-        //    if (isNeedLogTrace)
-        //    {
-        //        StackTrace st = new StackTrace(true);
-        //        StackFrame[] sf = st.GetFrames();
-        //        for (int i = 2; i < sf.Length; ++i)
-        //        {
-        //            var frame = sf[i];
-        //            _curSb.AppendLine(frame.GetMethod().DeclaringType.FullName + "::" + frame.GetMethod().Name);
-        //        }
-        //    }
-        //}
-
         public void DumpAll()
         {
-            if (!enable) return;
-            var path = dumpAllPath + "/cur.txt";
-            var dir = Path.GetDirectoryName(path);
+            if (!Enable)
+            {
+                return;
+            }
+
+            string dumpFilePath = m_DumpAllPath + $"/All_{GameEntry.Service.GetService<ConstStateService>().LocalActorId}.txt";
+            string dir = Path.GetDirectoryName(dumpFilePath);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
+
             StringBuilder sbRaw = new StringBuilder();
             for (int i = 0; i <= Tick; i++)
             {
-                if (_tick2RawFrameData.TryGetValue(i, out var data))
+                if (m_Tick2RawFrameData.TryGetValue(i, out var data))
                 {
                     sbRaw.AppendLine(data.ToString());
                 }
             }
-            File.WriteAllText(dumpAllPath + $"/All_{GameEntry.Service.GetService<ConstStateService>().LocalActorId}.txt", sbRaw.ToString());
-        }
 
-        private StringBuilder DumpFrame()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("Tick : " + Tick + "--------------------");
-            _DumpStr(sb, "");
-            return sb;
-        }
-
-        private void _DumpStr(System.Text.StringBuilder sb, string prefix)
-        {
-            foreach (var svc in GameEntry.Service.GetAllServices())
-            {
-                if (svc is IDumpStr hashSvc)
-                {
-                    sb.AppendLine(svc.GetType() + " --------------------");
-                    hashSvc.DumpStr(sb, "\t" + prefix);
-                }
-            }
+            File.WriteAllText(dumpFilePath, sbRaw.ToString());
         }
     }
 }

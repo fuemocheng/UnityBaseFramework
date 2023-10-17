@@ -1,7 +1,6 @@
 ﻿using BaseFramework;
 using BaseFramework.Runtime;
 using GameProto;
-using Lockstep.Util;
 
 namespace Server
 {
@@ -36,6 +35,29 @@ namespace Server
             m_GameStartTimestampMs = -1;
         }
 
+        public void Update(double elapseSeconds, double realElapseSeconds)
+        {
+            m_TimeSinceLoaded += (float)elapseSeconds;
+
+            if (GameState != EGameState.Playing)
+            {
+                return;
+            }
+            if (m_GameStartTimestampMs <= 0)
+            {
+                return;
+            }
+            while (Tick < m_TickSinceGameStart)
+            {
+                CheckBroadcastServerFrame(true);
+            }
+        }
+
+        public void Destroy()
+        {
+            OnFinished();
+        }
+
         public void Clear()
         {
             Tick = 0;
@@ -61,24 +83,6 @@ namespace Server
         public void SetLoadingFinished()
         {
             GameState = EGameState.Loaded;
-        }
-
-        public void Update(double elapseSeconds, double realElapseSeconds)
-        {
-            m_TimeSinceLoaded += (float)elapseSeconds;
-
-            if (GameState != EGameState.Playing)
-            {
-                return;
-            }
-            if (m_GameStartTimestampMs <= 0)
-            {
-                return;
-            }
-            while (Tick < m_TickSinceGameStart)
-            {
-                CheckBroadcastServerFrame(true);
-            }
         }
 
         public void ReceiveInput(User user, CSInputFrame input)
@@ -111,7 +115,6 @@ namespace Server
             // 不强制广播，等所有人数据都到了再广播。
             CheckBroadcastServerFrame(false);
         }
-
 
         private ServerFrame GetOrCreateFrame(int tick)
         {
@@ -311,7 +314,7 @@ namespace Server
             }
         }
 
-        void OnCheckHashCodeResult(User user, int tick, long hashCode, bool isMatched)
+        private void OnCheckHashCodeResult(User user, int tick, long hashCode, bool isMatched)
         {
             // 此帧全部校验成功，则将数据置空，缓解内存压力。
             if (isMatched)
@@ -329,6 +332,69 @@ namespace Server
                 scHashCode.RetCode = (int)EErrorCode.HashCodeMismatch;
                 scHashCode.MismatchedTick = tick;
                 user?.TcpSession?.Send(scHashCode);
+            }
+        }
+
+
+        private void OnFinished()
+        {
+            DumpGameFrames();
+        }
+
+        private void DumpGameFrames()
+        {
+            int count = Math.Min((Tick - 1), m_AllHistoryFrames.Count);
+            if (count <= 0)
+            {
+                return;
+            }
+
+            SCGameStartInfo gameStartInfo = new();
+            gameStartInfo.RoomId = Room.RoomId;
+            gameStartInfo.MapId = 1;
+            gameStartInfo.UserCount = Room.GetCurrCount();
+            gameStartInfo.Seed = 0;
+            // 遍历添加所有人信息，添加到 SCGameStartInfo
+            foreach (KeyValuePair<long, User> kvp2 in Room.GetUsersDictionary())
+            {
+                GameProto.User tUser = new GameProto.User();
+                tUser.UserId = kvp2.Value.UserId;
+                tUser.UserName = kvp2.Value.UserName;
+                gameStartInfo.Users.Add(tUser);
+            }
+
+            SCServerFrame scServerFrame = new();
+            for (int i = 0; i < count; i++)
+            {
+                scServerFrame.ServerFrames.Add(m_AllHistoryFrames[i]);
+                if (m_AllHistoryFrames[i] == null)
+                {
+                    Log.Error($"DumpGameFrames: Frame:{i} is null.");
+                }
+            }
+            scServerFrame.StartTick = m_AllHistoryFrames[0].Tick;
+
+            //序列化
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // 在此处离开 using 块后，MemoryStream 被自动关闭和释放
+
+                ProtoBuf.Meta.RuntimeTypeModel.Default.SerializeWithLengthPrefix(ms, gameStartInfo, gameStartInfo.GetType(), ProtoBuf.PrefixStyle.Fixed32, 0);
+                ProtoBuf.Meta.RuntimeTypeModel.Default.SerializeWithLengthPrefix(ms, scServerFrame, scServerFrame.GetType(), ProtoBuf.PrefixStyle.Fixed32, 0);
+
+                byte[] bytes = ms.GetBuffer();
+
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../Record/" +
+                    DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Room.RoomId + "_" + MapId + ".record");
+
+                var dir = Path.GetDirectoryName(path);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                Log.Info("Create Record " + path);
+                File.WriteAllBytes(path, bytes);
             }
         }
     }

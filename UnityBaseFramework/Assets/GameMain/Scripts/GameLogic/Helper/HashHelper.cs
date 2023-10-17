@@ -11,15 +11,10 @@ namespace XGame
     public class HashHelper
     {
         private int Tick => m_World.Tick;
-
         private World m_World;
-
         private FrameBuffer m_FrameBuffer;
-
         private int m_FirstHashTick = 0;
-
         private List<int> m_WaitToSendHashCodes = new List<int>();
-
         private Dictionary<int, int> m_AllHashCodes = new Dictionary<int, int>();
 
         public HashHelper(World world, FrameBuffer frameBuffer)

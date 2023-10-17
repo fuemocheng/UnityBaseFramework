@@ -64,6 +64,7 @@ namespace XGame
             m_FrameBuffer = new FrameBuffer(this, 2000, m_SnapshotFrameInterval, MaxPredictFrameCount);
             m_HashHelper = new HashHelper(World, m_FrameBuffer);
             m_DumpHelper = new DumpHelper(World, m_HashHelper);
+            m_DumpHelper.Enable = true;
 
             IsRunning = false;
             m_HasRecvInputMsg = false;
@@ -75,8 +76,8 @@ namespace XGame
             IsRunning = false;
             m_HasRecvInputMsg = false;
             m_SnapshotFrameInterval = 1;
+            m_DumpHelper.DumpAll();
         }
-
 
         public void OnGameCreate(int targetFps, int mapId, int localId, int actorCount, List<User> users)
         {
@@ -334,27 +335,34 @@ namespace XGame
             // 备份当前帧。
             GameEntry.Service.GetService<TimeMachineService>().Backup(World.Tick);
 
-            DumpFrame(hash);
+            DumpFrameBegin();
+            
             hash = m_HashHelper.CalculateHash(true);
             m_HashHelper.SetHash(World.Tick, hash);
             ProcessInputQueue(serverFrame);
 
             World.Step();
 
-            m_DumpHelper.OnFrameEnd();
+            DumpFrameEnd();
+
             // 记录当前 Tick。
             int tick = World.Tick;
             m_FrameBuffer.SetClientTick(tick);
         }
 
+        private void DumpFrameBegin()
+        {
+            m_DumpHelper.DumpFrame(true);
+        }
+
+        private void DumpFrameEnd()
+        {
+            m_DumpHelper.OnFrameEnd();
+        }
+
         private void CleanUselessSnapshot(int tick)
         {
             //TODO
-        }
-
-        private void DumpFrame(int hash)
-        {
-            m_DumpHelper.DumpFrame(true);
         }
 
         private void FillInputWithLastFrame(ServerFrame frame)

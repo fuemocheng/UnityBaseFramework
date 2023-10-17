@@ -29,6 +29,11 @@ namespace Server
             Game?.Update(elapseSeconds, realElapseSeconds);
         }
 
+        public void Destroy()
+        {
+            Game?.Destroy();
+        }
+
         public void Clear()
         {
             RoomId = 0;

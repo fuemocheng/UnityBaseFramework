@@ -23,6 +23,16 @@
         /// <summary>
         /// 服务器比客户端延迟执行的帧数。
         /// </summary>
-        public const int ServerDelayTick = 10;
+        public const int ServerDelayTick = 3;
+
+        /// <summary>
+        /// 每个消息包请求的丢失帧的最大数量。
+        /// </summary>
+        public const int MaxRepMissFrameCountPerPack = 500;
+
+        /// <summary>
+        /// Dump路径，客户端。
+        /// </summary>
+        public const string DumpPath = "../DumpStr";
     }
 }
