@@ -5,10 +5,11 @@
     /// </summary>
     public class NetworkIdGenerator
     {
+        // 预留10000。
+        private static long m_ChannelId = 10000;
 
-        private static long m_ChannelId = 0;
-
-        private static long m_SessionId = 0;
+        // 预留10000。
+        private static long m_SessionId = 10000;
 
         /// <summary>
         /// 生成ChannelId。
@@ -16,7 +17,7 @@
         /// <returns></returns>
         public static long GenerateChannelId()
         {
-            return m_ChannelId++;
+            return ++m_ChannelId;
         }
 
         /// <summary>
@@ -25,7 +26,7 @@
         /// <returns></returns>
         public static long GenerateSessionId()
         {
-            return m_SessionId++;
+            return ++m_SessionId;
         }
     }
 }

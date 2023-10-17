@@ -16,7 +16,7 @@
         /// <returns></returns>
         public static int GenerateId()
         {
-            return m_Id++;
+            return ++m_Id;
         }
     }
 }

@@ -16,7 +16,7 @@
         /// <returns></returns>
         public static long GenerateId()
         {
-            return m_Id++;
+            return ++m_Id;
         }
     }
 }
