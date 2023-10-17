@@ -1,58 +1,40 @@
+using BaseFramework;
+using BaseFramework.Network;
+using GameProto;
 using Lockstep.Game;
 using Lockstep.Math;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
     public class HashHelper
     {
-        public int Tick => _world.Tick;
-        protected World _world;
+        private int Tick => m_World.Tick;
 
-        private FrameBuffer _cmdBuffer;
+        private World m_World;
 
-        private List<int> _allHashCodes = new List<int>();
-        private int _firstHashTick = 0;
-        Dictionary<int, int> _tick2Hash = new Dictionary<int, int>();
+        private FrameBuffer m_FrameBuffer;
 
-        public HashHelper(World world, FrameBuffer cmdBuffer)
+        private int m_FirstHashTick = 0;
+
+        private List<int> m_WaitToSendHashCodes = new List<int>();
+
+        private Dictionary<int, int> m_AllHashCodes = new Dictionary<int, int>();
+
+        public HashHelper(World world, FrameBuffer frameBuffer)
         {
-            _world = world;
-            _cmdBuffer = cmdBuffer;
+            m_World = world;
+            m_FrameBuffer = frameBuffer;
         }
 
-        public void CheckAndSendHashCodes()
-        {
-            //only sends the hashCodes whose FrameInputs was checked
-            if (_cmdBuffer.NextTickToCheck > _firstHashTick)
-            {
-                var count = LMath.Min(_allHashCodes.Count, (int)(_cmdBuffer.NextTickToCheck - _firstHashTick), (480 / 4));
-                if (count > 0)
-                {
-                    // TODO:SendHashCode
-                    //_networkService.SendHashCodes(_firstHashTick, _allHashCodes, 0, count);
-
-                    _firstHashTick = _firstHashTick + count;
-                    _allHashCodes.RemoveRange(0, count);
-                }
-            }
-        }
-
-        public bool TryGetValue(int tick, out int hash)
-        {
-            return _tick2Hash.TryGetValue(tick, out hash);
-        }
-
-        public int CalcHash(bool isNeedTrace = false)
+        public int CalculateHash(bool isNeedTrace = false)
         {
             int idx = 0;
-            return CalcHash(ref idx, isNeedTrace);
+            return CalculateHash(ref idx, isNeedTrace);
         }
 
-
-        private int CalcHash(ref int idx, bool isNeedTrace)
+        private int CalculateHash(ref int idx, bool isNeedTrace)
         {
             int hashIdx = 0;
             int hashCode = 0;
@@ -69,22 +51,61 @@ namespace XGame
 
         public void SetHash(int tick, int hash)
         {
-            if (tick < _firstHashTick)
+            if (tick < m_FirstHashTick)
             {
                 return;
             }
 
-            var idx = (int)(tick - _firstHashTick);
-            if (_allHashCodes.Count <= idx)
+            int count = tick - m_FirstHashTick;
+            if (m_WaitToSendHashCodes.Count <= count)
             {
-                for (int i = 0; i < idx + 1; i++)
+                for (int i = 0; i < count + 1; i++)
                 {
-                    _allHashCodes.Add(0);
+                    m_WaitToSendHashCodes.Add(0);
                 }
             }
 
-            _allHashCodes[idx] = hash;
-            _tick2Hash[Tick] = hash;
+            m_WaitToSendHashCodes[count] = hash;
+            m_AllHashCodes[Tick] = hash;
+        }
+
+        public bool TryGetHash(int tick, out int hash)
+        {
+            return m_AllHashCodes.TryGetValue(tick, out hash);
+        }
+
+        public void CheckAndSendHashCodes()
+        {
+            // 本地Check过的帧。
+            if (m_FrameBuffer.NextTickToCheck > m_FirstHashTick)
+            {
+                var count = LMath.Min(m_WaitToSendHashCodes.Count, (int)(m_FrameBuffer.NextTickToCheck - m_FirstHashTick), (480 / 4));
+                if (count > 0)
+                {
+                    SendHashCodes(m_FirstHashTick, m_WaitToSendHashCodes, 0, count);
+
+                    m_FirstHashTick = m_FirstHashTick + count;
+                    m_WaitToSendHashCodes.RemoveRange(0, count);
+                }
+            }
+        }
+
+        private void SendHashCodes(int firstHashTick, List<int> hashCodes, int startIndex, int count)
+        {
+            INetworkChannel tcpChannel = GameEntry.NetworkExtended.TcpChannel;
+            if (tcpChannel == null)
+            {
+                Log.Error("Cannot Ready, tcpChannel is null.");
+                return;
+            }
+
+            CSHashCode csHashCode = ReferencePool.Acquire<CSHashCode>();
+            csHashCode.StartTick = firstHashTick;
+            for (int i = startIndex; i < count; i++)
+            {
+                csHashCode.HashCodes.Add(hashCodes[i]);
+            }
+            tcpChannel.Send(csHashCode);
         }
     }
 }

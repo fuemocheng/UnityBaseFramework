@@ -25,7 +25,7 @@ namespace Server
 
         private int m_TickSinceGameStart => (int)((GameTime.CurrTimeStamp - m_GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
 
-        public const int MaxRepMissFrameCountPerPack = 500;
+        private Dictionary<int, HashCodeChecker> m_HashCodeCheckers = new Dictionary<int, HashCodeChecker>();
 
         public Game(Room room)
         {
@@ -42,6 +42,7 @@ namespace Server
             m_AllHistoryFrames.Clear();
             GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
+            m_HashCodeCheckers.Clear();
         }
 
         public long GameStartTimestampMs
@@ -238,7 +239,7 @@ namespace Server
 
             //Log.Info($"OnReqMissFrame : {startTick}");
 
-            int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - startTick), MaxRepMissFrameCountPerPack);
+            int count = Math.Min((Math.Min((Tick - 1), m_AllHistoryFrames.Count) - startTick), CommonDefinitions.MaxRepMissFrameCountPerPack);
             if (count <= 0)
             {
                 return;
@@ -258,6 +259,77 @@ namespace Server
             }
             scReqMissFrame.ServerFrames.AddRange(frames);
             session?.Send(scReqMissFrame);
+        }
+
+        public void OnCheckHashCode(User user, CSHashCode csHashCode)
+        {
+            if (user == null)
+            {
+                return;
+            }
+            var localId = user.LocalId;
+            for (int i = 0; i < csHashCode.HashCodes.Count; i++)
+            {
+                int tick = csHashCode.StartTick + i;
+                int code = csHashCode.HashCodes[i];
+
+                //Log.Info($"OnHashCode LocalId:{localId} Tick: {tick} HashCode {code}");
+
+                if (m_HashCodeCheckers.TryGetValue(tick, out HashCodeChecker matcher))
+                {
+                    // 匹配器已经为空，说明匹配之前成功了，或者已经收到过此玩家此帧的数据。
+                    if (matcher == null || matcher.ReceivedResult[localId])
+                    {
+                        continue;
+                    }
+
+                    // 出现了HashCode不匹配的情况。
+                    if (matcher.HashCode != code)
+                    {
+                        OnCheckHashCodeResult(user, tick, code, false);
+                    }
+
+                    matcher.CheckedCount = matcher.CheckedCount + 1;
+                    matcher.ReceivedResult[localId] = true;
+                    if (matcher.IsMatched)
+                    {
+                        OnCheckHashCodeResult(user, tick, code, true);
+                    }
+                }
+                else
+                {
+                    var newMatcher = ReferencePool.Acquire<HashCodeChecker>();
+                    newMatcher.HashCode = code;
+                    newMatcher.CheckedCount = 1;
+                    newMatcher.ReceivedResult[localId] = true;
+                    m_HashCodeCheckers.Add(tick, newMatcher);
+                    if (newMatcher.IsMatched)
+                    {
+                        OnCheckHashCodeResult(user, tick, code, true);
+                    }
+                }
+            }
+        }
+
+        void OnCheckHashCodeResult(User user, int tick, long hashCode, bool isMatched)
+        {
+            // 此帧全部校验成功，则将数据置空，缓解内存压力。
+            if (isMatched)
+            {
+                ReferencePool.Release(m_HashCodeCheckers[tick]);
+                m_HashCodeCheckers[tick] = null;
+            }
+
+            // 数据不匹配，打印报错。
+            if (!isMatched)
+            {
+                Log.Error($"Error: HashCode is not matched! User:{user.UserName} Tick: {tick} HashCode: {hashCode}");
+
+                SCHashCode scHashCode = ReferencePool.Acquire<SCHashCode>();
+                scHashCode.RetCode = (int)EErrorCode.HashCodeMismatch;
+                scHashCode.MismatchedTick = tick;
+                user?.TcpSession?.Send(scHashCode);
+            }
         }
     }
 }

@@ -26,8 +26,8 @@ namespace XGame
         public World World { get; private set; }
 
         private FrameBuffer m_FrameBuffer;
-        private HashHelper _hashHelper;
-        private DumpHelper _dumpHelper;
+        private HashHelper m_HashHelper;
+        private DumpHelper m_DumpHelper;
 
         private int m_MapId = 0;
         private int m_LocalId = -1;
@@ -62,8 +62,8 @@ namespace XGame
         {
             World = new World();
             m_FrameBuffer = new FrameBuffer(this, 2000, m_SnapshotFrameInterval, MaxPredictFrameCount);
-            _hashHelper = new HashHelper(World, m_FrameBuffer);
-            _dumpHelper = new DumpHelper(World, _hashHelper);
+            m_HashHelper = new HashHelper(World, m_FrameBuffer);
+            m_DumpHelper = new DumpHelper(World, m_HashHelper);
 
             IsRunning = false;
             m_HasRecvInputMsg = false;
@@ -248,7 +248,7 @@ namespace XGame
                 Predict(frame, true);
             }
 
-            _hashHelper.CheckAndSendHashCodes();
+            m_HashHelper.CheckAndSendHashCodes();
 
         }
 
@@ -306,12 +306,12 @@ namespace XGame
             World.RollbackTo(tick, maxContinueServerTick, isNeedClear);
 
             var hash = GameEntry.Service.GetService<CommonStateService>().Hash;
-            var curHash = _hashHelper.CalcHash();
+            var curHash = m_HashHelper.CalculateHash();
             if (hash != curHash)
             {
-                Log.Error($"tick:{tick} Rollback error: Hash isDiff oldHash ={hash}  curHash{curHash}");
+                Log.Error($"Tick [{tick}] Rollback Error: Hash is diff. OldHash:{hash}  CurHash:{curHash}");
 #if UNITY_EDITOR
-                _dumpHelper.DumpToFile(true);
+                m_DumpHelper.DumpToFile(true);
                 return false;
 #endif
             }
@@ -328,20 +328,20 @@ namespace XGame
         {
             GameEntry.Service.GetService<CommonStateService>().SetTick(World.Tick);
 
-            var hash = _hashHelper.CalcHash();
+            var hash = m_HashHelper.CalculateHash();
             GameEntry.Service.GetService<CommonStateService>().Hash = hash;
 
             // 备份当前帧。
             GameEntry.Service.GetService<TimeMachineService>().Backup(World.Tick);
 
             DumpFrame(hash);
-            hash = _hashHelper.CalcHash(true);
-            _hashHelper.SetHash(World.Tick, hash);
+            hash = m_HashHelper.CalculateHash(true);
+            m_HashHelper.SetHash(World.Tick, hash);
             ProcessInputQueue(serverFrame);
 
             World.Step();
 
-            _dumpHelper.OnFrameEnd();
+            m_DumpHelper.OnFrameEnd();
             // 记录当前 Tick。
             int tick = World.Tick;
             m_FrameBuffer.SetClientTick(tick);
@@ -354,7 +354,7 @@ namespace XGame
 
         private void DumpFrame(int hash)
         {
-            _dumpHelper.DumpFrame(true);
+            m_DumpHelper.DumpFrame(true);
         }
 
         private void FillInputWithLastFrame(ServerFrame frame)

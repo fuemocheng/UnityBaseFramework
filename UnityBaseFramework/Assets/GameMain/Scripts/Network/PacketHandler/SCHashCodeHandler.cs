@@ -15,7 +15,12 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             SCHashCode packetImpl = (SCHashCode)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.Id.ToString());
+            //Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
+
+            if(packetImpl.RetCode != (int)EErrorCode.Success)
+            {
+                Log.Error($"SCHashCodeHandler: HashCode Mismatch Tick:{packetImpl.MismatchedTick}");
+            }
         }
     }
 }

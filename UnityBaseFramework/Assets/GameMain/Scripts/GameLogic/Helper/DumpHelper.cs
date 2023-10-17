@@ -71,7 +71,7 @@ namespace XGame
             if (withCurFrame)
             {
                 _curSb = DumpFrame();
-                var curHash = _hashHelper.CalcHash(true);
+                var curHash = _hashHelper.CalculateHash(true);
                 File.WriteAllText(dumpPath + "/cur_single.txt", _curSb.ToString());
                 File.WriteAllText(dumpPath + "/raw_single.txt", _tick2RawFrameData[Tick].ToString());
             }
