@@ -20,7 +20,7 @@ namespace XGame
         /// </summary>
         public SCReadyEventArgs()
         {
-            UserReadyInfos = new();
+            UserGameInfos = new();
             UserData = null;
         }
 
@@ -47,7 +47,7 @@ namespace XGame
             private set;
         }
 
-        public List<UserReadyInfo> UserReadyInfos
+        public List<UserGameInfo> UserGameInfos
         {
             get;
             private set;
@@ -65,15 +65,15 @@ namespace XGame
         /// <summary>
         /// 创建准备事件。
         /// </summary>
-        /// <param name="userReadyInfos"></param>
+        /// <param name="userGameInfos"></param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCReadyEventArgs Create(int roomId, int localId, List<UserReadyInfo> userReadyInfos, object userData = null)
+        public static SCReadyEventArgs Create(int roomId, int localId, List<UserGameInfo> userGameInfos, object userData = null)
         {
             SCReadyEventArgs scReadyEventArgs = ReferencePool.Acquire<SCReadyEventArgs>();
             scReadyEventArgs.RoomId = roomId;
             scReadyEventArgs.LocalId = localId;
-            scReadyEventArgs.UserReadyInfos.AddRange(userReadyInfos);
+            scReadyEventArgs.UserGameInfos.AddRange(userGameInfos);
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;
         }
@@ -83,7 +83,7 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
-            UserReadyInfos.Clear();
+            UserGameInfos.Clear();
             UserData = null;
         }
     }

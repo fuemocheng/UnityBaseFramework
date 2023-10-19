@@ -17,7 +17,7 @@ namespace GameProto
             SCReady packetImpl = (SCReady)packet;
             Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
-            GameEntry.Event.Fire(sender, SCReadyEventArgs.Create(packetImpl.RoomId, packetImpl.LocalId, packetImpl.UserReadyInfos));
+            GameEntry.Event.Fire(sender, SCReadyEventArgs.Create(packetImpl.RoomId, packetImpl.LocalId, packetImpl.UserGameInfos));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace XGame
         public SCJoinRoomEventArgs()
         {
             UserData = null;
-            UserReadyInfos = new();
+            UserGameInfos = new();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace XGame
             private set;
         }
 
-        public List<UserReadyInfo> UserReadyInfos
+        public List<UserGameInfo> UserGameInfos
         {
             get;
             private set;
@@ -67,15 +67,15 @@ namespace XGame
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="localId"></param>
-        /// <param name="userReadyInfos"></param>
+        /// <param name="userGameInfos"></param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCJoinRoomEventArgs Create(int roomId, int localId, List<UserReadyInfo> userReadyInfos, object userData = null)
+        public static SCJoinRoomEventArgs Create(int roomId, int localId, List<UserGameInfo> userGameInfos, object userData = null)
         {
             SCJoinRoomEventArgs scReadyEventArgs = ReferencePool.Acquire<SCJoinRoomEventArgs>();
             scReadyEventArgs.RoomId = roomId;
             scReadyEventArgs.LocalId = localId;
-            scReadyEventArgs.UserReadyInfos.AddRange(userReadyInfos);
+            scReadyEventArgs.UserGameInfos.AddRange(userGameInfos);
             scReadyEventArgs.UserData = userData;
             return scReadyEventArgs;
         }
@@ -85,7 +85,7 @@ namespace XGame
         /// </summary>
         public override void Clear()
         {
-            UserReadyInfos.Clear();
+            UserGameInfos.Clear();
             UserData = null;
             RoomId = 0;
             LocalId = 0;

@@ -68,8 +68,8 @@ namespace XGame
         {
             SCLoginEventArgs scLoginEventArgs = ReferencePool.Acquire<SCLoginEventArgs>();
             scLoginEventArgs.RetCode = retCode;
-            scLoginEventArgs.UserData = userData;
             scLoginEventArgs.UserState = userState;
+            scLoginEventArgs.UserData = userData;
             return scLoginEventArgs;
         }
 

@@ -8,11 +8,11 @@ message User{
 	string UserName = 2;					//角色昵称
 }
 
-//房间角色准备信息
-message UserReadyInfo{
-	int32 LocalId = 1;						//在此房间的Index
-	int32 UserState = 2;					//EUserState.NotReady:未准备 EUserState.Ready:准备
-	User User = 3;							//角色信息
+//角色游戏数据
+message UserGameInfo{
+	User User = 1;							//角色信息
+	int32 LocalId = 2;						//在此房间的Index
+	int32 UserState = 3;					//EUserState.NotReady:未准备 EUserState.Ready:准备
 }
 
 //输入数据
@@ -33,7 +33,7 @@ message InputFrame{
 //服务器帧
 message ServerFrame{
 	int32 Tick = 1;							//逻辑帧
-	repeated InputFrame InputFrames = 2;	//帧数据
+	repeated InputFrame InputFrames = 2;	//帧数据（每个玩家的输入帧）
 }
 
 
@@ -84,7 +84,7 @@ message CSJoinRoom{
 message SCJoinRoom{
 	int32 RoomId = 1;								//-1:离开房间 其他:加入了指定房间
 	int32 LocalId = 2;								//在此房间的Index
-	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
+	repeated UserGameInfo UserGameInfos = 3;		//玩家游戏状态数据
 }
 
 //准备游戏
@@ -95,7 +95,7 @@ message CSReady{
 message SCReady{
 	int32 RoomId = 1;
 	int32 LocalId = 2;
-	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
+	repeated UserGameInfo UserGameInfos = 3;		//玩家游戏状态数据
 }
 
 //获取游戏开始基础信息（一般重连时用）
@@ -104,12 +104,12 @@ message CSGameStartInfo{
 
 //游戏开始基础信息
 message SCGameStartInfo{
-	int32 RoomId = 1;						//RoomId
-	int32 MapId = 2;						//地图Id
-	int32 LocalId = 3;						//LocalId
-	int32 UserCount = 4;					//房间人数
-	int32 Seed = 5;							//随机因子
-	repeated User Users = 6;				//玩家数据
+	int32 RoomId = 1;								//RoomId
+	int32 MapId = 2;								//地图Id
+	int32 LocalId = 3;								//LocalId
+	int32 UserCount = 4;							//房间人数
+	int32 Seed = 5;									//随机因子
+	repeated UserGameInfo UserGameInfos = 6;		//玩家游戏数据
 }
 
 //加载进度
@@ -161,4 +161,3 @@ message CSGameControlCode{
 message SCGameControlCode{
 	int32 GameControlCode = 1;					//1:退出游戏 2:暂停游戏 3:继续游戏
 }
-

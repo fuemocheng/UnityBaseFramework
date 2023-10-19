@@ -177,18 +177,18 @@ namespace XGame
             if (scJoinRoomEventArgs.RoomId >= 0)
             {
                 int readyCount = 0;
-                for (int i = 0; i < scJoinRoomEventArgs.UserReadyInfos.Count; i++)
+                for (int i = 0; i < scJoinRoomEventArgs.UserGameInfos.Count; i++)
                 {
-                    UserReadyInfo userReadyInfo = scJoinRoomEventArgs.UserReadyInfos[i];
-                    if (userReadyInfo != null && userReadyInfo.UserState == (int)EUserState.Ready)
+                    UserGameInfo userGameInfo = scJoinRoomEventArgs.UserGameInfos[i];
+                    if (userGameInfo != null && userGameInfo.UserState == (int)EUserState.Ready)
                     {
                         readyCount++;
                     }
 
                     //记录自己的状态
-                    if (userReadyInfo.LocalId == scJoinRoomEventArgs.LocalId)
+                    if (userGameInfo.LocalId == scJoinRoomEventArgs.LocalId)
                     {
-                        m_UserState = (EUserState)userReadyInfo.UserState;
+                        m_UserState = (EUserState)userGameInfo.UserState;
                     }
                 }
                 m_LobbyForm?.OnJoinedRoom(scJoinRoomEventArgs.RoomId, scJoinRoomEventArgs.LocalId, readyCount, m_UserState);
@@ -226,18 +226,18 @@ namespace XGame
             }
 
             int readyCount = 0;
-            for (int i = 0; i < scReadyEventArgs.UserReadyInfos.Count; i++)
+            for (int i = 0; i < scReadyEventArgs.UserGameInfos.Count; i++)
             {
-                UserReadyInfo userReadyInfo = scReadyEventArgs.UserReadyInfos[i];
-                if (userReadyInfo != null && userReadyInfo.UserState == (int)EUserState.Ready)
+                UserGameInfo userGameInfo = scReadyEventArgs.UserGameInfos[i];
+                if (userGameInfo != null && userGameInfo.UserState == (int)EUserState.Ready)
                 {
                     readyCount++;
                 }
 
                 //记录自己的状态
-                if (userReadyInfo.LocalId == scReadyEventArgs.LocalId)
+                if (userGameInfo.LocalId == scReadyEventArgs.LocalId)
                 {
-                    m_UserState = (EUserState)userReadyInfo.UserState;
+                    m_UserState = (EUserState)userGameInfo.UserState;
                 }
             }
 
@@ -251,7 +251,7 @@ namespace XGame
             {
                 return;
             }
-            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
+            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.UserGameInfos.Count}");
 
             //开始计时。
             //初始化时间戳。
@@ -259,17 +259,20 @@ namespace XGame
 
             Simulator simulator = new Simulator();
             simulator.Start();
-            simulator.OnGameCreate(60,
+            simulator.OnGameCreate(
+                60,
                 scGameStartInfoEventArgs.MapId,
                 scGameStartInfoEventArgs.LocalId,
                 scGameStartInfoEventArgs.UserCount,
-                scGameStartInfoEventArgs.Users);
+                scGameStartInfoEventArgs.UserGameInfos);
 
             //所有人都准备完成。
             m_IsAllReady = true;
         }
 
+
         #region Network
+
         private void OnNetworkClosed(object sender, GameEventArgs e)
         {
             UnityBaseFramework.Runtime.NetworkClosedEventArgs ne = (UnityBaseFramework.Runtime.NetworkClosedEventArgs)e;
@@ -280,6 +283,7 @@ namespace XGame
 
             m_IsNetworkError = true;
         }
+
         #endregion
     }
 }

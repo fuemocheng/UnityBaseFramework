@@ -36,12 +36,16 @@ namespace GameProto
             gameStartInfo.UserCount = user.Room.GetCurrCount();
             gameStartInfo.Seed = 0;
             // 遍历添加所有人信息，添加到 SCGameStartInfo
-            foreach (KeyValuePair<long, Server.User> kvp2 in user.Room.GetUsersDictionary())
+            foreach (KeyValuePair<long, Server.User> kvp in user.Room.GetUsersDictionary())
             {
-                GameProto.User tUser = new GameProto.User();
-                tUser.UserId = kvp2.Value.UserId;
-                tUser.UserName = kvp2.Value.UserName;
-                gameStartInfo.Users.Add(tUser);
+                UserGameInfo userGameInfo = new UserGameInfo();
+                userGameInfo.LocalId = kvp.Value.LocalId;
+                userGameInfo.UserState = (int)kvp.Value.UserState;
+                userGameInfo.User = new User();
+                userGameInfo.User.UserId = kvp.Value.UserId;
+                userGameInfo.User.UserName = kvp.Value.UserName;
+
+                gameStartInfo.UserGameInfos.Add(userGameInfo);
             }
             user.TcpSession?.Send(gameStartInfo);
         }

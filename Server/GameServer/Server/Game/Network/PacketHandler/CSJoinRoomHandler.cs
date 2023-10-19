@@ -47,13 +47,13 @@ namespace GameProto
                     //遍历添加所有人信息，添加到 SCJoinRoom
                     foreach (KeyValuePair<long, Server.User> kvp2 in availableRoom.GetUsersDictionary())
                     {
-                        UserReadyInfo userReadyInfo = new UserReadyInfo();
-                        userReadyInfo.LocalId = kvp2.Value.LocalId;
-                        userReadyInfo.UserState = (int)kvp2.Value.UserState;
-                        userReadyInfo.User = new User();
-                        userReadyInfo.User.UserId = kvp2.Value.UserId;
-                        userReadyInfo.User.UserName = kvp2.Value.UserName;
-                        scJoinRoom.UserReadyInfos.Add(userReadyInfo);
+                        UserGameInfo userGameInfo = new UserGameInfo();
+                        userGameInfo.User = new User();
+                        userGameInfo.User.UserId = kvp2.Value.UserId;
+                        userGameInfo.User.UserName = kvp2.Value.UserName;
+                        userGameInfo.LocalId = kvp2.Value.LocalId;
+                        userGameInfo.UserState = (int)kvp2.Value.UserState;
+                        scJoinRoom.UserGameInfos.Add(userGameInfo);
                     }
                     sUser.TcpSession?.Send(scJoinRoom);
                 }
@@ -74,7 +74,7 @@ namespace GameProto
                     //房间删掉角色信息，角色删掉房间信息
                     user.Room.LeaveRoom(user);
 
-                    //广播其他人，有人离开房间，这里不会发送给自己了。
+                    //广播其他人，有人离开房间，这里不会发送给自己了。因为先把自己从房间删掉了。
                     foreach (KeyValuePair<long, Server.User> kvp in tRoom.GetUsersDictionary())
                     {
                         Server.User sUser = kvp.Value;
@@ -88,13 +88,13 @@ namespace GameProto
                         //遍历添加所有人信息，添加到 SCJoinRoom
                         foreach (KeyValuePair<long, Server.User> kvp2 in tRoom.GetUsersDictionary())
                         {
-                            UserReadyInfo userReadyInfo = new UserReadyInfo();
-                            userReadyInfo.LocalId = kvp2.Value.LocalId;
-                            userReadyInfo.UserState = (int)kvp2.Value.UserState;
-                            userReadyInfo.User = new User();
-                            userReadyInfo.User.UserId = kvp2.Value.UserId;
-                            userReadyInfo.User.UserName = kvp2.Value.UserName;
-                            tSCJoinRoom.UserReadyInfos.Add(userReadyInfo);
+                            UserGameInfo userGameInfo = new UserGameInfo();
+                            userGameInfo.User = new User();
+                            userGameInfo.User.UserId = kvp2.Value.UserId;
+                            userGameInfo.User.UserName = kvp2.Value.UserName;
+                            userGameInfo.LocalId = kvp2.Value.LocalId;
+                            userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            tSCJoinRoom.UserGameInfos.Add(userGameInfo);
                         }
                         sUser.TcpSession?.Send(tSCJoinRoom);
                     }

@@ -20,7 +20,7 @@ namespace XGame
         /// </summary>
         public SCGameStartInfoEventArgs()
         {
-            Users = new();
+            UserGameInfos = new();
             UserData = null;
         }
 
@@ -65,7 +65,7 @@ namespace XGame
             private set;
         }
 
-        public List<User> Users
+        public List<UserGameInfo> UserGameInfos
         {
             get;
             private set;
@@ -87,10 +87,10 @@ namespace XGame
         /// <param name="mapId"></param>
         /// <param name="userCount"></param>
         /// <param name="seed"></param>
-        /// <param name="users"></param>
+        /// <param name="userGameInfos"></param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static SCGameStartInfoEventArgs Create(int roomId, int mapId, int localId, int userCount, int seed, List<User> users, object userData = null)
+        public static SCGameStartInfoEventArgs Create(int roomId, int mapId, int localId, int userCount, int seed, List<UserGameInfo> userGameInfos, object userData = null)
         {
             SCGameStartInfoEventArgs scGameStartInfoEventArgs = ReferencePool.Acquire<SCGameStartInfoEventArgs>();
             scGameStartInfoEventArgs.RoomId = roomId;
@@ -98,7 +98,7 @@ namespace XGame
             scGameStartInfoEventArgs.LocalId = localId;
             scGameStartInfoEventArgs.UserCount = userCount;
             scGameStartInfoEventArgs.Seed = seed;
-            scGameStartInfoEventArgs.Users.AddRange(users);
+            scGameStartInfoEventArgs.UserGameInfos.AddRange(userGameInfos);
             scGameStartInfoEventArgs.UserData = userData;
             return scGameStartInfoEventArgs;
         }
@@ -112,7 +112,7 @@ namespace XGame
             MapId = 0;
             UserCount = 0;
             Seed = 0;
-            Users.Clear();
+            UserGameInfos.Clear();
             UserData = null;
         }
     }

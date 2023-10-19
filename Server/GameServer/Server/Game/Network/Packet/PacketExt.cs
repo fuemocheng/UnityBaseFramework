@@ -134,7 +134,7 @@ namespace GameProto
         {
             RoomId = 0;
             LocalId = 0;
-            UserReadyInfos.Clear();
+            UserGameInfos.Clear();
         }
     }
 
@@ -161,7 +161,7 @@ namespace GameProto
         {
             RoomId = 0;
             LocalId = 0;
-            UserReadyInfos.Clear();
+            UserGameInfos.Clear();
         }
     }
 
@@ -190,7 +190,7 @@ namespace GameProto
             LocalId = 0;
             UserCount = 0;
             Seed = 0;
-            Users.Clear();
+            UserGameInfos.Clear();
         }
     }
 

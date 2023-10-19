@@ -370,15 +370,20 @@ namespace Server
             SCGameStartInfo gameStartInfo = new();
             gameStartInfo.RoomId = Room.RoomId;
             gameStartInfo.MapId = 1;
+            gameStartInfo.LocalId = -1; //存储的所有人的信息
             gameStartInfo.UserCount = Room.GetCurrCount();
             gameStartInfo.Seed = 0;
             // 遍历添加所有人信息，添加到 SCGameStartInfo
-            foreach (KeyValuePair<long, User> kvp2 in Room.GetUsersDictionary())
+            foreach (KeyValuePair<long, User> kvp in Room.GetUsersDictionary())
             {
-                GameProto.User tUser = new GameProto.User();
-                tUser.UserId = kvp2.Value.UserId;
-                tUser.UserName = kvp2.Value.UserName;
-                gameStartInfo.Users.Add(tUser);
+                UserGameInfo userGameInfo = new UserGameInfo();
+                userGameInfo.LocalId = kvp.Value.LocalId;
+                userGameInfo.UserState = (int)kvp.Value.UserState;
+                userGameInfo.User = new GameProto.User();
+                userGameInfo.User.UserId = kvp.Value.UserId;
+                userGameInfo.User.UserName = kvp.Value.UserName;
+
+                gameStartInfo.UserGameInfos.Add(userGameInfo);
             }
 
             SCServerFrame scServerFrame = new();
@@ -387,7 +392,7 @@ namespace Server
                 scServerFrame.ServerFrames.Add(m_AllHistoryFrames[i]);
                 if (m_AllHistoryFrames[i] == null)
                 {
-                    Log.Error($"DumpGameFrames: Frame:{i} is null.");
+                    Log.Error($"DumpGameFrames Error: Frame[{i}] is null.");
                 }
             }
             scServerFrame.StartTick = m_AllHistoryFrames[0].Tick;
@@ -402,10 +407,10 @@ namespace Server
 
                 byte[] bytes = ms.GetBuffer();
 
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../Record/" +
-                    DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Room.RoomId + "_" + MapId + ".record");
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                    $"../Record/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Room.RoomId}_{MapId}.record");
 
-                var dir = Path.GetDirectoryName(path);
+                string dir = Path.GetDirectoryName(path);
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);

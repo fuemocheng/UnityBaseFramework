@@ -17,7 +17,7 @@ namespace GameProto
             SCJoinRoom packetImpl = (SCJoinRoom)packet;
             Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
-            GameEntry.Event.Fire(sender, SCJoinRoomEventArgs.Create(packetImpl.RoomId, packetImpl.LocalId, packetImpl.UserReadyInfos));
+            GameEntry.Event.Fire(sender, SCJoinRoomEventArgs.Create(packetImpl.RoomId, packetImpl.LocalId, packetImpl.UserGameInfos));
         }
     }
 }

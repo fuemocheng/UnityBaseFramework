@@ -272,7 +272,7 @@ namespace XGame
             {
                 return;
             }
-            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.Users.Count}");
+            Log.Info($"OnGameStartInfoResponse  RoomId:{scGameStartInfoEventArgs.RoomId}  MapId:{scGameStartInfoEventArgs.MapId}  UserCount:{scGameStartInfoEventArgs.UserGameInfos.Count}");
 
             //初始化时间戳。
             GameTime.InitStartTimeStamp();
@@ -283,7 +283,7 @@ namespace XGame
                 scGameStartInfoEventArgs.MapId,
                 scGameStartInfoEventArgs.LocalId,
                 scGameStartInfoEventArgs.UserCount,
-                scGameStartInfoEventArgs.Users);
+                scGameStartInfoEventArgs.UserGameInfos);
 
             //因为是重连，则直接开始游戏。
             Log.Info("Reconnected - Start Game.");

@@ -40,13 +40,13 @@ namespace GameProto
                 // 遍历添加所有人信息，添加到 SCReady
                 foreach (KeyValuePair<long, Server.User> kvp2 in user.Room.GetUsersDictionary())
                 {
-                    UserReadyInfo userReadyInfo = new UserReadyInfo();
-                    userReadyInfo.LocalId = kvp2.Value.LocalId;
-                    userReadyInfo.UserState = (int)kvp2.Value.UserState;
-                    userReadyInfo.User = new User();
-                    userReadyInfo.User.UserId = kvp2.Value.UserId;
-                    userReadyInfo.User.UserName = kvp2.Value.UserName;
-                    scReady.UserReadyInfos.Add(userReadyInfo);
+                    UserGameInfo userGameInfo = new UserGameInfo();
+                    userGameInfo.LocalId = kvp2.Value.LocalId;
+                    userGameInfo.UserState = (int)kvp2.Value.UserState;
+                    userGameInfo.User = new User();
+                    userGameInfo.User.UserId = kvp2.Value.UserId;
+                    userGameInfo.User.UserName = kvp2.Value.UserName;
+                    scReady.UserGameInfos.Add(userGameInfo);
                 }
                 user.TcpSession?.Send(scReady);
             }
@@ -81,10 +81,14 @@ namespace GameProto
                         // 遍历添加所有人信息，添加到 SCGameStartInfo
                         foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
                         {
-                            GameProto.User tUser = new GameProto.User();
-                            tUser.UserId = kvp2.Value.UserId;
-                            tUser.UserName = kvp2.Value.UserName;
-                            gameStartInfo.Users.Add(tUser);
+                            UserGameInfo userGameInfo = new UserGameInfo();
+                            userGameInfo.LocalId = kvp2.Value.LocalId;
+                            userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            userGameInfo.User = new User();
+                            userGameInfo.User.UserId = kvp2.Value.UserId;
+                            userGameInfo.User.UserName = kvp2.Value.UserName;
+
+                            gameStartInfo.UserGameInfos.Add(userGameInfo);
                         }
                         sUser.TcpSession?.Send(gameStartInfo);
                     }
@@ -107,13 +111,13 @@ namespace GameProto
                         // 遍历添加所有人信息，添加到 SCReady
                         foreach (KeyValuePair<long, Server.User> kvp2 in room.GetUsersDictionary())
                         {
-                            UserReadyInfo userReadyInfo = new UserReadyInfo();
-                            userReadyInfo.LocalId = kvp2.Value.LocalId;
-                            userReadyInfo.UserState = (int)kvp2.Value.UserState;
-                            userReadyInfo.User = new User();
-                            userReadyInfo.User.UserId = kvp2.Value.UserId;
-                            userReadyInfo.User.UserName = kvp2.Value.UserName;
-                            scReady.UserReadyInfos.Add(userReadyInfo);
+                            UserGameInfo userGameInfo = new UserGameInfo();
+                            userGameInfo.LocalId = kvp2.Value.LocalId;
+                            userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            userGameInfo.User = new User();
+                            userGameInfo.User.UserId = kvp2.Value.UserId;
+                            userGameInfo.User.UserName = kvp2.Value.UserName;
+                            scReady.UserGameInfos.Add(userGameInfo);
                         }
                         sUser.TcpSession?.Send(scReady);
                     }

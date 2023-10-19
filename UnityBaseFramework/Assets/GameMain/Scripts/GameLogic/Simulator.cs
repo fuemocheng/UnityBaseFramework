@@ -31,7 +31,7 @@ namespace XGame
 
         private int m_MapId = 0;
         private int m_LocalId = -1;
-        private List<User> m_Users = new List<User>();
+        private List<UserGameInfo> m_UserGameInfos = new List<UserGameInfo>();
 
         public GameProto.Input[] PlayerInputs => World.PlayerInputs;
 
@@ -94,12 +94,12 @@ namespace XGame
             GameEntry.Service.RemoveAllServices();
         }
 
-        public void OnGameCreate(int targetFps, int mapId, int localId, int actorCount, List<User> users)
+        public void OnGameCreate(int targetFps, int mapId, int localId, int actorCount, List<UserGameInfo> userGameInfos)
         {
             Log.Info($"OnGameCreate:{localId}");
             m_MapId = mapId;
             m_LocalId = localId;
-            m_Users.AddRange(users);
+            m_UserGameInfos.AddRange(userGameInfos);
             m_FrameBuffer.LocalId = localId;
 
             // Service 创建。
@@ -133,7 +133,7 @@ namespace XGame
             }
             IsRunning = true;
 
-            World.StartSimulate(m_Users, m_LocalId);
+            World.StartSimulate(m_UserGameInfos, m_LocalId);
 
             // 发送Input
             while (m_InputTick < PreSendInputCount)
@@ -279,7 +279,7 @@ namespace XGame
             csInputFrame.InputFrame = inputFrame;
 
             ServerFrame cFrame = new ServerFrame();
-            var inputFrames = new InputFrame[m_Users.Count];
+            var inputFrames = new InputFrame[m_UserGameInfos.Count];
             inputFrames[m_LocalId] = inputFrame;
             cFrame.InputFrames.AddRange(inputFrames);
             cFrame.Tick = curTick;
@@ -387,7 +387,7 @@ namespace XGame
             var lastServerInputs = tick == 0 ? null : m_FrameBuffer.GetFrame(tick - 1)?.InputFrames;
             var myInput = inputs[m_LocalId];
             //fill inputs with last frame's input (Input predict)
-            for (int i = 0; i < m_Users.Count; i++)
+            for (int i = 0; i < m_UserGameInfos.Count; i++)
             {
                 inputs[i] = new InputFrame();
                 inputs[i].Tick = tick;

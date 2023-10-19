@@ -26,20 +26,20 @@ namespace GameProto
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class UserReadyInfo : global::ProtoBuf.IExtensible
+    public partial class UserGameInfo : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public int LocalId { get; set; }
+        public User User { get; set; }
 
         [global::ProtoBuf.ProtoMember(2)]
-        public int UserState { get; set; }
+        public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
-        public User User { get; set; }
+        public int UserState { get; set; }
 
     }
 
@@ -232,7 +232,7 @@ namespace GameProto
         public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
-        public global::System.Collections.Generic.List<UserReadyInfo> UserReadyInfos { get; } = new global::System.Collections.Generic.List<UserReadyInfo>();
+        public global::System.Collections.Generic.List<UserGameInfo> UserGameInfos { get; } = new global::System.Collections.Generic.List<UserGameInfo>();
 
     }
 
@@ -262,7 +262,7 @@ namespace GameProto
         public int LocalId { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
-        public global::System.Collections.Generic.List<UserReadyInfo> UserReadyInfos { get; } = new global::System.Collections.Generic.List<UserReadyInfo>();
+        public global::System.Collections.Generic.List<UserGameInfo> UserGameInfos { get; } = new global::System.Collections.Generic.List<UserGameInfo>();
 
     }
 
@@ -298,7 +298,7 @@ namespace GameProto
         public int Seed { get; set; }
 
         [global::ProtoBuf.ProtoMember(6)]
-        public global::System.Collections.Generic.List<User> Users { get; } = new global::System.Collections.Generic.List<User>();
+        public global::System.Collections.Generic.List<UserGameInfo> UserGameInfos { get; } = new global::System.Collections.Generic.List<UserGameInfo>();
 
     }
 

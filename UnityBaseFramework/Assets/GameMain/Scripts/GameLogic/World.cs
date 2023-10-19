@@ -77,7 +77,7 @@ namespace XGame
             m_Systems.Clear();
         }
 
-        public void StartSimulate(List<User> users, int localActorId)
+        public void StartSimulate(List<UserGameInfo> userGameInfos, int localActorId)
         {
             if (m_HasStart)
             {
@@ -86,12 +86,13 @@ namespace XGame
 
             m_HasStart = true;
 
-            for (int i = 0; i < users.Count; i++)
+            for (int i = 0; i < userGameInfos.Count; i++)
             {
                 int prefabId = 0;
                 LVector2 initPos = LVector2.zero;
                 Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(prefabId, initPos);
-                player.localId = i;
+
+                player.localId = userGameInfos[i].LocalId;
             }
 
             var allPlayers = GameEntry.Service.GetService<GameStateService>().GetPlayers();
