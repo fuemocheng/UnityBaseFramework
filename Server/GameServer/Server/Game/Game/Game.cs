@@ -1,6 +1,7 @@
 ﻿using BaseFramework;
 using BaseFramework.Runtime;
 using GameProto;
+using Network;
 
 namespace Server
 {
@@ -397,28 +398,11 @@ namespace Server
             }
             scServerFrame.StartTick = m_AllHistoryFrames[0].Tick;
 
-            //序列化
-            using (MemoryStream ms = new MemoryStream())
-            {
-                // 在此处离开 using 块后，MemoryStream 被自动关闭和释放
+            string recordPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                $"../Record/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Room.RoomId}_{MapId}.record");
 
-                ProtoBuf.Meta.RuntimeTypeModel.Default.SerializeWithLengthPrefix(ms, gameStartInfo, gameStartInfo.GetType(), ProtoBuf.PrefixStyle.Fixed32, 0);
-                ProtoBuf.Meta.RuntimeTypeModel.Default.SerializeWithLengthPrefix(ms, scServerFrame, scServerFrame.GetType(), ProtoBuf.PrefixStyle.Fixed32, 0);
-
-                byte[] bytes = ms.GetBuffer();
-
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    $"../Record/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Room.RoomId}_{MapId}.record");
-
-                string dir = Path.GetDirectoryName(path);
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                Log.Info("Create Record " + path);
-                File.WriteAllBytes(path, bytes);
-            }
+            RecordUtility.WriteRecord(recordPath, gameStartInfo, scServerFrame);
         }
     }
 }
