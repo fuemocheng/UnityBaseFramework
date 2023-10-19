@@ -99,6 +99,12 @@ namespace Server
             User user = (User)BindInfo;
             if (user != null)
             {
+                //如果不是加载中，也不是游戏中，断线或者离线，退出房间。
+                if(user.UserState != EUserState.Loading && user.UserState != EUserState.Playing)
+                {
+                    user.Room?.LeaveRoom(user);
+                }
+
                 user.TcpSession = null;
                 user.KcpSession = null;
             }

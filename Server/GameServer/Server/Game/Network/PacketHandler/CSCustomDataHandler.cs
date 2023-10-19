@@ -18,15 +18,13 @@ namespace GameProto
             CSCustomData packetImpl = (CSCustomData)packet;
             Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
 
-
+            //Tcp Session¡£
             Session session = (Session)sender;
-            // User¡£
+            //User¡£
             Server.User user = (Server.User)session.BindInfo;
 
             SCCustomData sCCustomData = ReferencePool.Acquire<SCCustomData>();
-            sCCustomData.CustomData = "S2C:" + packetImpl.CustomData;
-
-            Log.Error($"CSCustomDataHandler User:{user.Account} ChannelID:{user.TcpSession.Channel.Id} Data:{packetImpl.CustomData}");
+            sCCustomData.CustomData = packetImpl.CustomData;
 
             user.TcpSession?.Send(sCCustomData);
         }

@@ -6,7 +6,6 @@
         Loading,        //加载中。
         Loaded,         //加载完成。
         Playing,        //游戏中。
-        Finished,       //完成。
-        FinishAll,      //所有完成。
+        Finished,       //游戏结束。
     }
 }

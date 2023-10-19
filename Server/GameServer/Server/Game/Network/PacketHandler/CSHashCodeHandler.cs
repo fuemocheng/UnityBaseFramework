@@ -15,11 +15,11 @@ namespace GameProto
         public override void Handle(object sender, Packet packet)
         {
             CSHashCode packetImpl = (CSHashCode)packet;
-            Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
+            //Log.Info("Receive packet '{0}'.", packetImpl.GetType().ToString());
 
-            // Tcp Session。
+            //Tcp Session。
             Session session = (Session)sender;
-            // User。
+            //User。
             Server.User user = (Server.User)session.BindInfo;
 
             user?.Room?.Game.OnCheckHashCode(user, packetImpl);

@@ -3,7 +3,6 @@ using BaseFramework;
 using BaseFramework.Network;
 using UnityBaseFramework.Runtime;
 using UnityEngine.UI;
-using TMPro;
 using GameProto;
 
 namespace XGame
@@ -12,16 +11,16 @@ namespace XGame
     {
         private ProcedureLogin m_ProcedureLogin = null;
 
-        private TMP_InputField m_InputAccount = null;
-        private TMP_InputField m_InputPassword = null;
+        private InputField m_InputAccount = null;
+        private InputField m_InputPassword = null;
         private Button m_BtnLogin = null;
 
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
 
-            m_InputAccount = transform.Find("Content/Center/Account").GetComponent<TMP_InputField>();
-            m_InputPassword = transform.Find("Content/Center/Password").GetComponent<TMP_InputField>();
+            m_InputAccount = transform.Find("Content/Center/Account").GetComponent<InputField>();
+            m_InputPassword = transform.Find("Content/Center/Password").GetComponent<InputField>();
             m_BtnLogin = transform.Find("Content/Center/BtnLogin").GetComponent<Button>();
 
             m_BtnLogin.onClick.AddListener(OnClickLogin);
@@ -57,7 +56,7 @@ namespace XGame
                     Title = "Account Error",
                     Message = "Please input correct account.",
                     ConfirmText = "Confirm",
-                    OnClickConfirm = delegate (object userData) 
+                    OnClickConfirm = delegate (object userData)
                     {
                         //Do something.
                     },

@@ -29,7 +29,7 @@ namespace XGame
 
         private List<BaseSystem> m_Systems = new List<BaseSystem>();
 
-        private bool _hasStart = false;
+        private bool m_HasStart = false;
 
         private void RegisterSystem(BaseSystem baseSystem)
         {
@@ -46,6 +46,8 @@ namespace XGame
 
         public void OnGameCreate()
         {
+            Instance = this;
+
             Tick = 0;
 
             // 注册系统。
@@ -64,14 +66,25 @@ namespace XGame
             }
         }
 
+        public void OnGameDestroy()
+        {
+            Instance = null;
+
+            foreach (BaseSystem system in m_Systems)
+            {
+                system?.Destroy();
+            }
+            m_Systems.Clear();
+        }
+
         public void StartSimulate(List<User> users, int localActorId)
         {
-            if (_hasStart)
+            if (m_HasStart)
             {
                 return;
             }
 
-            _hasStart = true;
+            m_HasStart = true;
 
             for (int i = 0; i < users.Count; i++)
             {
@@ -117,7 +130,7 @@ namespace XGame
                 return;
             }
 
-            Log.Info($" Rollback diff:{Tick - tick} From{Tick}->{tick}  maxContinueServerTick:{maxContinueServerTick} {isNeedClear}");
+            Log.Info($"Rollback diff:{Tick - tick} From{Tick}->{tick}  maxContinueServerTick:{maxContinueServerTick} {isNeedClear}");
             GameEntry.Service.GetService<TimeMachineService>().RollbackTo(tick);
             GameEntry.Service.GetService<CommonStateService>().SetTick(tick);
             Tick = tick;

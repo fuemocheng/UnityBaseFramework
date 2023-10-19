@@ -418,6 +418,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9035866954879854470, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EditorLanguage
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035866954879854470, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_EditorResourceMode
       value: 1
       objectReference: {fileID: 0}

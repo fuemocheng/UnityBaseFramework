@@ -10,8 +10,8 @@ message User{
 
 //房间角色准备信息
 message UserReadyInfo{
-	int32 LocalId = 1;						//LocalId
-	int32 UserState = 2;					//准备状态  UserState
+	int32 LocalId = 1;						//在此房间的Index
+	int32 UserState = 2;					//EUserState.NotReady:未准备 EUserState.Ready:准备
 	User User = 3;							//角色信息
 }
 
@@ -25,7 +25,7 @@ message Input{
 //输入帧
 message InputFrame{
 	int32 Tick = 1;							//逻辑帧
-	int32 LocalId = 2;						//ActorId, LocalId
+	int32 LocalId = 2;						//LocalId
 	bool IsMiss = 3;						//是否丢失
 	Input Input = 4;						//输入数据
 }
@@ -78,18 +78,18 @@ message SCLogin{
 
 //加入游戏房间
 message CSJoinRoom{
-	int32 RoomId = 1;
+	int32 RoomId = 1;								//-1:离开房间 0:随机加入 其他:加入指定房间
 }
 
 message SCJoinRoom{
-	int32 RoomId = 1;
-	int32 LocalId = 2;
+	int32 RoomId = 1;								//-1:离开房间 其他:加入了指定房间
+	int32 LocalId = 2;								//在此房间的Index
 	repeated UserReadyInfo UserReadyInfos = 3;		//玩家准备状态数据
 }
 
 //准备游戏
 message CSReady{
-	int32 UserState = 1;							//准备状态  UserState
+	int32 UserState = 1;							//EUserState.NotReady:未准备(取消准备) EUserState.Ready:准备
 }
 
 message SCReady{
@@ -152,3 +152,13 @@ message SCHashCode{
 	int32 RetCode = 1;
 	int32 MismatchedTick = 2;				//不匹配的帧HashCode
 }
+
+//游戏控制代码
+message CSGameControlCode{
+	int32 GameControlCode = 1;					//1:退出游戏 2:暂停游戏 3:继续游戏
+}
+
+message SCGameControlCode{
+	int32 GameControlCode = 1;					//1:退出游戏 2:暂停游戏 3:继续游戏
+}
+

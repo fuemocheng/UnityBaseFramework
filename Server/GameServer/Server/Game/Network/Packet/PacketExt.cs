@@ -298,4 +298,29 @@ namespace GameProto
         }
     }
 
+    public partial class CSGameControlCode : CSPacketBase
+    {
+        public override int Id => 23;
+
+        public override void Clear()
+        {
+            GameControlCode = 0;
+        }
+    }
+
+    public partial class CSGameControlCodeHandler : PacketHandlerBase
+    {
+        public override int Id => 23;
+    }
+
+    public partial class SCGameControlCode : SCPacketBase
+    {
+        public override int Id => 24;
+
+        public override void Clear()
+        {
+            GameControlCode = 0;
+        }
+    }
+
 }

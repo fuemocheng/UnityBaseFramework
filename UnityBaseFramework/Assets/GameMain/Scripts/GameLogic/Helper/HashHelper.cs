@@ -23,6 +23,12 @@ namespace XGame
             m_FrameBuffer = frameBuffer;
         }
 
+        public void Clear()
+        {
+            m_WaitToSendHashCodes.Clear();
+            m_AllHashCodes.Clear();
+        }
+
         public int CalculateHash(bool isNeedTrace = false)
         {
             int idx = 0;

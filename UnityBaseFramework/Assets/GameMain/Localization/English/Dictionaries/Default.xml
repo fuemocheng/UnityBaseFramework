@@ -1,29 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Dictionaries>
   <Dictionary Language="English">
-    <String Key="Game.Name" Value="STAR FORCE" />
-    <String Key="Game.Description" Value="Game Framework Demo Program" />
-    <String Key="Game.Website" Value="https://GameFramework.cn/" />
-    <String Key="Game.Summary" Value="This project is a demo game made with Game Framework. It's intended to demonstrate how this game framework should be used for developers' reference." />
-    <String Key="Game.Introduction" Value="Game Framework is literally a game framework, based on Unity game engine. It encapsulates commonly used game modules during development, and, to a large degree, standardises the process, enhances the development speed and ensures the product quality." />
-    <String Key="Menu.StartButton" Value="START" />
-    <String Key="Menu.SettingButton" Value="SETTINGS" />
-    <String Key="Menu.AboutButton" Value="ABOUT" />
-    <String Key="Menu.QuitButton" Value="QUIT" />
-    <String Key="Dialog.ConfirmButton" Value="OK" />
-    <String Key="Dialog.CancelButton" Value="CANCEL" />
-    <String Key="Dialog.OtherButton" Value="" />
-    <String Key="ForceUpdate.Title" Value="OUT OF DATE" />
-    <String Key="ForceUpdate.Message" Value="The current game version is out-of-date. Would you like to go for update now?" />
-    <String Key="ForceUpdate.UpdateButton" Value="UPDATE" />
-    <String Key="ForceUpdate.QuitButton" Value="QUIT" />
-    <String Key="AskQuitGame.Title" Value="CONFIRM TO QUIT" />
-    <String Key="AskQuitGame.Message" Value="Are you sure to quit the game?" />
-    <String Key="Setting.Title" Value="SETTINGS" />
-    <String Key="Setting.Music" Value="Music" />
-    <String Key="Setting.Sound" Value="Sound FX" />
-    <String Key="Setting.UISound" Value="UI Sound FX" />
-    <String Key="Setting.Language" Value="Language" />
-    <String Key="Setting.LanguageTips" Value="Language change demands restarting." />
+    <String Key="Game.Name" Value="Stealth Shoot" />
+    <String Key="Login.TitleLeft" Value="Stealth" />
+    <String Key="Login.TitleRight" Value="Shoot" />
+    <String Key="Login.EnterAccountTip" Value="Enter Account..." />
+    <String Key="Login.EnterPasswordTip" Value="Enter Password..." />
+    <String Key="Login.LoginBtnText" Value="Login" />
+    <String Key="Lobby.Title" Value="Lobby" />
+    <String Key="Lobby.JoinRoom" Value="JoinRoom" />
+    <String Key="Lobby.LeaveRoom" Value="LeaveRoom" />
+    <String Key="Lobby.GetReady" Value="GetReady" />
+    <String Key="Lobby.CancelReady" Value="CancelReady" />
+    <String Key="MainUI.Title" Value="MainUI" />
+    <String Key="MainUI.Pause" Value="Pause" />
+    <String Key="MainUI.Resume" Value="Resume" />
+    <String Key="MainUI.Quit" Value="Quit" />
   </Dictionary>
 </Dictionaries>

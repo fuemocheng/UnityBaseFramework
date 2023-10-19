@@ -25,7 +25,13 @@ namespace GameProto
 
             if (packetImpl.UserState == (int)EUserState.LoggedIn)
             {
-                Log.Error("CSReadyHandler Reconnected...");
+                Log.Info("CSReadyHandler Reconnected...");
+
+                if (user.Room == null)
+                {
+                    Log.Error("CSReadyHandler Error : Room is null.");
+                    return;
+                }
 
                 // 重连，只给自己重新同步信息。
                 SCReady scReady = ReferencePool.Acquire<SCReady>();

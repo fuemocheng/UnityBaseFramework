@@ -18,49 +18,92 @@ namespace GameProto
             CSJoinRoom packetImpl = (CSJoinRoom)packet;
             //Log.Info("Receive Packet Type:'{0}'", packetImpl.GetType().ToString());
 
-            // Tcp Session。
+            //Tcp Session。
             Session session = (Session)sender;
-            // Server.User。
+            //Server.User。
             Server.User user = (Server.User)session.BindInfo;
 
-            // Create Room.
-            Room availableRoom = GameEntry.GameLogic.RoomManager.GetAvailableRoom();
-            if (availableRoom == null)
+            if (packetImpl.RoomId >= 0)
             {
-                availableRoom = ReferencePool.Acquire<Room>();
-                availableRoom.RoomId = RoomIdGenerator.GenerateId();
-                availableRoom.RoomName = user.Account;
+                //Create Room.
+                Room availableRoom = GameEntry.GameLogic.RoomManager.GetAvailableRoom();
+                if (availableRoom == null)
+                {
+                    availableRoom = GameEntry.GameLogic.RoomManager.CreateNewRoom(user);
+                }
                 availableRoom.JoinRoom(user);
-                GameEntry.GameLogic.RoomManager.AddRoom(availableRoom);
+
+                //广播客户端有人加入房间。
+                foreach (KeyValuePair<long, Server.User> kvp in availableRoom.GetUsersDictionary())
+                {
+                    Server.User sUser = kvp.Value;
+                    if (sUser == null || sUser.TcpSession == null)
+                    {
+                        continue;
+                    }
+                    SCJoinRoom scJoinRoom = ReferencePool.Acquire<SCJoinRoom>();
+                    scJoinRoom.RoomId = availableRoom.RoomId;
+                    scJoinRoom.LocalId = user.LocalId;
+                    //遍历添加所有人信息，添加到 SCJoinRoom
+                    foreach (KeyValuePair<long, Server.User> kvp2 in availableRoom.GetUsersDictionary())
+                    {
+                        UserReadyInfo userReadyInfo = new UserReadyInfo();
+                        userReadyInfo.LocalId = kvp2.Value.LocalId;
+                        userReadyInfo.UserState = (int)kvp2.Value.UserState;
+                        userReadyInfo.User = new User();
+                        userReadyInfo.User.UserId = kvp2.Value.UserId;
+                        userReadyInfo.User.UserName = kvp2.Value.UserName;
+                        scJoinRoom.UserReadyInfos.Add(userReadyInfo);
+                    }
+                    sUser.TcpSession?.Send(scJoinRoom);
+                }
             }
             else
             {
-                availableRoom.JoinRoom(user);
-            }
+                //LeaveRoom
+                if(user.Room == null)
+                {
+                    //本来就不在房间
+                    Log.Error($"CSJoinRoomHandler: {user.Account} leave room, but user is not in room.");
+                }
+                else
+                {
+                    //临时记录房间。
+                    Room tRoom = user.Room;
 
-            // 广播客户端有人加入房间。
-            foreach (KeyValuePair<long, Server.User> kvp in availableRoom.GetUsersDictionary())
-            {
-                Server.User sUser = kvp.Value;
-                if (sUser == null || sUser.TcpSession == null)
-                {
-                    continue;
+                    //房间删掉角色信息，角色删掉房间信息
+                    user.Room.LeaveRoom(user);
+
+                    //广播其他人，有人离开房间，这里不会发送给自己了。
+                    foreach (KeyValuePair<long, Server.User> kvp in tRoom.GetUsersDictionary())
+                    {
+                        Server.User sUser = kvp.Value;
+                        if (sUser == null || sUser.TcpSession == null)
+                        {
+                            continue;
+                        }
+                        SCJoinRoom tSCJoinRoom = ReferencePool.Acquire<SCJoinRoom>();
+                        tSCJoinRoom.RoomId = user.Room.RoomId;
+                        tSCJoinRoom.LocalId = user.LocalId;
+                        //遍历添加所有人信息，添加到 SCJoinRoom
+                        foreach (KeyValuePair<long, Server.User> kvp2 in tRoom.GetUsersDictionary())
+                        {
+                            UserReadyInfo userReadyInfo = new UserReadyInfo();
+                            userReadyInfo.LocalId = kvp2.Value.LocalId;
+                            userReadyInfo.UserState = (int)kvp2.Value.UserState;
+                            userReadyInfo.User = new User();
+                            userReadyInfo.User.UserId = kvp2.Value.UserId;
+                            userReadyInfo.User.UserName = kvp2.Value.UserName;
+                            tSCJoinRoom.UserReadyInfos.Add(userReadyInfo);
+                        }
+                        sUser.TcpSession?.Send(tSCJoinRoom);
+                    }
                 }
+
+                //发送自己离开房间的信息。
                 SCJoinRoom scJoinRoom = ReferencePool.Acquire<SCJoinRoom>();
-                scJoinRoom.RoomId = availableRoom.RoomId;
-                scJoinRoom.LocalId = user.LocalId;
-                // 遍历添加所有人信息，添加到 SCJoinRoom
-                foreach (KeyValuePair<long, Server.User> kvp2 in availableRoom.GetUsersDictionary())
-                {
-                    UserReadyInfo userReadyInfo = new UserReadyInfo();
-                    userReadyInfo.LocalId = kvp2.Value.LocalId;
-                    userReadyInfo.UserState = (int)kvp2.Value.UserState;
-                    userReadyInfo.User = new User();
-                    userReadyInfo.User.UserId = kvp2.Value.UserId;
-                    userReadyInfo.User.UserName = kvp2.Value.UserName;
-                    scJoinRoom.UserReadyInfos.Add(userReadyInfo);
-                }
-                sUser.TcpSession?.Send(scJoinRoom);
+                scJoinRoom.RoomId = -1;
+                user?.TcpSession?.Send(scJoinRoom);
             }
         }
     }

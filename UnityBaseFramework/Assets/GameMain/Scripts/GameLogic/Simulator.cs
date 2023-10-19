@@ -60,6 +60,8 @@ namespace XGame
 
         public void Start()
         {
+            Instance = this;
+
             World = new World();
             m_FrameBuffer = new FrameBuffer(this, 2000, m_SnapshotFrameInterval, MaxPredictFrameCount);
             m_HashHelper = new HashHelper(World, m_FrameBuffer);
@@ -73,10 +75,23 @@ namespace XGame
 
         public void Destroy()
         {
+            Instance = null;
+            
             IsRunning = false;
             m_HasRecvInputMsg = false;
             m_SnapshotFrameInterval = 1;
+
             m_DumpHelper.DumpAll();
+            m_DumpHelper.Clear();
+            m_DumpHelper = null;
+            m_HashHelper.Clear();
+            m_HashHelper = null;
+            m_FrameBuffer.Clear();
+            m_FrameBuffer = null;
+            World.OnGameDestroy();
+            World = null;
+
+            GameEntry.Service.RemoveAllServices();
         }
 
         public void OnGameCreate(int targetFps, int mapId, int localId, int actorCount, List<User> users)

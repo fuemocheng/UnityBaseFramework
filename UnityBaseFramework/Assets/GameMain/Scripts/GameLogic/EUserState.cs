@@ -8,5 +8,6 @@ namespace XGame
         Ready,              //在房间中，已准备。
         Loading,            //加载中。
         Playing,            //在游戏中，已开始游戏。
+        Finished,           //游戏结束。
     }
 }

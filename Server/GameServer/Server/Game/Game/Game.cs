@@ -8,9 +8,11 @@ namespace Server
     {
         public Room Room;
         public int MapId;
-        public EGameState GameState;
-
+       
         public int Tick = 0;
+        public bool Paused = false;
+
+        public EGameState GameState = EGameState.Default;
 
         /// <summary>
         /// 所有的历史帧。
@@ -30,9 +32,13 @@ namespace Server
         {
             Room = room;
             Tick = 0;
+            Paused = false;
             m_AllHistoryFrames = new();
             GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
+            m_TimeSinceLoaded = 0;
+            m_FirstFrameTimeStamp = 0;
+            m_HashCodeCheckers.Clear();
         }
 
         public void Update(double elapseSeconds, double realElapseSeconds)
@@ -53,17 +59,15 @@ namespace Server
             }
         }
 
-        public void Destroy()
-        {
-            OnFinished();
-        }
-
         public void Clear()
         {
             Tick = 0;
+            Paused = false;
             m_AllHistoryFrames.Clear();
             GameState = EGameState.Default;
             m_GameStartTimestampMs = -1;
+            m_TimeSinceLoaded = 0;
+            m_FirstFrameTimeStamp = 0;
             m_HashCodeCheckers.Clear();
         }
 
@@ -85,12 +89,23 @@ namespace Server
             GameState = EGameState.Loaded;
         }
 
+        public void StopGame()
+        {
+            //不是默认状态，且不是停止状态，则停止游戏。
+            if (GameState != EGameState.Default && GameState != EGameState.Finished)
+            {
+                OnFinished();
+                GameState = EGameState.Finished;
+
+                Log.Info($"StopGame RoomId:{Room.RoomId}");
+            }
+        }
+
         public void ReceiveInput(User user, CSInputFrame input)
         {
             //Log.Info("ReceiveInput CSInputFrame.Tick: {0}", input.InputFrame.Tick);
 
-            if (GameState != EGameState.Loaded &&
-                GameState != EGameState.Playing)
+            if (GameState != EGameState.Loaded && GameState != EGameState.Playing)
             {
                 return;
             }
@@ -99,6 +114,7 @@ namespace Server
             if (GameState == EGameState.Loaded)
             {
                 GameState = EGameState.Playing;
+                Log.Info($"StartGame RoomId:{Room.RoomId}");
             }
 
             // 这条帧数据的帧落后于服务器的帧。
@@ -335,10 +351,12 @@ namespace Server
             }
         }
 
-
         private void OnFinished()
         {
+            //记录对局信息。
             DumpGameFrames();
+
+            Clear();
         }
 
         private void DumpGameFrames()

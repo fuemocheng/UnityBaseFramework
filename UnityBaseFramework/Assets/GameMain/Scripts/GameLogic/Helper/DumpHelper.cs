@@ -2,6 +2,7 @@ using Lockstep.Game;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
@@ -26,6 +27,13 @@ namespace XGame
         {
             m_World = world;
             m_HashHelper = hashHelper;
+        }
+
+        public void Clear()
+        {
+            m_Tick2RawFrameData.Clear();
+            m_Tick2OverrideFrameData.Clear();
+            m_CurSb = null;
         }
 
         public void DumpFrame(bool isNewFrame)
@@ -112,7 +120,7 @@ namespace XGame
             {
                 return;
             }
-
+            
             string dumpFilePath = m_DumpAllPath + $"/All_{GameEntry.Service.GetService<ConstStateService>().LocalActorId}.txt";
             string dir = Path.GetDirectoryName(dumpFilePath);
             if (!Directory.Exists(dir))
@@ -130,6 +138,8 @@ namespace XGame
             }
 
             File.WriteAllText(dumpFilePath, sbRaw.ToString());
+
+            Log.Info($"DumpAll {dumpFilePath}");
         }
     }
 }

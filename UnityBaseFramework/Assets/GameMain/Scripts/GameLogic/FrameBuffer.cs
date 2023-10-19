@@ -60,6 +60,15 @@ namespace XGame
             m_ClientBuffer = new ServerFrame[bufferSize];
         }
 
+        public void Clear()
+        {
+            m_ServerBuffer = null;
+            m_ClientBuffer = null;
+            m_Pings.Clear();
+            m_Delays.Clear();
+            m_Tick2SendTimestamp.Clear();
+        }
+
         public void SetClientTick(int tick)
         {
             m_NextClientTick = tick + 1;

@@ -17,5 +17,9 @@ namespace XGame
         public virtual void Update(LFloat deltaTime)
         {
         }
+
+        public virtual void Destroy()
+        {
+        }
     }
 }

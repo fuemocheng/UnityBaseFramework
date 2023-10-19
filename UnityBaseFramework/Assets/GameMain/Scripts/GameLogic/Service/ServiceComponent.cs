@@ -76,5 +76,10 @@ namespace XGame
                 return (T)m_Services[key];
             }
         }
+
+        public void RemoveAllServices()
+        {
+            m_Services.Clear();
+        }
     }
 }
