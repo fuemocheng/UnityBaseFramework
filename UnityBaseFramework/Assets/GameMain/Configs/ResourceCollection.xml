@@ -7,8 +7,10 @@
       <Resource Name="Fonts" LoadType="0" Packed="True" />
       <Resource Name="Localization/Dictionaries" Variant="en-us" LoadType="0" Packed="True" />
       <Resource Name="Localization/Dictionaries" Variant="zh-cn" LoadType="0" Packed="True" />
+      <Resource Name="Material" LoadType="0" Packed="True" />
       <Resource Name="Scenes" LoadType="0" Packed="True" />
-      <Resource Name="Sounds" LoadType="0" Packed="False" />
+      <Resource Name="Sounds" LoadType="0" Packed="True" />
+      <Resource Name="Texture" LoadType="0" Packed="True" />
       <Resource Name="UI/UIForms" LoadType="0" Packed="True" />
       <Resource Name="UI/UISounds" LoadType="0" Packed="True" />
       <Resource Name="UI/UISprites/Common" LoadType="0" Packed="True" />
@@ -37,6 +39,7 @@
       <Asset Guid="62af9e5c8f39cfa49af9e10ccf42f1da" ResourceName="UI/UISprites/Common" />
       <Asset Guid="642e831a3d357ba40bfbb2ac416afd07" ResourceName="DataTables" />
       <Asset Guid="6cbc2c323b77f804fb958fa4eca33998" ResourceName="UI/UISprites/Common" />
+      <Asset Guid="6fe469f85abaeee4ab379a5335431c19" ResourceName="Texture" />
       <Asset Guid="72e76810224064300b7d32e8322a5d12" ResourceName="Sounds" />
       <Asset Guid="77cbb7c5404c10242ab59953e0746314" ResourceName="Fonts" />
       <Asset Guid="7c50ae7a56b585c459af3cd74cca8c29" ResourceName="UI/UIForms" />
@@ -57,6 +60,7 @@
       <Asset Guid="e82837c9099f69a48b48fc44eb8d119d" ResourceName="UI/UISprites/Common" />
       <Asset Guid="e830964cdb85ff3429bca484c16bab44" ResourceName="UI/UISounds" />
       <Asset Guid="e85864330b68dde498dcb6e8711815d3" ResourceName="UI/UISprites/Common" />
+      <Asset Guid="ef80c3d540b1744519c7324c0702a39f" ResourceName="Material" />
       <Asset Guid="f00001644c5492c4d9cb0dbfe061a86d" ResourceName="Scenes" />
       <Asset Guid="f03a8b2715b053e43b40650792f4bac0" ResourceName="Configs" />
       <Asset Guid="f2f4df0b7211e4c42a5638273525d8ee" ResourceName="UI/UISprites/Common" />
