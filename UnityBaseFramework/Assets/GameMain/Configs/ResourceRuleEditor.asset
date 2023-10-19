@@ -12,4 +12,134 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b93107d7bc31740838a156d99e161c, type: 3}
   m_Name: ResourceRuleEditor
   m_EditorClassIdentifier: 
-  rules: []
+  rules:
+  - valid: 1
+    name: GameMain/Configs
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Configs
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/DataTables
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/DataTables
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 0
+    name: GameMain/Entities
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Entities
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Fonts
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Fonts
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Localization
+    variant: zh-cn
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Localization/ChineseSimplified
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Localization
+    variant: en-us
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Localization/English
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Materials
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Materials
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 0
+    name: GameMain/Meshes
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Meshes
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Music
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Music
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Scenes
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Scenes
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Sounds
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Sounds
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Textures
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Textures
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/UI
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/UI
+    loadType: 0
+    packed: 1
+    filterType: 2
+    searchPatterns: '*.*'
