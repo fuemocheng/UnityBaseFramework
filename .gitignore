@@ -82,6 +82,7 @@ crashlytics-build.properties
 /UnityBaseFramework/crashlytics-build.properties
 
 #Custom
+/UnityBaseFramework/[Uu]serSettings/
+/UnityBaseFramework/Assets/StreamingAssets/
 
-
-UnityBaseFramework/UserSettings/Layouts/default-2022.dwlt
+/HFS/Output/
