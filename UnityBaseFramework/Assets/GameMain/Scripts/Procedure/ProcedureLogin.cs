@@ -14,6 +14,8 @@ namespace XGame
         private bool m_LoggedIn = false;
         private EUserState m_UserState = EUserState.Default;
 
+        private bool m_IsClientMode = false;
+
         public override bool UseNativeDialog
         {
             get
@@ -31,9 +33,10 @@ namespace XGame
             GameEntry.Event.Subscribe(SCLoginEventArgs.EventId, OnLoginResponse);
 
             //重置数据。
-            m_UserState = EUserState.Default;
             m_Connected = false;
             m_LoggedIn = false;
+            m_UserState = EUserState.Default;
+            m_IsClientMode = false;
 
             if (m_LoginFormSerialId == null || !GameEntry.UI.HasUIForm((int)m_LoginFormSerialId))
             {
@@ -68,6 +71,13 @@ namespace XGame
         protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+
+            if(m_IsClientMode)
+            {
+                procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.MapClientMode"));
+                ChangeState<ProcedureChangeScene>(procedureOwner);
+                return;
+            }
 
             if (m_Connected && m_LoggedIn)
             {
@@ -137,5 +147,17 @@ namespace XGame
                 m_UserState = (EUserState)ne.UserState;
             }
         }
+
+        #region ClientMode
+
+        /// <summary>
+        /// 进入单机模式。
+        /// </summary>
+        public void OnClientMode()
+        {
+            m_IsClientMode = true;
+        }
+
+        #endregion
     }
 }

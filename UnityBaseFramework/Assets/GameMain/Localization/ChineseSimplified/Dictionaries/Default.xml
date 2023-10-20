@@ -1,20 +1,26 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Dictionaries>
   <Dictionary Language="ChineseSimplified">
+    <String Key="Start" Value="开始" />
+    <String Key="Pause" Value="暂停" />
+    <String Key="Resume" Value="继续" />
+    <String Key="Quit" Value="退出" />
     <String Key="Game.Name" Value="Stealth Shoot" />
     <String Key="Login.TitleLeft" Value="Stealth" />
     <String Key="Login.TitleRight" Value="Shoot" />
     <String Key="Login.EnterAccountTip" Value="请输入用户名..." />
     <String Key="Login.EnterPasswordTip" Value="请输入密码..." />
     <String Key="Login.LoginBtnText" Value="登录" />
+    <String Key="Login.ClientMode" Value="单机模式" />
+    <String Key="ClientMode.ReadRecord" Value="读取记录" />
+    <String Key="ClientMode.MaxTick" Value="MaxTick:0" />
+    <String Key="ClientMode.EnterTick" Value="输入Tick" />
+    <String Key="ClientMode.JumpTo" Value="跳转" />
     <String Key="Lobby.Title" Value="Lobby" />
     <String Key="Lobby.JoinRoom" Value="加入房间" />
     <String Key="Lobby.LeaveRoom" Value="离开房间" />
     <String Key="Lobby.GetReady" Value="准备" />
     <String Key="Lobby.CancelReady" Value="取消准备" />
     <String Key="MainUI.Title" Value="MainUI" />
-    <String Key="MainUI.Pause" Value="暂停" />
-    <String Key="MainUI.Resume" Value="继续" />
-    <String Key="MainUI.Quit" Value="退出" />
   </Dictionary>
 </Dictionaries>

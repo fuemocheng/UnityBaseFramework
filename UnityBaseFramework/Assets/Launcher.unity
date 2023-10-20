@@ -347,7 +347,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.size
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[0]
@@ -363,42 +363,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[3]
-      value: XGame.ProcedureInitResources
+      value: XGame.ProcedureClientMode
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[4]
-      value: XGame.ProcedureLaunch
+      value: XGame.ProcedureInitResources
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[5]
-      value: XGame.ProcedureLobby
+      value: XGame.ProcedureLaunch
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[6]
-      value: XGame.ProcedureLogin
+      value: XGame.ProcedureLobby
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[7]
-      value: XGame.ProcedureMap
+      value: XGame.ProcedureLogin
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[8]
-      value: XGame.ProcedurePreload
+      value: XGame.ProcedureMap
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[9]
-      value: XGame.ProcedureSplash
+      value: XGame.ProcedurePreload
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[10]
-      value: XGame.ProcedureUpdateResources
+      value: XGame.ProcedureSplash
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[11]
-      value: XGame.ProcedureUpdateVersion
+      value: XGame.ProcedureUpdateResources
       objectReference: {fileID: 0}
     - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[12]
+      value: XGame.ProcedureUpdateVersion
+      objectReference: {fileID: 0}
+    - target: {fileID: 625557032364242044, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_AvailableProcedureTypeNames.Array.data[13]
       value: XGame.ProcedureVerifyResources
       objectReference: {fileID: 0}
     - target: {fileID: 3710880779689643014, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}

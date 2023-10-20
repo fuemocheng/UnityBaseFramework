@@ -18,6 +18,11 @@ namespace XGame
         LoginForm = 10,
 
         /// <summary>
+        /// 单机模式。
+        /// </summary>
+        ClientModeForm = 11,
+
+        /// <summary>
         /// 大厅。
         /// </summary>
         LobbyForm = 20,

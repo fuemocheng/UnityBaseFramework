@@ -1,20 +1,26 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Dictionaries>
   <Dictionary Language="English">
+    <String Key="Start" Value="Start" />
+    <String Key="Pause" Value="Pause" />
+    <String Key="Resume" Value="Resume" />
+    <String Key="Quit" Value="Quit" />
     <String Key="Game.Name" Value="Stealth Shoot" />
     <String Key="Login.TitleLeft" Value="Stealth" />
     <String Key="Login.TitleRight" Value="Shoot" />
     <String Key="Login.EnterAccountTip" Value="Enter Account..." />
     <String Key="Login.EnterPasswordTip" Value="Enter Password..." />
     <String Key="Login.LoginBtnText" Value="Login" />
+    <String Key="Login.ClientMode" Value="ClientMode" />
+    <String Key="ClientMode.ReadRecord" Value="ReadRecord" />
+    <String Key="ClientMode.MaxTick" Value="MaxTick:0" />
+    <String Key="ClientMode.EnterTick" Value="EnterTick" />
+    <String Key="ClientMode.JumpTo" Value="JumpTo" />
     <String Key="Lobby.Title" Value="Lobby" />
     <String Key="Lobby.JoinRoom" Value="JoinRoom" />
     <String Key="Lobby.LeaveRoom" Value="LeaveRoom" />
     <String Key="Lobby.GetReady" Value="GetReady" />
     <String Key="Lobby.CancelReady" Value="CancelReady" />
     <String Key="MainUI.Title" Value="MainUI" />
-    <String Key="MainUI.Pause" Value="Pause" />
-    <String Key="MainUI.Resume" Value="Resume" />
-    <String Key="MainUI.Quit" Value="Quit" />
   </Dictionary>
 </Dictionaries>

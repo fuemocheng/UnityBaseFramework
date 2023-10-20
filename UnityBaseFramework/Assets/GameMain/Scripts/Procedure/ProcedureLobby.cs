@@ -12,11 +12,10 @@ namespace XGame
         private int? m_LobbyFormSerialId = null;
         private LobbyForm m_LobbyForm = null;
 
-        private EUserState m_UserState = EUserState.Default;
-
         private bool m_IsAllReady = false;
-
         private bool m_IsNetworkError = false;
+
+        private EUserState m_UserState = EUserState.Default;
 
         public override bool UseNativeDialog
         {

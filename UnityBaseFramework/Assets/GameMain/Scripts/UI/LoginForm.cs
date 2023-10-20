@@ -14,6 +14,9 @@ namespace XGame
         private InputField m_InputAccount = null;
         private InputField m_InputPassword = null;
         private Button m_BtnLogin = null;
+        private Button m_BtnClientMode = null;
+
+        private bool m_IsClientMode = false;
 
         protected override void OnInit(object userData)
         {
@@ -22,8 +25,10 @@ namespace XGame
             m_InputAccount = transform.Find("Content/Center/Account").GetComponent<InputField>();
             m_InputPassword = transform.Find("Content/Center/Password").GetComponent<InputField>();
             m_BtnLogin = transform.Find("Content/Center/BtnLogin").GetComponent<Button>();
+            m_BtnClientMode = transform.Find("Content/Center/BtnClientMode").GetComponent<Button>();
 
             m_BtnLogin.onClick.AddListener(OnClickLogin);
+            m_BtnClientMode.onClick.AddListener(OnClickClientMode);
         }
 
         protected override void OnOpen(object userData)
@@ -91,6 +96,11 @@ namespace XGame
             loginVerify.Account = m_InputAccount.text;
             loginVerify.Password = m_InputPassword.text;
             tcpChannel.Send(loginVerify);
+        }
+
+        private void OnClickClientMode()
+        {
+            m_ProcedureLogin?.OnClientMode();
         }
     }
 }
