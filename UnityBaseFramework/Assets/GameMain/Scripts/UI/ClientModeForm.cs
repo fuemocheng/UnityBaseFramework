@@ -17,6 +17,13 @@ namespace XGame
         private SCGameStartInfo m_GameStartInfo = null;
         private SCServerFrame m_ServerFrame = null;
 
+        private GameObject m_Menu = null;
+        private GameObject m_ClientSimulate = null;
+        private GameObject m_VideoMode = null;
+
+        private Button m_BtnClientSimulate = null;
+        private Button m_BtnVideoMode = null;
+
         private Button m_BtnReadRecord = null;
         private Text m_MaxTickText = null;
         private InputField m_InputFrameIndex = null;
@@ -32,15 +39,25 @@ namespace XGame
         {
             base.OnInit(userData);
 
-            m_BtnReadRecord = transform.Find("Content/BtnReadRecord").GetComponent<Button>();
-            m_MaxTickText = transform.Find("Content/MaxTickBg/MaxTick").GetComponent<Text>();
-            m_InputFrameIndex = transform.Find("Content/InputFrameIndex").GetComponent<InputField>();
-            m_BtnJumpTo = transform.Find("Content/BtnJumpTo").GetComponent<Button>();
+            m_Menu = transform.Find("Content/Menu").gameObject;
+            m_ClientSimulate = transform.Find("Content/ClientSimulate").gameObject;
+            m_VideoMode = transform.Find("Content/VideoMode").gameObject;
 
-            m_BtnStart = transform.Find("Content/BtnStart").GetComponent<Button>();
-            m_BtnPause = transform.Find("Content/BtnPause").GetComponent<Button>();
-            m_BtnResume = transform.Find("Content/BtnResume").GetComponent<Button>();
-            m_BtnQuit = transform.Find("Content/BtnQuit").GetComponent<Button>();
+            m_BtnClientSimulate = transform.Find("Content/Menu/BtnClientSimulate").GetComponent<Button>();
+            m_BtnVideoMode = transform.Find("Content/Menu/BtnVideoMode").GetComponent<Button>();
+
+            m_BtnClientSimulate.onClick.AddListener(OnClickClientSimulate);
+            m_BtnVideoMode.onClick.AddListener(OnClickVideoMode);
+
+            m_BtnReadRecord = transform.Find("Content/VideoMode/BtnReadRecord").GetComponent<Button>();
+            m_MaxTickText = transform.Find("Content/VideoMode/MaxTickBg/MaxTick").GetComponent<Text>();
+            m_InputFrameIndex = transform.Find("Content/VideoMode/InputFrameIndex").GetComponent<InputField>();
+            m_BtnJumpTo = transform.Find("Content/VideoMode/BtnJumpTo").GetComponent<Button>();
+
+            m_BtnStart = transform.Find("Content/VideoMode/BtnStart").GetComponent<Button>();
+            m_BtnPause = transform.Find("Content/VideoMode/BtnPause").GetComponent<Button>();
+            m_BtnResume = transform.Find("Content/VideoMode/BtnResume").GetComponent<Button>();
+            m_BtnQuit = transform.Find("Content/VideoMode/BtnQuit").GetComponent<Button>();
 
 
             m_BtnReadRecord.onClick.AddListener(OnClickReadRecord);
@@ -49,6 +66,10 @@ namespace XGame
             m_BtnPause.onClick.AddListener(OnClickPause);
             m_BtnResume.onClick.AddListener(OnClickResume);
             m_BtnQuit.onClick.AddListener(OnClickQuit);
+
+            m_Menu.gameObject.SetActive(true);
+            m_ClientSimulate.gameObject.SetActive(false);
+            m_VideoMode.gameObject.SetActive(false);
         }
 
         protected override void OnOpen(object userData)
@@ -77,6 +98,24 @@ namespace XGame
             m_MaxTick = 0;
             m_GameStartInfo = null;
             m_ServerFrame = null;
+
+            m_Menu.gameObject.SetActive(true);
+            m_ClientSimulate.gameObject.SetActive(false);
+            m_VideoMode.gameObject.SetActive(false);
+        }
+
+        private void OnClickClientSimulate()
+        {
+            m_Menu.gameObject.SetActive(false);
+            m_ClientSimulate.gameObject.SetActive(true);
+            m_VideoMode.gameObject .SetActive(false);
+        }
+
+        private void OnClickVideoMode()
+        {
+            m_Menu.gameObject.SetActive(false);
+            m_ClientSimulate.gameObject.SetActive(false);
+            m_VideoMode.gameObject.SetActive(true);
         }
 
         private void OnClickReadRecord()

@@ -57,6 +57,13 @@ namespace XGame
         private int m_SnapshotFrameInterval = 1; //快照间隔。
         private bool m_HasRecvInputMsg = false; //是否收到输入帧消息。
 
+        #region VideoMode
+        private SCServerFrame m_VideoFrames;
+        private bool m_IsInitVideo = false;
+        private int m_TickOnLastJumpTo = 0;
+        private long m_TimestampOnLastJumpToMs = 0;
+
+        #endregion
 
         public void Start()
         {
@@ -460,5 +467,27 @@ namespace XGame
         {
             m_FrameBuffer?.SendReqMissFrame(startTick);
         }
+
+        #region VideoMode
+
+        public void SetVideoFrame(SCServerFrame frames)
+        {
+            m_VideoFrames = frames;
+        }
+
+        public void JumpTo(int tick)
+        {
+            if (m_VideoFrames == null)
+            {
+                return;
+            }
+        }
+
+        public void UpdateVideo()
+        {
+
+        }
+
+        #endregion
     }
 }
