@@ -1,8 +1,9 @@
+using BaseFramework;
 using GameProto;
 using Lockstep.Game;
-using Lockstep.Util;
 using System.Collections.Generic;
 using UnityBaseFramework.Runtime;
+using UnityEngine;
 
 namespace XGame
 {
@@ -58,11 +59,16 @@ namespace XGame
         private bool m_HasRecvInputMsg = false; //是否收到输入帧消息。
 
         #region VideoMode
+        public bool IsVideoMode = false;
         private SCServerFrame m_VideoFrames;
         private bool m_IsInitVideo = false;
         private int m_TickOnLastJumpTo = 0;
         private long m_TimestampOnLastJumpToMs = 0;
+        #endregion
 
+        #region ClientSimulateMode
+        public bool IsClientMode = true;
+        private bool m_IsDebugRollBack = false;
         #endregion
 
         public void Start()
@@ -83,7 +89,7 @@ namespace XGame
         public void Destroy()
         {
             Instance = null;
-            
+
             IsRunning = false;
             m_HasRecvInputMsg = false;
             m_SnapshotFrameInterval = 1;
@@ -97,6 +103,10 @@ namespace XGame
             m_FrameBuffer = null;
             World.OnGameDestroy();
             World = null;
+
+            m_VideoFrames?.ServerFrames?.Clear();
+            m_VideoFrames = null;
+            m_IsInitVideo = false;
 
             GameEntry.Service.RemoveAllServices();
         }
@@ -177,16 +187,109 @@ namespace XGame
                 return;
             }
 
+            if (GameEntry.Service.GetService<ConstStateService>().IsVideoMode)
+            {
+                return;
+            }
+
+            if (GameEntry.Service.GetService<CommonStateService>().IsPause)
+            {
+                return;
+            }
+
             m_TickSinceGameStart = (int)((GameTime.CurrTimeStamp - GameStartTimestampMs) / CommonDefinitions.UpdateDeltatime);
 
             m_FrameBuffer.Update(elapseSeconds);
 
-            while (m_InputTick <= InputTargetTick)
+
+            if (IsClientMode)
             {
-                SendInputs(m_InputTick++);
+                //单机模式更新。
+                DoClientUpdate();
+            }
+            else
+            {
+                //多人模式更新。
+                while (m_InputTick <= InputTargetTick)
+                {
+                    SendInputs(m_InputTick++);
+                }
+
+                DoNormalUpdate();
+            }
+        }
+
+        private void DoClientUpdate()
+        {
+            int maxRollbackCount = 5;
+            if (m_IsDebugRollBack && World.Tick > maxRollbackCount && World.Tick % maxRollbackCount == 0)
+            {
+                int rawTick = World.Tick;
+                int revertCount = Utility.Random.GetRandom(1, maxRollbackCount);
+                for (int i = 0; i < revertCount; i++)
+                {
+                    InputFrame inputFrame = new();
+                    inputFrame.Tick = World.Tick;
+                    inputFrame.LocalId = 0;
+                    inputFrame.Input = new();
+                    inputFrame.Input.InputH = Utility.Random.GetRandom(-1, 1);
+                    inputFrame.Input.InputV = Utility.Random.GetRandom(-1, 1);
+
+                    ServerFrame serverFrame = new();
+                    serverFrame.Tick = rawTick - i;
+                    serverFrame.InputFrames.Add(inputFrame);
+
+                    m_FrameBuffer.ForcePushDebugFrame(serverFrame);
+                }
+
+                Log.Info("RollbackTo:{0}", World.Tick - revertCount);
+
+                if (!RollbackTo(World.Tick - revertCount, World.Tick))
+                {
+                    GameEntry.Service.GetService<CommonStateService>().IsPause = true;
+                    return;
+                }
+
+                while (World.Tick < rawTick)
+                {
+                    ServerFrame sFrame = m_FrameBuffer.GetServerFrame(World.Tick);
+                    if (sFrame == null || sFrame.Tick != World.Tick)
+                    {
+                        Log.Error("DoClientUpdate ServerFrame is Error.");
+                        return;
+                    }
+                    m_FrameBuffer.PushLocalFrame(sFrame);
+                    Simulate(sFrame);
+                    if (GameEntry.Service.GetService<CommonStateService>().IsPause)
+                    {
+                        return;
+                    }
+                }
             }
 
-            DoNormalUpdate();
+            while (World.Tick < TargetTick)
+            {
+                FramePredictCount = 0;
+
+                GameProto.Input input = GameEntry.Service.GetService<GameInputService>().CurrInput;
+
+                InputFrame inputFrame = new();
+                inputFrame.Tick = World.Tick;
+                inputFrame.LocalId = 0;
+                inputFrame.Input = input;
+
+                ServerFrame serverFrame = new();
+                serverFrame.Tick = World.Tick;
+                serverFrame.InputFrames.Add(inputFrame);
+
+                m_FrameBuffer.PushLocalFrame(serverFrame);
+                m_FrameBuffer.PushServerFrames(new ServerFrame[] { serverFrame });
+                Simulate(m_FrameBuffer.GetFrame(World.Tick));
+                if (GameEntry.Service.GetService<CommonStateService>().IsPause)
+                {
+                    return;
+                }
+            }
         }
 
         private void DoNormalUpdate()
@@ -358,7 +461,7 @@ namespace XGame
             GameEntry.Service.GetService<TimeMachineService>().Backup(World.Tick);
 
             DumpFrameBegin();
-            
+
             hash = m_HashHelper.CalculateHash(true);
             m_HashHelper.SetHash(World.Tick, hash);
             ProcessInputQueue(serverFrame);
@@ -398,7 +501,7 @@ namespace XGame
             {
                 inputs[i] = new InputFrame();
                 inputs[i].Tick = tick;
-                if(lastServerInputs!=null && lastServerInputs[i] !=null)
+                if (lastServerInputs != null && lastServerInputs[i] != null)
                 {
                     inputs[i].LocalId = lastServerInputs[i].LocalId;
                     inputs[i].Input = lastServerInputs[i].Input;
@@ -406,7 +509,7 @@ namespace XGame
                 else
                 {
                     inputs[i].LocalId = i;
-                    inputs[i].Input = new Input();
+                    inputs[i].Input = new GameProto.Input();
                 }
             }
 
@@ -481,11 +584,85 @@ namespace XGame
             {
                 return;
             }
+
+            if (tick < 0)
+            {
+                return;
+            }
+
+            if (tick + 1 == World.Tick || tick == World.Tick)
+            {
+                return;
+            }
+
+            tick = System.Math.Min(tick, m_VideoFrames.ServerFrames.Count);
+
+            float time = GameTime.CurrTimeStamp + 0.05f;
+            //把所有帧运行一遍
+            if (!m_IsInitVideo)
+            {
+                GameEntry.Service.GetService<ConstStateService>().IsVideoLoading = true;
+                while (World.Tick < m_VideoFrames.ServerFrames.Count)
+                {
+                    ServerFrame sFrame = m_VideoFrames.ServerFrames[World.Tick];
+                    Simulate(sFrame, true);
+                    if (GameTime.CurrTimeStamp > time)
+                    {
+                        //每帧最多执行的时间。
+                        return;
+                    }
+                }
+                GameEntry.Service.GetService<ConstStateService>().IsVideoLoading = false;
+                m_IsInitVideo = true;
+            }
+
+            if (World.Tick > tick)
+            {
+                RollbackTo(tick, m_VideoFrames.ServerFrames.Count, false);
+            }
+
+            while (World.Tick <= tick)
+            {
+                ServerFrame tframe = m_VideoFrames.ServerFrames[World.Tick];
+                Simulate(tframe, false);
+            }
+
+            m_TimestampOnLastJumpToMs = GameTime.CurrTimeStamp;
+            m_TickOnLastJumpTo = tick;
         }
 
         public void UpdateVideo()
         {
+            if (m_VideoFrames == null)
+            {
+                return;
+            }
 
+            if (m_TickOnLastJumpTo == World.Tick)
+            {
+                m_TimestampOnLastJumpToMs = GameTime.CurrTimeStamp;
+                m_TickOnLastJumpTo = World.Tick;
+            }
+
+            if (GameEntry.Service.GetService<CommonStateService>().IsPause)
+            {
+                return;
+            }
+
+            long frameDeltaTime = (GameTime.CurrTimeStamp - m_TimestampOnLastJumpToMs);
+            int targetTick = (int)System.Math.Ceiling((double)frameDeltaTime / CommonDefinitions.UpdateDeltatime) + m_TickOnLastJumpTo;
+            while (World.Tick <= targetTick)
+            {
+                if (World.Tick < m_VideoFrames.ServerFrames.Count)
+                {
+                    ServerFrame frame = m_VideoFrames.ServerFrames[World.Tick];
+                    Simulate(frame, false);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         #endregion

@@ -12,64 +12,80 @@ namespace XGame
     {
         private ProcedureClientMode m_ProcedureClientMode = null;
 
-        private int m_MaxTick = 0;
-
-        private SCGameStartInfo m_GameStartInfo = null;
-        private SCServerFrame m_ServerFrame = null;
-
         private GameObject m_Menu = null;
-        private GameObject m_ClientSimulate = null;
-        private GameObject m_VideoMode = null;
+        private GameObject m_SimulatePanel = null;
+        private GameObject m_PlayVideoPanel = null;
 
-        private Button m_BtnClientSimulate = null;
-        private Button m_BtnVideoMode = null;
+        //Menu
+        private Button m_BtnSimulateMode = null;
+        private Button m_BtnPlayVideoMode = null;
+        private Button m_BtnQuit = null;
 
+        //ClientSimulate
+        private Button m_BtnStartSimulate = null;
+        private Button m_BtnPauseSimulate = null;
+        private Button m_BtnResumeSimulate = null;
+
+        //PlayVideo
         private Button m_BtnReadRecord = null;
+        private Button m_BtnStartVideo = null;
+        private Button m_BtnPauseVideo = null;
+        private Button m_BtnResumeVideo = null;
         private Text m_MaxTickText = null;
         private InputField m_InputFrameIndex = null;
         private Button m_BtnJumpTo = null;
-
-        private Button m_BtnStart = null;
-        private Button m_BtnPause = null;
-        private Button m_BtnResume = null;
-        private Button m_BtnQuit = null;
-
+        private Button m_BtnPreFrame = null;
+        private Button m_BtnNextFrame = null;
 
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
 
             m_Menu = transform.Find("Content/Menu").gameObject;
-            m_ClientSimulate = transform.Find("Content/ClientSimulate").gameObject;
-            m_VideoMode = transform.Find("Content/VideoMode").gameObject;
+            m_SimulatePanel = transform.Find("Content/SimulatePanel").gameObject;
+            m_PlayVideoPanel = transform.Find("Content/PlayVideoPanel").gameObject;
 
-            m_BtnClientSimulate = transform.Find("Content/Menu/BtnClientSimulate").GetComponent<Button>();
-            m_BtnVideoMode = transform.Find("Content/Menu/BtnVideoMode").GetComponent<Button>();
-
-            m_BtnClientSimulate.onClick.AddListener(OnClickClientSimulate);
-            m_BtnVideoMode.onClick.AddListener(OnClickVideoMode);
-
-            m_BtnReadRecord = transform.Find("Content/VideoMode/BtnReadRecord").GetComponent<Button>();
-            m_MaxTickText = transform.Find("Content/VideoMode/MaxTickBg/MaxTick").GetComponent<Text>();
-            m_InputFrameIndex = transform.Find("Content/VideoMode/InputFrameIndex").GetComponent<InputField>();
-            m_BtnJumpTo = transform.Find("Content/VideoMode/BtnJumpTo").GetComponent<Button>();
-
-            m_BtnStart = transform.Find("Content/VideoMode/BtnStart").GetComponent<Button>();
-            m_BtnPause = transform.Find("Content/VideoMode/BtnPause").GetComponent<Button>();
-            m_BtnResume = transform.Find("Content/VideoMode/BtnResume").GetComponent<Button>();
-            m_BtnQuit = transform.Find("Content/VideoMode/BtnQuit").GetComponent<Button>();
-
-
-            m_BtnReadRecord.onClick.AddListener(OnClickReadRecord);
-            m_BtnJumpTo.onClick.AddListener(OnClickJumpTo);
-            m_BtnStart.onClick.AddListener(OnClickStart);
-            m_BtnPause.onClick.AddListener(OnClickPause);
-            m_BtnResume.onClick.AddListener(OnClickResume);
+            //Menu
+            m_BtnSimulateMode = transform.Find("Content/Menu/BtnSimulateMode").GetComponent<Button>();
+            m_BtnPlayVideoMode = transform.Find("Content/Menu/BtnPlayVideoMode").GetComponent<Button>();
+            m_BtnQuit = transform.Find("Content/BtnQuit").GetComponent<Button>();
+            m_BtnSimulateMode.onClick.AddListener(OnClickBtnSimulateMode);
+            m_BtnPlayVideoMode.onClick.AddListener(OnClickBtnPlayVideoMode);
             m_BtnQuit.onClick.AddListener(OnClickQuit);
 
+            //ClientSimulate
+            m_BtnStartSimulate = transform.Find("Content/SimulatePanel/BtnStartSimulate").GetComponent<Button>();
+            m_BtnPauseSimulate = transform.Find("Content/SimulatePanel/BtnPauseSimulate").GetComponent<Button>();
+            m_BtnResumeSimulate = transform.Find("Content/SimulatePanel/BtnResumeSimulate").GetComponent<Button>();
+            m_BtnStartSimulate.onClick.AddListener(OnClickStartSimulate);
+            m_BtnPauseSimulate.onClick.AddListener(OnClickPauseSimulate);
+            m_BtnResumeSimulate.onClick.AddListener(OnClickResumeSimulate);
+
+
+            //PlayVideo
+            m_BtnReadRecord = transform.Find("Content/PlayVideoPanel/BtnReadRecord").GetComponent<Button>();
+            m_BtnStartVideo = transform.Find("Content/PlayVideoPanel/BtnStartVideo").GetComponent<Button>();
+            m_BtnPauseVideo = transform.Find("Content/PlayVideoPanel/BtnPauseVideo").GetComponent<Button>();
+            m_BtnResumeVideo = transform.Find("Content/PlayVideoPanel/BtnResumeVideo").GetComponent<Button>();
+            m_MaxTickText = transform.Find("Content/PlayVideoPanel/MaxTickBg/MaxTick").GetComponent<Text>();
+            m_InputFrameIndex = transform.Find("Content/PlayVideoPanel/InputFrameIndex").GetComponent<InputField>();
+            m_BtnJumpTo = transform.Find("Content/PlayVideoPanel/BtnJumpTo").GetComponent<Button>();
+            m_BtnPreFrame = transform.Find("Content/PlayVideoPanel/BtnPreFrame").GetComponent<Button>();
+            m_BtnNextFrame = transform.Find("Content/PlayVideoPanel/BtnNextFrame").GetComponent<Button>();
+            m_BtnReadRecord.onClick.AddListener(OnClickReadRecord);
+            m_BtnStartVideo.onClick.AddListener(OnClickStartVideo);
+            m_BtnPauseVideo.onClick.AddListener(OnClickPauseVideo);
+            m_BtnResumeVideo.onClick.AddListener(OnClickResumeVideo);
+            m_BtnJumpTo.onClick.AddListener(OnClickJumpTo);
+            m_BtnPreFrame.onClick.AddListener(OnClickPreFrame);
+            m_BtnNextFrame.onClick.AddListener(OnClickNextFrame);
+
+            //Default
             m_Menu.gameObject.SetActive(true);
-            m_ClientSimulate.gameObject.SetActive(false);
-            m_VideoMode.gameObject.SetActive(false);
+            m_SimulatePanel.gameObject.SetActive(false);
+            m_PlayVideoPanel.gameObject.SetActive(false);
+            m_BtnStartSimulate.gameObject.SetActive(true);
+
         }
 
         protected override void OnOpen(object userData)
@@ -95,87 +111,110 @@ namespace XGame
         {
             base.OnResume();
 
-            m_MaxTick = 0;
-            m_GameStartInfo = null;
-            m_ServerFrame = null;
-
             m_Menu.gameObject.SetActive(true);
-            m_ClientSimulate.gameObject.SetActive(false);
-            m_VideoMode.gameObject.SetActive(false);
+            m_SimulatePanel.gameObject.SetActive(false);
+            m_PlayVideoPanel.gameObject.SetActive(false);
+            m_BtnStartSimulate.gameObject.SetActive(true);
         }
 
-        private void OnClickClientSimulate()
+        #region Menu
+
+        private void OnClickBtnSimulateMode()
         {
             m_Menu.gameObject.SetActive(false);
-            m_ClientSimulate.gameObject.SetActive(true);
-            m_VideoMode.gameObject .SetActive(false);
+            m_SimulatePanel.gameObject.SetActive(true);
+            m_PlayVideoPanel.gameObject.SetActive(false);
+
+            m_ProcedureClientMode.OnClickSimulateMode();
         }
 
-        private void OnClickVideoMode()
+        private void OnClickBtnPlayVideoMode()
         {
             m_Menu.gameObject.SetActive(false);
-            m_ClientSimulate.gameObject.SetActive(false);
-            m_VideoMode.gameObject.SetActive(true);
-        }
+            m_SimulatePanel.gameObject.SetActive(false);
+            m_PlayVideoPanel.gameObject.SetActive(true);
 
-        private void OnClickReadRecord()
-        {
-            string recordPath = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/Assets/GameMain/Record/TestRecord.record");
-            recordPath = recordPath.Replace("\\", "/");
-            if (!File.Exists(recordPath))
-            {
-                Log.Error("ClickReadRecord Error: {0} is not exist.", recordPath);
-                return;
-            }
-
-            m_GameStartInfo = new SCGameStartInfo();
-            m_ServerFrame = new SCServerFrame();
-            RecordUtility.ReadRecord(recordPath, ref m_GameStartInfo, ref m_ServerFrame);
-
-            m_MaxTick = m_ServerFrame.ServerFrames.Count;
-            m_MaxTickText.text = $"MaxTick:{m_MaxTick}";
-
-        }
-
-        private void OnClickJumpTo()
-        {
-        }
-
-        private void OnClickStart()
-        {
-            if(m_GameStartInfo == null || m_ServerFrame == null)
-            {
-                return;
-            }
-
-            //初始化时间戳。
-            GameTime.InitStartTimeStamp();
-
-            Simulator simulator = new Simulator();
-            simulator.Start();
-            simulator.OnGameCreate(60,
-                m_GameStartInfo.MapId,
-                0,  //模拟时，选择 LocalId 为 0； 
-                m_GameStartInfo.UserCount,
-                m_GameStartInfo.UserGameInfos);
-
-            //将所有的帧数据添加进模拟器。
-            simulator.OnServerFrame(m_ServerFrame.ServerFrames);
-
-            simulator.StartSimulate();
-        }
-
-        private void OnClickPause()
-        {
-        }
-
-        private void OnClickResume()
-        {
+            m_ProcedureClientMode.OnClickPlayVideoMode();
         }
 
         private void OnClickQuit()
         {
+            m_ProcedureClientMode.OnQuit();
         }
 
+        #endregion
+
+        #region ClientSimulate
+
+        private void OnClickStartSimulate()
+        {
+            m_BtnStartSimulate.gameObject.SetActive(false);
+            m_ProcedureClientMode.StartClientSimulate();
+        }
+
+        private void OnClickPauseSimulate()
+        {
+            m_ProcedureClientMode.PauseClientSimulate();
+        }
+
+        private void OnClickResumeSimulate()
+        {
+            m_ProcedureClientMode.ResumeClientSimulate();
+        }
+
+        #endregion
+
+        #region PlayVideo
+
+        private void OnClickReadRecord()
+        {
+            m_ProcedureClientMode.OnReadRecord();
+        }
+
+        private void OnClickStartVideo()
+        {
+            m_ProcedureClientMode.OnStartPlayVideo();
+        }
+
+        private void OnClickPauseVideo()
+        {
+            m_ProcedureClientMode.OnPauseVideo();
+        }
+
+        private void OnClickResumeVideo()
+        {
+            m_ProcedureClientMode.OnResumeVideo();
+        }
+
+        private void OnClickJumpTo()
+        {
+            int targetTick;
+            if (!int.TryParse(m_InputFrameIndex.text, out targetTick))
+            {
+                return;
+            }
+            m_ProcedureClientMode.OnJumpTo(targetTick);
+        }
+
+        private void OnClickPreFrame()
+        {
+            m_ProcedureClientMode.OnPreFrame();
+        }
+
+        private void OnClickNextFrame()
+        {
+            m_ProcedureClientMode.OnNextFrame();
+        }
+
+        public void SetMaxTick(int tick)
+        {
+            m_MaxTickText.text = $"MaxTick:{tick}";
+        }
+
+        public void SetCurrTick(int tick)
+        {
+            m_InputFrameIndex.text = tick.ToString();
+        }
+        #endregion
     }
 }

@@ -12,6 +12,8 @@
     <String Key="Login.EnterPasswordTip" Value="Enter Password..." />
     <String Key="Login.LoginBtnText" Value="Login" />
     <String Key="Login.ClientMode" Value="ClientMode" />
+    <String Key="ClientMode.SimulateMode" Value="SimulateMode" />
+    <String Key="ClientMode.PlayVideoMode" Value="PlayVideoMode" />
     <String Key="ClientMode.ReadRecord" Value="ReadRecord" />
     <String Key="ClientMode.MaxTick" Value="MaxTick:0" />
     <String Key="ClientMode.EnterTick" Value="EnterTick" />

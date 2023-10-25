@@ -12,6 +12,8 @@
     <String Key="Login.EnterPasswordTip" Value="请输入密码..." />
     <String Key="Login.LoginBtnText" Value="登录" />
     <String Key="Login.ClientMode" Value="单机模式" />
+    <String Key="ClientMode.SimulateMode" Value="单机模拟" />
+    <String Key="ClientMode.PlayVideoMode" Value="播放录像" />
     <String Key="ClientMode.ReadRecord" Value="读取记录" />
     <String Key="ClientMode.MaxTick" Value="MaxTick:0" />
     <String Key="ClientMode.EnterTick" Value="输入Tick" />

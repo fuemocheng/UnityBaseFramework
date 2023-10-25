@@ -110,6 +110,13 @@ namespace XGame
             SendReqMissFrame(MaxContinueServerTick + 1);
         }
 
+        public void ForcePushDebugFrame(ServerFrame data)
+        {
+            int targetIdx = data.Tick % m_BufferSize;
+            m_ServerBuffer[targetIdx] = data;
+            m_ClientBuffer[targetIdx] = data;
+        }
+
         public void PushServerFrames(ServerFrame[] frames, bool isNeedDebugCheck = true)
         {
             var count = frames.Length;

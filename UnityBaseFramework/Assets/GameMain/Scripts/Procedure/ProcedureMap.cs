@@ -111,9 +111,10 @@ namespace XGame
 
             if (m_IsNetworkError)
             {
-                // 切换场景，然后发送开始游戏。
+                // 返回Login。
                 procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Login"));
                 ChangeState<ProcedureChangeScene>(procedureOwner);
+                return;
             }
 
             if (!m_IsReconnected)

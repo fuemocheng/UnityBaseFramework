@@ -105,10 +105,10 @@ namespace XGame
         /// </summary>
         public void Step()
         {
-            //if (IsPause)
-            //{
-            //    return;
-            //}
+            if (GameEntry.Service.GetService<CommonStateService>().IsPause)
+            {
+                return;
+            }
 
             //更新系统
             var deltaTime = new LFloat(true, 30);
