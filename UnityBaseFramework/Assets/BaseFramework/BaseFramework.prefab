@@ -324,7 +324,12 @@ MonoBehaviour:
   m_CustomEntityHelper: {fileID: 0}
   m_EntityGroupHelperTypeName: UnityBaseFramework.Runtime.DefaultEntityGroupHelper
   m_CustomEntityGroupHelper: {fileID: 0}
-  m_EntityGroups: []
+  m_EntityGroups:
+  - m_Name: Player
+    m_InstanceAutoReleaseInterval: 60
+    m_InstanceCapacity: 16
+    m_InstanceExpireTime: 60
+    m_InstancePriority: 0
 --- !u!1 &9035866955193996358
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,8 +998,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AvailableProcedureTypeNames:
+  - XGame.ProcedureChangeScene
+  - XGame.ProcedureCheckResources
+  - XGame.ProcedureCheckVersion
+  - XGame.ProcedureClientMode
+  - XGame.ProcedureInitResources
   - XGame.ProcedureLaunch
+  - XGame.ProcedureLobby
+  - XGame.ProcedureLogin
+  - XGame.ProcedureMap
   - XGame.ProcedurePreload
+  - XGame.ProcedureSplash
+  - XGame.ProcedureUpdateResources
+  - XGame.ProcedureUpdateVersion
+  - XGame.ProcedureVerifyResources
   m_EntranceProcedureTypeName: XGame.ProcedureLaunch
 --- !u!1 &9035866956335643001
 GameObject:

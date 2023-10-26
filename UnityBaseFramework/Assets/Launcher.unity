@@ -405,6 +405,26 @@ PrefabInstance:
       propertyPath: m_AvailableProcedureTypeNames.Array.data[13]
       value: XGame.ProcedureVerifyResources
       objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[0].m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[0].m_InstanceCapacity
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[0].m_InstanceExpireTime
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[0].m_InstanceAutoReleaseInterval
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 3710880779689643014, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_InstanceRoot
       value: 

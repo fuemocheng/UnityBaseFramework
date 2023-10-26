@@ -1,0 +1,6 @@
+﻿#	实体配置表				
+#	Id		AssetName	AssetId	GroupName
+#	int		string	int	string
+#	实体编号	备注	资源名称	资源Id	实体组名
+	10001	玩家模型	PlayerModel	10001	Player
+	10002	玩家模型	PlayerModel	10002	Player

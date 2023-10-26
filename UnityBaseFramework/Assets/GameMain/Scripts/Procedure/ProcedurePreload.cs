@@ -15,7 +15,7 @@ namespace XGame
             //"Aircraft",
             //"Armor",
             //"Asteroid",
-            //"Entity",
+            "Entity",
             "Music",
             "Scene",
             "Sound",

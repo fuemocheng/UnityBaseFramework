@@ -25,7 +25,7 @@ namespace XGame
 
         public static Player MyPlayer;
 
-        public static object MyPlayerTrans => MyPlayer?.engineTransform;
+        public static object MyPlayerTrans => MyPlayer?.EngineTransform;
 
         private List<BaseSystem> m_Systems = new List<BaseSystem>();
 

@@ -13,12 +13,16 @@ namespace XGame
     {
         public int EntityId;
         public int PrefabId;
+
         public CTransform2D transform = new CTransform2D();
-        [NoBackup] public object engineTransform;
+        
+        [NoBackup] 
+        public object EngineTransform;
+
+        [ReRefBackup]
+        public EntityLogicBase EntityLogicBase;
 
         protected List<CComponent> m_AllComponents;
-
-        [ReRefBackup] public IEntityView EntityView;
 
         public void DoBindRef()
         {
@@ -27,9 +31,8 @@ namespace XGame
 
         public virtual void OnRollbackDestroy()
         {
-            EntityView?.OnRollbackDestroy();
-            EntityView = null;
-            engineTransform = null;
+            EngineTransform = null;
+            EntityLogicBase?.OnRollbackDestroy();
         }
 
         protected virtual void BindRef()

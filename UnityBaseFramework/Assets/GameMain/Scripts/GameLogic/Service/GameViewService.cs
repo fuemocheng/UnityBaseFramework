@@ -1,3 +1,4 @@
+using BaseFramework;
 using Lockstep.Game;
 using Lockstep.Math;
 using UnityEngine;
@@ -6,19 +7,31 @@ namespace XGame
 {
     public class GameViewService : IService
     {
-        public void BindView(BaseEntity entity, BaseEntity oldEntity = null)
+        private EntityLoader m_EntityLoader;
+
+        public GameViewService()
+        {
+            m_EntityLoader = EntityLoader.Create(this);
+        }
+
+        public void Clear()
+        {
+            if (m_EntityLoader != null)
+            {
+                ReferencePool.Release(m_EntityLoader);
+            }
+        }
+
+        public void BindView(BaseEntity baseEntity, BaseEntity oldEntity = null)
         {
             if (oldEntity != null)
             {
-                if (oldEntity.PrefabId == entity.PrefabId)
+                if (oldEntity.PrefabId == baseEntity.PrefabId)
                 {
-                    entity.engineTransform = oldEntity.engineTransform;
-                    var obj = (oldEntity.engineTransform as Transform).gameObject;
-                    var views = obj.GetComponents<EntityView>();
-                    foreach (var view in views)
-                    {
-                        view.BindEntity(entity, oldEntity);
-                    }
+                    baseEntity.EngineTransform = oldEntity.EngineTransform;
+                    GameObject obj = (oldEntity.EngineTransform as Transform).gameObject;
+                    EntityLogicBase entityLogicBase = obj.GetComponent<EntityLogicBase>();
+                    entityLogicBase.BindLSEntity(baseEntity, oldEntity);
                 }
                 else
                 {
@@ -27,27 +40,27 @@ namespace XGame
             }
             else
             {
-                GameObject prefab = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                if (prefab == null)
-                    return;
-                prefab.transform.position = entity.transform.Pos3.ToVector3();
-                prefab.transform.rotation = Quaternion.Euler(new Vector3(0, entity.transform.deg, 0));
-                entity.engineTransform = prefab.transform;
 
-
-                var views = prefab.GetComponents<EntityView>();
-                if (views.Length <= 0)
+                //默认10001
+                m_EntityLoader.ShowEntity(10001, typeof(EntityLogicPlayer), (entity) =>
                 {
-                    var view = prefab.AddComponent<EntityView>();
-                    view.BindEntity(entity);
-                }
-                else
-                {
-                    foreach (var view in views)
+                    if (entity == null)
                     {
-                        view.BindEntity(entity);
+                        return;
                     }
-                }
+                    entity.transform.position = baseEntity.transform.Pos3.ToVector3();
+                    entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.transform.deg, 0));
+                    baseEntity.EngineTransform = entity.transform;
+
+
+                    EntityLogicPlayer entityLogic = entity.gameObject.GetComponent<EntityLogicPlayer>();
+                    if (entityLogic == null)
+                    {
+                        entityLogic = entity.gameObject.AddComponent<EntityLogicPlayer>();
+                    }
+
+                    entityLogic.BindLSEntity(baseEntity);
+                });
             }
         }
 

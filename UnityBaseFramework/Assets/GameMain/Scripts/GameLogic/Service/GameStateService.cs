@@ -113,6 +113,7 @@ namespace XGame
             Log.Info($"CreateEntity {prefabId} pos {prefabId} entityId:{baseEntity.EntityId}");
 
             baseEntity.DoBindRef();
+
             if (baseEntity is CEntity cEntity)
             {
                 PhysicSystem.Instance.RegisterEntity(prefabId, cEntity);

@@ -8,7 +8,7 @@ namespace XGame
     [Serializable]
     public partial class CBrain : CComponent
     {
-        public Entity target { get; private set; }
+        //public Entity target { get; private set; }
         public int targetId;
         public LFloat stopDistSqr = 1 * 1;
         public LFloat atkInterval = 1;
