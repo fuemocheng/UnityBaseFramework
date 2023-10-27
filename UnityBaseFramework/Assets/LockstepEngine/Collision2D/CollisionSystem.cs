@@ -154,7 +154,8 @@ namespace Lockstep.Collision2D {
                 val.IsMoved = false;
                 var bound = val.GetBounds();
                 for (int i = 0; i < LayerCount; i++) {
-                    if (InterestingMasks[val.LayerType * LayerCount + i]) {
+                    if (InterestingMasks[val.LayerType * LayerCount + i])
+                    {
                         var boundsTree = GetBoundTree(i);
                         boundsTree.CheckCollision(val, bound);
                     }
@@ -259,12 +260,17 @@ namespace Lockstep.Collision2D {
         public int ShowTreeId { get; set; }
 
         public void DrawGizmos(){
-            var boundsTree = GetBoundTree(ShowTreeId);
-            if (boundsTree == null) return;
 #if UNITY_EDITOR
-            boundsTree.DrawAllBounds(); // Draw node boundaries
-            boundsTree.DrawAllObjects(); // Draw object boundaries
-            boundsTree.DrawCollisionChecks(); // Draw the last *numCollisionsToSave* collision check boundaries
+            for (int i = 0; i < boundsTrees.Count; i++)
+            {
+                var boundsTree = GetBoundTree(i);
+                if (boundsTree == null) 
+                    return;
+
+                boundsTree.DrawAllBounds(); // Draw node boundaries
+                boundsTree.DrawAllObjects(); // Draw object boundaries
+                boundsTree.DrawCollisionChecks(); // Draw the last *numCollisionsToSave* collision check boundaries
+            }
 #endif
             // pointTree.DrawAllBounds(); // Draw node boundaries
             // pointTree.DrawAllObjects(); // Mark object positions

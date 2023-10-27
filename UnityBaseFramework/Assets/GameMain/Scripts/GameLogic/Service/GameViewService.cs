@@ -1,6 +1,7 @@
 using BaseFramework;
 using Lockstep.Game;
 using Lockstep.Math;
+using System;
 using UnityEngine;
 
 namespace XGame
@@ -22,7 +23,7 @@ namespace XGame
             }
         }
 
-        public void BindView(BaseEntity baseEntity, BaseEntity oldEntity = null)
+        public void BindView(BaseEntity baseEntity, BaseEntity oldEntity = null, Action<BaseEntity> onBindViewFinished = null)
         {
             if (oldEntity != null)
             {
@@ -60,6 +61,7 @@ namespace XGame
                     }
 
                     entityLogic.BindLSEntity(baseEntity);
+                    onBindViewFinished?.Invoke(baseEntity);
                 });
             }
         }

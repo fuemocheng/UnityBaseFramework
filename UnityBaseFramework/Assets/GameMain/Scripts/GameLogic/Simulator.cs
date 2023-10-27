@@ -137,6 +137,10 @@ namespace XGame
             GameEntry.GameLogic.gameObject.GetOrAddComponent<PingMono>();
             GameEntry.GameLogic.gameObject.GetOrAddComponent<InputMono>();
 
+#if UNITY_EDITOR
+            GameEntry.GameLogic.gameObject.GetOrAddComponent<TestMono>();
+#endif
+
             World.OnGameCreate();
         }
 

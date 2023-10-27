@@ -1,8 +1,10 @@
 using GameProto;
+using Lockstep.Collision2D;
 using Lockstep.Math;
 using System.Collections.Generic;
 using System.Linq;
 using UnityBaseFramework.Runtime;
+using UnityEngine;
 
 namespace XGame
 {
@@ -21,7 +23,7 @@ namespace XGame
 
         public int Tick { get; private set; }
 
-        public Input[] PlayerInputs => GameEntry.Service.GetService<GameStateService>().GetPlayers().Select(a => a.input).ToArray();
+        public GameProto.Input[] PlayerInputs => GameEntry.Service.GetService<GameStateService>().GetPlayers().Select(a => a.input).ToArray();
 
         public static Player MyPlayer;
 
@@ -42,6 +44,8 @@ namespace XGame
             RegisterSystem(new EnemySystem());
             RegisterSystem(new PhysicSystem());
             RegisterSystem(new HashSystem());
+
+            
         }
 
         public void OnGameCreate()
@@ -64,6 +68,8 @@ namespace XGame
             {
                 system.Start();
             }
+
+            InitColliderTest();
         }
 
         public void OnGameDestroy()
@@ -136,5 +142,115 @@ namespace XGame
             GameEntry.Service.GetService<CommonStateService>().SetTick(tick);
             Tick = tick;
         }
+
+        #region Test
+
+        private List<ColliderPrefab> prefabs = new List<ColliderPrefab>();
+
+        Dictionary<EShape2D, PrimitiveType> type2PType = new Dictionary<EShape2D, PrimitiveType>() {
+            {EShape2D.Circle, PrimitiveType.Cylinder},
+            {EShape2D.AABB, PrimitiveType.Cube},
+            {EShape2D.OBB, PrimitiveType.Cube},
+        };
+
+        const int size = 4;
+
+        public int count = 1;
+
+        public float percent = 0.1f;
+
+        private void InitColliderTest()
+        {
+            void CreatePrefab(CBaseShape collider)
+            {
+                var prefab = new ColliderPrefab();
+                prefab.parts.Add(new ColliderPart()
+                {
+                    transform = new CTransform2D(LVector2.zero),
+                    collider = collider
+                });
+                prefabs.Add(prefab);
+            }
+
+            for (int i = 1; i < 2; i++)
+            {
+                for (int j = 1; j < 2; j++)
+                {
+                    CreatePrefab(new CAABB(new LVector2(i, j)));
+                    CreatePrefab(new COBB(new LVector2(i, j), LFloat.zero));
+                    CreatePrefab(new CCircle(((i + j) * 0.5f).ToLFloat()));
+                }
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                int layerType = 0;
+                var rawColor = Color.white;
+                bool isStatic = true;
+                if (i < percent * count * 2)
+                {
+                    layerType = 1;
+                    isStatic = false;
+                    rawColor = Color.yellow;
+                    if (i < percent * count)
+                    {
+                        rawColor = Color.green;
+                        layerType = 2;
+                    }
+                }
+
+                var proxy = CreateType(0, true, rawColor);
+                PhysicSystem.Instance.GetCollisionSystem().AddCollider(proxy);
+                //collisionSystem.AddCollider(proxy);
+            }
+        }
+
+        private ColliderProxy CreateType(int layerType, bool isStatic, Color rawColor)
+        {
+            var prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
+            var type = (EShape2D)prefab.collider.TypeId;
+            var obj = GameObject.CreatePrimitive(type2PType[type]).GetComponent<Collider>();
+            //obj.transform.SetParent(transform, false);
+            obj.transform.position = new Vector3(UnityEngine.Random.Range(-20, 20), 0,
+                UnityEngine.Random.Range(-20, 20));
+            switch (type)
+            {
+                case EShape2D.Circle:
+                    {
+                        var colInfo = (CCircle)prefab.collider;
+                        obj.transform.localScale =
+                            new Vector3(colInfo.radius.ToFloat() * 2, 1, colInfo.radius.ToFloat() * 2);
+                        break;
+                    }
+                case EShape2D.AABB:
+                    {
+                        var colInfo = (CAABB)prefab.collider;
+                        obj.transform.localScale =
+                            new Vector3(colInfo.size.x.ToFloat() * 2, 1, colInfo.size.y.ToFloat() * 2);
+                        break;
+                    }
+                case EShape2D.OBB:
+                    {
+                        var colInfo = (COBB)prefab.collider;
+                        obj.transform.localScale =
+                            new Vector3(colInfo.size.x.ToFloat() * 2, 1, colInfo.size.y.ToFloat() * 2);
+                        break;
+                    }
+            }
+
+            var proxy = new ColliderProxy();
+            proxy.Init(prefab, obj.transform.position.ToLVector2XZ());
+            if (!isStatic)
+            {
+                var mover = obj.gameObject.AddComponent<RandomMove>();
+                mover.halfworldSize = 20;
+                mover.isNeedRotate = type == EShape2D.OBB;
+            }
+
+            proxy.IsStatic = isStatic;
+            proxy.LayerType = layerType;
+            return proxy;
+        }
+        #endregion
     }
 }

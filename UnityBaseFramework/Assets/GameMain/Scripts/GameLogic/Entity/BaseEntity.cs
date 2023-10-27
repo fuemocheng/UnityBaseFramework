@@ -4,6 +4,7 @@ using Lockstep;
 using Lockstep.Collision2D;
 using Lockstep.Game;
 using Lockstep.Math;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
@@ -88,14 +89,17 @@ namespace XGame
 
         public virtual void OnLPTriggerEnter(ColliderProxy other)
         {
+            Log.Error("OnLPTriggerEnter");
         }
 
         public virtual void OnLPTriggerStay(ColliderProxy other)
         {
+            Log.Error("OnLPTriggerStay");
         }
 
         public virtual void OnLPTriggerExit(ColliderProxy other)
         {
+            Log.Error("OnLPTriggerExit");
         }
     }
 }

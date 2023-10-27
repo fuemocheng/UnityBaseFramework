@@ -62,6 +62,12 @@ namespace XGame
             };
             Log.Info($"worldSize:{worldSize} pos:{pos} minNodeSize:{minNodeSize} loosenessval:{loosenessval}");
             this.collisionSystem = collisionSystem;
+
+            //碰撞层级矩阵
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 0] = true;
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 1] = true;
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 2] = true;
+
             collisionSystem.DoStart(collisionMatrix, allTypes);
             collisionSystem.funcGlobalOnTriggerEvent += GlobalOnTriggerEvent;
         }
@@ -149,19 +155,22 @@ namespace XGame
 
         public void RegisterEntity(int prefabId, CEntity entity)
         {
-            ColliderPrefab prefab = null;
+            ColliderPrefab colliderPrefab = null;
 
             RigisterPrefab(prefabId, prefabId < 10 ? (int)EColliderLayer.Hero : (int)EColliderLayer.Enemy);
-            //var fab = _gameResourceService.LoadPrefab(prefabId) as GameObject;
 
-            var fab = new GameObject();
-            fab.name = "Temp";
-            if (!_fabId2ColPrefab.TryGetValue(prefabId, out prefab))
+            GameObject fab = ((Transform)entity.EngineTransform)?.gameObject;
+            if (fab == null)
             {
-                prefab = CollisionSystem.CreateColliderPrefab(fab, entity.colliderData);
+                Log.Error("PhysicSystem RegisterEntity Prefab is null.");
+                return;
+            }
+            if (!_fabId2ColPrefab.TryGetValue(prefabId, out colliderPrefab))
+            {
+                colliderPrefab = CollisionSystem.CreateColliderPrefab(fab, entity.colliderData);
             }
 
-            AttachToColSystem(_fabId2Layer[prefabId], prefab, entity);
+            AttachToColSystem(_fabId2Layer[prefabId], colliderPrefab, entity);
         }
 
         public void AttachToColSystem(int layer, ColliderPrefab prefab, BaseEntity entity)
@@ -196,9 +205,14 @@ namespace XGame
             collisionSystem.RemoveCollider(collider);
         }
 
-        void OnDrawGizmos()
+        public void OnDrawGizmos()
         {
             collisionSystem?.DrawGizmos();
+        }
+
+        public ICollisionSystem GetCollisionSystem()
+        {
+            return collisionSystem;
         }
     }
 }
