@@ -114,11 +114,6 @@ namespace XGame
 
             baseEntity.DoBindRef();
 
-            //if (baseEntity is CEntity cEntity)
-            //{
-            //    PhysicSystem.Instance.RegisterEntity(prefabId, cEntity);
-            //}
-
             baseEntity.Awake();
             baseEntity.Start();
             GameEntry.Service.GetService<GameViewService>().BindView(baseEntity, null, (bEntity) => {

@@ -36,7 +36,7 @@ namespace XGame
 
         private LFloat halfworldSize => worldSize / 2 - 5;
 
-        private int[] allTypes = new int[] { 0, 1, 2 };
+        //private int[] allTypes = new int[] { 0, 1, 2 };
 
         public int showTreeId = 0;
 
@@ -63,12 +63,22 @@ namespace XGame
             Log.Info($"worldSize:{worldSize} pos:{pos} minNodeSize:{minNodeSize} loosenessval:{loosenessval}");
             this.collisionSystem = collisionSystem;
 
-            //碰撞层级矩阵
-            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 0] = true;
-            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 1] = true;
-            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + 2] = true;
+            List<int> colliderAllLayers = new List<int>();
+            for (int i = 0; i < (int)EColliderLayer.EnumCount; i++)
+            {
+                colliderAllLayers.Add(i);
+            }
 
-            collisionSystem.DoStart(collisionMatrix, allTypes);
+            //TODO：Read From File.
+            //碰撞层级矩阵
+            //collisionMatrix[layer(要检测的碰撞物的层级) * (int)EColliderLayer.EnumCount + layer(会被碰撞的层级)] = true;
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Static] = true;              // Hero * Static
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapGroupOne] = true;         // Hero * MapGroupOne
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapGroupTwo] = true;         // Hero * MapGroupTwo
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Enemy] = false;              // Hero 不会和 Enemy 碰撞
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Hero] = false;               // Hero 不会和 Hero 碰撞
+
+            collisionSystem.DoStart(collisionMatrix, colliderAllLayers.ToArray());
             collisionSystem.funcGlobalOnTriggerEvent += GlobalOnTriggerEvent;
         }
 

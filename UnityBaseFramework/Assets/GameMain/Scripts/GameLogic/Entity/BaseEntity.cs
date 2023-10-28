@@ -16,9 +16,11 @@ namespace XGame
         public int PrefabId;
 
         public CTransform2D transform = new CTransform2D();
-        
-        [NoBackup] 
+
+        [NoBackup]
         public object EngineTransform;
+
+        private UnityEngine.Transform m_Transform => (UnityEngine.Transform)EngineTransform;
 
         [ReRefBackup]
         public EntityLogicBase EntityLogicBase;
@@ -89,17 +91,32 @@ namespace XGame
 
         public virtual void OnLPTriggerEnter(ColliderProxy other)
         {
-            Log.Error("OnLPTriggerEnter");
+            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
+            {
+                Log.Error("OnLPTriggerEnter");
+                m_Transform?.gameObject?.SetActive(false);
+            }
         }
 
         public virtual void OnLPTriggerStay(ColliderProxy other)
         {
-            Log.Error("OnLPTriggerStay");
+            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
+            {
+                //Log.Error("OnLPTriggerStay");
+                if(m_Transform != null && m_Transform.gameObject.activeSelf)
+                {
+                    m_Transform?.gameObject?.SetActive(false);
+                }
+            }
         }
 
         public virtual void OnLPTriggerExit(ColliderProxy other)
         {
-            Log.Error("OnLPTriggerExit");
+            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
+            {
+                Log.Error("OnLPTriggerExit");
+                m_Transform?.gameObject?.SetActive(true);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace XGame
     public partial class CEntity : BaseEntity
     {
         public CRigidbody rigidbody = new CRigidbody();
-        public ColliderData colliderData = new ColliderData() {radius = new LFloat(true, 1000) };
+        public ColliderData colliderData = new ColliderData() {radius = (0.1f).ToLFloat() };
         //public CAnimator animator = new CAnimator();
         //public CSkillBox skillBox = new CSkillBox();
 

@@ -27,7 +27,17 @@ namespace XGame
             private set;
         }
 
-        public static GameLogicComponent GameLogic;
+        public static GameLogicComponent GameLogic
+        {
+            get;
+            private set;
+        }
+
+        public static MapComponent Map
+        {
+            get;
+            private set;
+        }
 
         private static void InitCustomComponents()
         {
@@ -35,6 +45,7 @@ namespace XGame
             NetworkExtended = UnityBaseFramework.Runtime.BaseEntry.GetComponent<NetworkExtendedComponent>();
             Service = UnityBaseFramework.Runtime.BaseEntry.GetComponent<ServiceComponent>();
             GameLogic = UnityBaseFramework.Runtime.BaseEntry.GetComponent<GameLogicComponent>();
+            Map = UnityBaseFramework.Runtime.BaseEntry.GetComponent<MapComponent>();
         }
     }
 }
