@@ -68,8 +68,6 @@ namespace XGame
             {
                 system.Start();
             }
-
-            GameEntry.Map?.RegisterMapColliderProxy();
         }
 
         public void OnGameDestroy()
@@ -94,11 +92,12 @@ namespace XGame
 
             for (int i = 0; i < userGameInfos.Count; i++)
             {
-                int prefabId = 0;
+                int configId = 10001;
                 LVector2 initPos = LVector2.zero;
-                Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(prefabId, initPos);
+                Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(configId, initPos);
 
                 player.localId = userGameInfos[i].LocalId;
+                player.Camp = (ECamp)userGameInfos[i].Camp;
             }
 
             var allPlayers = GameEntry.Service.GetService<GameStateService>().GetPlayers();

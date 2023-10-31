@@ -95,13 +95,14 @@ namespace Server
             ReferencePool.Release(room);
         }
 
-        public Room GetAvailableRoom()
+        public Room GetAvailableRoom(User user)
         {
             // TODO:匹配规则
 
             foreach (KeyValuePair<int, Room> kvp in m_Rooms)
             {
-                if (!kvp.Value.IsFull())
+                //要加入的房间未满，并且要加入的阵营也未满；
+                if (!kvp.Value.IsFull() && !kvp.Value.IsCampFull(user.Camp))
                 {
                     return kvp.Value;
                 }

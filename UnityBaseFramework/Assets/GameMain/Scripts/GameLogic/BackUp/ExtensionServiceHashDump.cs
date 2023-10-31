@@ -31,7 +31,7 @@ namespace XGame
             //}
             //_debugService.Trace($"GetSpawners hash {hash}",true);
 
-            hash += _curGameState.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += m_CurGameState.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //_debugService.Trace($"GetHash hash {hash}",true);
             return hash;
         }
@@ -42,7 +42,7 @@ namespace XGame
             BackUpUtil.DumpList("GetPlayers", GetPlayers(), sb, prefix);
             //BackUpUtil.DumpList("GetEnemies", GetEnemies(), sb, prefix);
             //BackUpUtil.DumpList("GetSpawners", GetSpawners(), sb, prefix);
-            sb.AppendLine(prefix + "EntityId" + ":" + _curGameState.ToString());
+            sb.AppendLine(prefix + "EntityId" + ":" + m_CurGameState.ToString());
         }
     }
 

@@ -33,7 +33,7 @@ MonoBehaviour:
     packed: 1
     filterType: 0
     searchPatterns: '*.*'
-  - valid: 0
+  - valid: 1
     name: GameMain/Entities
     variant: 
     fileSystem: 

@@ -169,6 +169,8 @@ namespace XGame
                 m_GameStartInfo.UserCount,
                 m_GameStartInfo.UserGameInfos);
 
+            GameEntry.Map?.AddAllMapColliderProxy();
+
             simulator.StartSimulate();
 
             //模拟发送第一帧
@@ -240,6 +242,8 @@ namespace XGame
                 0,  //模拟时，选择 LocalId 为 0； 
                 m_GameStartInfo.UserCount,
                 m_GameStartInfo.UserGameInfos);
+
+            GameEntry.Map?.AddAllMapColliderProxy();
 
             simulator.SetVideoFrame(m_ServerFrame);
 

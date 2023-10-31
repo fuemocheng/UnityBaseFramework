@@ -11,6 +11,7 @@ namespace Server
 
         private Dictionary<long, User> m_Users = new Dictionary<long, User>();
         private List<User> m_LocalUsers = new List<User>();
+        private Dictionary<int, List<User>> m_Camps = new Dictionary<int, List<User>>();
 
         public Game Game;
 
@@ -21,9 +22,23 @@ namespace Server
 
         public void Init(int memberCount)
         {
+            //初始化LocalId列表。
             for (int i = 0; i < memberCount; i++)
             {
                 m_LocalUsers.Add(null);
+            }
+
+            //初始化分组。
+            for (int i = 1; i < (int)ECamp.EnumCount; i++)
+            {
+                if(m_Camps.ContainsKey(i))
+                {
+                    m_Camps[i].Clear();
+                }
+                else
+                {
+                    m_Camps.Add(i, new List<User>());
+                }
             }
         }
 
@@ -31,7 +46,7 @@ namespace Server
         {
             Game?.Update(elapseSeconds, realElapseSeconds);
         }
-       
+
         public void Clear()
         {
             RoomId = 0;
@@ -39,6 +54,13 @@ namespace Server
             m_Users.Clear();
             m_LocalUsers.Clear();
             Game?.Clear();
+            for (int i = 1; i < (int)ECamp.EnumCount; i++)
+            {
+                if (m_Camps.ContainsKey(i))
+                {
+                    m_Camps[i].Clear();
+                }
+            }
         }
 
         /// <summary>
@@ -77,6 +99,28 @@ namespace Server
             return m_Users.Count >= CommonDefinitions.MaxRoomMemberCount;
         }
 
+        /// <summary>
+        /// 此阵营是否已经满员。
+        /// </summary>
+        /// <param name="camp"></param>
+        /// <returns></returns>
+        public bool IsCampFull(ECamp camp)
+        {
+            if (camp == ECamp.Default)
+            {
+                return false;
+            }
+            if (!m_Camps.ContainsKey((int)camp))
+            {
+                return false;
+            }
+            if (m_Camps[(int)camp].Count < CommonDefinitions.MaxRoomMemberCount / 2.0f)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool IsAllReady()
         {
             if (!IsFull())
@@ -113,7 +157,34 @@ namespace Server
             }
             user.UserState = EUserState.NotReady;
 
-            Log.Info("User:{0} Join Room:{1}.", user.UserId, RoomId);
+            //执行到这里，说明此阵营没有满，或者随机分配阵营。
+            if (user.Camp == ECamp.Default)
+            {
+                for (int i = 1; i < (int)ECamp.EnumCount; i++)
+                {
+                    //当此阵营未满，则加入此阵营。
+                    if(!IsCampFull((ECamp)i))
+                    {
+                        m_Camps[i].Add(user);
+                        user.Camp = (ECamp)i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                //当此阵营未满，则加入此阵营。
+                if (!IsCampFull(user.Camp))
+                {
+                    m_Camps[(int)user.Camp].Add(user);
+                }
+                else
+                {
+                    //如果此阵营满了，则出错了。
+                    Log.Error("User:{0} Join Camp Error, Camp:{1} is Full.", user.UserId, user.Camp);
+                }
+            }
+            Log.Info("User:{0} Join Room:{1}, Join Camp:{2}", user.UserId, RoomId, user.Camp);
         }
 
         public void LeaveRoom(User user)
@@ -126,6 +197,7 @@ namespace Server
             {
                 return;
             }
+            //LocalId 删除；
             for (int i = 0; i < m_LocalUsers.Count; i++)
             {
                 if (m_LocalUsers[i] == user)
@@ -135,9 +207,15 @@ namespace Server
                     break;
                 }
             }
+            //阵营删除；
+            if(user.Camp != ECamp.Default && m_Camps.ContainsKey((int)user.Camp))
+            {
+                m_Camps[(int)user.Camp].Remove(user);
+            }
             user.Room = null;
             user.LocalId = -1;
             user.UserState = EUserState.LoggedIn;
+            user.Camp = ECamp.Default;
             m_Users.Remove(user.UserId);
             Log.Info("User:{0} Leave Room:{1}.", user.UserId, RoomId);
         }

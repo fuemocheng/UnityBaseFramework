@@ -159,6 +159,13 @@ namespace XGame
         {
             //检查是否重连。
             CheckReconnected();
+            OnCreateGame();
+        }
+
+        public void OnCreateGame()
+        {
+            //进入地图后再添加地图的Collider
+            GameEntry.Map?.AddAllMapColliderProxy();
         }
 
         private void SendLoadingProgress()
@@ -285,6 +292,8 @@ namespace XGame
                 scGameStartInfoEventArgs.LocalId,
                 scGameStartInfoEventArgs.UserCount,
                 scGameStartInfoEventArgs.UserGameInfos);
+
+            GameEntry.Map?.AddAllMapColliderProxy();
 
             //因为是重连，则直接开始游戏。
             Log.Info("Reconnected - Start Game.");

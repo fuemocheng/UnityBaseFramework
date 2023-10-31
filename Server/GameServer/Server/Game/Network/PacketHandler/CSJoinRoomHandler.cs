@@ -22,11 +22,14 @@ namespace GameProto
             Session session = (Session)sender;
             //Server.User。
             Server.User user = (Server.User)session.BindInfo;
+            user.Camp = (ECamp)packetImpl.Camp;
 
+            // RoomId: -1:离开房间，0及以上，加入房间
             if (packetImpl.RoomId >= 0)
             {
                 //Create Room.
-                Room availableRoom = GameEntry.GameLogic.RoomManager.GetAvailableRoom();
+                Room availableRoom = GameEntry.GameLogic.RoomManager.GetAvailableRoom(user);
+                //这里如果要加入的房间要加入的阵营已满，则分配新房间新阵营。后续根据需求再添加需要的功能。
                 if (availableRoom == null)
                 {
                     availableRoom = GameEntry.GameLogic.RoomManager.CreateNewRoom(user);
@@ -53,6 +56,7 @@ namespace GameProto
                         userGameInfo.User.UserName = kvp2.Value.UserName;
                         userGameInfo.LocalId = kvp2.Value.LocalId;
                         userGameInfo.UserState = (int)kvp2.Value.UserState;
+                        userGameInfo.Camp = (int)kvp2.Value.Camp;
                         scJoinRoom.UserGameInfos.Add(userGameInfo);
                     }
                     sUser.TcpSession?.Send(scJoinRoom);
@@ -94,6 +98,7 @@ namespace GameProto
                             userGameInfo.User.UserName = kvp2.Value.UserName;
                             userGameInfo.LocalId = kvp2.Value.LocalId;
                             userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            userGameInfo.Camp = (int)kvp2.Value.Camp;
                             tSCJoinRoom.UserGameInfos.Add(userGameInfo);
                         }
                         sUser.TcpSession?.Send(tSCJoinRoom);

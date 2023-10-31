@@ -73,8 +73,8 @@ namespace XGame
             //碰撞层级矩阵
             //collisionMatrix[layer(要检测的碰撞物的层级) * (int)EColliderLayer.EnumCount + layer(会被碰撞的层级)] = true;
             collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Static] = true;              // Hero * Static
-            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapGroupOne] = true;         // Hero * MapGroupOne
-            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapGroupTwo] = true;         // Hero * MapGroupTwo
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapBlack] = true;         // Hero * MapGroupOne
+            collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.MapWhite] = true;         // Hero * MapGroupTwo
             collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Enemy] = false;              // Hero 不会和 Enemy 碰撞
             collisionMatrix[(int)EColliderLayer.Hero * (int)EColliderLayer.EnumCount + (int)EColliderLayer.Hero] = false;               // Hero 不会和 Hero 碰撞
 
@@ -167,7 +167,7 @@ namespace XGame
         {
             ColliderPrefab colliderPrefab = null;
 
-            RigisterPrefab(prefabId, prefabId < 10 ? (int)EColliderLayer.Hero : (int)EColliderLayer.Enemy);
+            RigisterPrefab(prefabId, prefabId < 100000 ? (int)EColliderLayer.Hero : (int)EColliderLayer.Enemy);
 
             GameObject fab = ((Transform)entity.EngineTransform)?.gameObject;
             if (fab == null)

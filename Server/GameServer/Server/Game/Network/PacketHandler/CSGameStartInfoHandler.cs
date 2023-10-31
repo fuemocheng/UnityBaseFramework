@@ -41,6 +41,7 @@ namespace GameProto
                 UserGameInfo userGameInfo = new UserGameInfo();
                 userGameInfo.LocalId = kvp.Value.LocalId;
                 userGameInfo.UserState = (int)kvp.Value.UserState;
+                userGameInfo.Camp = (int)kvp.Value.Camp;
                 userGameInfo.User = new User();
                 userGameInfo.User.UserId = kvp.Value.UserId;
                 userGameInfo.User.UserName = kvp.Value.UserName;

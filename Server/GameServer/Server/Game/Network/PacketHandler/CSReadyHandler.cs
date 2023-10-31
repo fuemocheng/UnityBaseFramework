@@ -43,6 +43,7 @@ namespace GameProto
                     UserGameInfo userGameInfo = new UserGameInfo();
                     userGameInfo.LocalId = kvp2.Value.LocalId;
                     userGameInfo.UserState = (int)kvp2.Value.UserState;
+                    userGameInfo.Camp = (int)kvp2.Value.Camp;
                     userGameInfo.User = new User();
                     userGameInfo.User.UserId = kvp2.Value.UserId;
                     userGameInfo.User.UserName = kvp2.Value.UserName;
@@ -84,6 +85,7 @@ namespace GameProto
                             UserGameInfo userGameInfo = new UserGameInfo();
                             userGameInfo.LocalId = kvp2.Value.LocalId;
                             userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            userGameInfo.Camp = (int)kvp2.Value.Camp;
                             userGameInfo.User = new User();
                             userGameInfo.User.UserId = kvp2.Value.UserId;
                             userGameInfo.User.UserName = kvp2.Value.UserName;
@@ -114,6 +116,7 @@ namespace GameProto
                             UserGameInfo userGameInfo = new UserGameInfo();
                             userGameInfo.LocalId = kvp2.Value.LocalId;
                             userGameInfo.UserState = (int)kvp2.Value.UserState;
+                            userGameInfo.Camp = (int)kvp2.Value.Camp;
                             userGameInfo.User = new User();
                             userGameInfo.User.UserId = kvp2.Value.UserId;
                             userGameInfo.User.UserName = kvp2.Value.UserName;

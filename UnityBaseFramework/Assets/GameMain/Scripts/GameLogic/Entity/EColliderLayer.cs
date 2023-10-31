@@ -2,9 +2,9 @@ namespace XGame
 {
     public enum EColliderLayer
     {
-        Static,
-        MapGroupOne,
-        MapGroupTwo,
+        Static = 0,
+        MapBlack,
+        MapWhite,
         Enemy,
         Hero,
         EnumCount

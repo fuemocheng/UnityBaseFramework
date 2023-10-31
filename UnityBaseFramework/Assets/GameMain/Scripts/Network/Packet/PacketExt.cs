@@ -118,6 +118,7 @@ namespace GameProto
         public override void Clear()
         {
             RoomId = 0;
+            Camp = 0;
         }
     }
 

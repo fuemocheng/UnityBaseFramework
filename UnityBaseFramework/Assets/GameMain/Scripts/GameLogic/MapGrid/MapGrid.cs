@@ -57,7 +57,15 @@ namespace XGame
             return proxy;
         }
 
-        public void RegisterColliderProxy()
+        public void AddColliderProxy()
+        {
+            if (m_ColliderProxy != null)
+            {
+                PhysicSystem.Instance?.GetCollisionSystem()?.AddCollider(m_ColliderProxy);
+            }
+        }
+
+        public void RemoveColliderProxy()
         {
             if (m_ColliderProxy != null)
             {

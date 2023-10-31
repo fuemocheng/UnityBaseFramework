@@ -14,6 +14,7 @@ namespace Server
         public int LoadingProgress = 0;
         public EUserState UserState = EUserState.Default;
         public Room Room = null;
+        public ECamp Camp = ECamp.Default;
 
         public Session TcpSession = null;
         public Session KcpSession = null;
@@ -34,6 +35,7 @@ namespace Server
             LoadingProgress = 0;
             UserState = EUserState.Default;
             Room = null;
+            Camp = ECamp.Default;
 
             TcpSession?.Dispose();
             KcpSession?.Dispose();

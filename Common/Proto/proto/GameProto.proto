@@ -13,6 +13,7 @@ message UserGameInfo{
 	User User = 1;							//角色信息
 	int32 LocalId = 2;						//在此房间的Index
 	int32 UserState = 3;					//EUserState.NotReady:未准备 EUserState.Ready:准备
+	int32 Camp = 4;							//阵营，黑白阵营，红蓝阵营
 }
 
 //输入数据
@@ -79,6 +80,7 @@ message SCLogin{
 //加入游戏房间
 message CSJoinRoom{
 	int32 RoomId = 1;								//-1:离开房间 0:随机加入 其他:加入指定房间
+	int32 Camp = 2;									//0:表示随机加入阵营，其他表示要加入的阵营Id
 }
 
 message SCJoinRoom{

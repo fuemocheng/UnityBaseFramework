@@ -147,6 +147,8 @@ namespace XGame
             CSJoinRoom csJoinRoom = ReferencePool.Acquire<CSJoinRoom>();
             //-1:离开房间 0:随机加入 其他:加入指定房间。
             csJoinRoom.RoomId = 0;
+            //0:随机加入阵营 其他：加入指定阵营；
+            csJoinRoom.Camp = 0;
             tcpChannel.Send(csJoinRoom);
         }
 

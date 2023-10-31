@@ -176,7 +176,7 @@ namespace XGame
         public void WriteBackup(Serializer writer)
         {
             writer.Write(EntityId);
-            writer.Write(PrefabId);
+            writer.Write(ConfigId);
             //writer.Write(curHealth);
             //writer.Write(damage);
             //writer.Write(isFire);
@@ -195,7 +195,7 @@ namespace XGame
         public void ReadBackup(Deserializer reader)
         {
             EntityId = reader.ReadInt32();
-            PrefabId = reader.ReadInt32();
+            ConfigId = reader.ReadInt32();
             //curHealth = reader.ReadInt32();
             //damage = reader.ReadInt32();
             //isFire = reader.ReadBoolean();
@@ -215,7 +215,7 @@ namespace XGame
         {
             int hash = 1;
             hash += EntityId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += PrefabId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += ConfigId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += curHealth.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += damage.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += isFire.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
@@ -235,7 +235,7 @@ namespace XGame
         public void DumpStr(StringBuilder sb, string prefix)
         {
             sb.AppendLine(prefix + "EntityId" + ":" + EntityId.ToString());
-            sb.AppendLine(prefix + "PrefabId" + ":" + PrefabId.ToString());
+            sb.AppendLine(prefix + "PrefabId" + ":" + ConfigId.ToString());
             //sb.AppendLine(prefix + "curHealth" + ":" + curHealth.ToString());
             //sb.AppendLine(prefix + "damage" + ":" + damage.ToString());
             //sb.AppendLine(prefix + "isFire" + ":" + isFire.ToString());

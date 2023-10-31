@@ -14,70 +14,108 @@ namespace XGame
     {
         public int CurTick { get; set; }
 
-        private Dictionary<int, GameState> _tick2State = new Dictionary<int, GameState>();
-        private GameState _curGameState;
-        private Dictionary<Type, IList> _type2Entities = new Dictionary<Type, IList>();
-        private Dictionary<int, BaseEntity> _id2Entities = new Dictionary<int, BaseEntity>();
-        private Dictionary<int, Serializer> _tick2Backup = new Dictionary<int, Serializer>();
+        private GameState m_CurGameState;
+        private Dictionary<int, GameState> m_Tick2State = new Dictionary<int, GameState>();
+        private Dictionary<int, Serializer> m_Tick2Backup = new Dictionary<int, Serializer>();
+
+        //EntityId <--> Entity
+        private Dictionary<int, BaseEntity> m_Entities = new Dictionary<int, BaseEntity>();
+        //EntityType <--> EntityList
+        private Dictionary<Type, IList> m_TypeEntities = new Dictionary<Type, IList>();
 
         private IdService m_IdService => GameEntry.Service.GetService<IdService>();
 
-        private void AddEntity<T>(T e) where T : BaseEntity
+        public T CreateEntity<T>(int configId, LVector3 position) where T : BaseEntity, new()
         {
-            if (typeof(T) == typeof(Player))
-            {
-                int i = 0;
-                Debug.Log("Add Player");
-            }
+            T baseEntity = new T();
 
-            var t = e.GetType();
-            if (_type2Entities.TryGetValue(t, out var lstObj))
-            {
-                var lst = lstObj as List<T>;
-                lst.Add(e);
-            }
-            else
-            {
-                var lst = new List<T>();
-                _type2Entities.Add(t, lst);
-                lst.Add(e);
-            }
+            //TODO:Config 根据ConfigId读表设置属性；
 
-            _id2Entities[e.EntityId] = e;
+            baseEntity.EntityId = m_IdService.GenId();
+            baseEntity.ConfigId = configId;
+            baseEntity.transform.Pos3 = position;
+            Log.Info($"CreateEntity:{configId} Pos:{position} EntityId:{baseEntity.EntityId}");
+
+            baseEntity.DoBindRef();
+
+            baseEntity.Awake();
+            baseEntity.Start();
+            GameEntry.Service.GetService<GameViewService>().BindView(
+                baseEntity,
+                (bEntity) =>
+                {
+                    if (bEntity is CEntity cEntity)
+                    {
+                        PhysicSystem.Instance.RegisterEntity(configId, cEntity);
+                    }
+                }
+            );
+
+            AddEntity(baseEntity);
+            return baseEntity;
         }
 
-        private void RemoveEntity<T>(T e) where T : BaseEntity
+        private void AddEntity<T>(T entity) where T : BaseEntity
         {
-            var t = e.GetType();
-            if (_type2Entities.TryGetValue(t, out var lstObj))
+            Type t = entity.GetType();
+            if (m_TypeEntities.TryGetValue(t, out IList outList))
             {
-                lstObj.Remove(e);
-                _id2Entities.Remove(e.EntityId);
+                List<T> entityList = outList as List<T>;
+                entityList.Add(entity);
             }
             else
             {
-                Debug.LogError("Try remove a deleted Entity" + e);
+                List<T> entityList = new List<T>();
+                m_TypeEntities.Add(t, entityList);
+                entityList.Add(entity);
             }
+
+            m_Entities[entity.EntityId] = entity;
+        }
+
+        public void DestroyEntity(BaseEntity entity)
+        {
+            GameEntry.Service.GetService<GameViewService>().UnbindView(entity);
+            RemoveEntity(entity);
+        }
+
+        private void RemoveEntity<T>(T entity) where T : BaseEntity
+        {
+            Type t = entity.GetType();
+            if (m_TypeEntities.TryGetValue(t, out IList outList))
+            {
+                outList.Remove(entity);
+                m_Entities.Remove(entity.EntityId);
+            }
+            else
+            {
+                Debug.LogError("Try remove a deleted Entity:{0}, EntityId:{1}", entity, entity.EntityId);
+            }
+        }
+
+        public BaseEntity GetEntity(int id)
+        {
+            if (m_Entities.TryGetValue(id, out BaseEntity entity))
+            {
+                return entity;
+            }
+
+            return null;
         }
 
         private List<T> GetEntities<T>()
         {
-            var t = typeof(T);
-            if (_type2Entities.TryGetValue(t, out var lstObj))
+            Type t = typeof(T);
+            if (m_TypeEntities.TryGetValue(t, out IList outList))
             {
-                return lstObj as List<T>;
+                return outList as List<T>;
             }
             else
             {
-                var lst = new List<T>();
-                _type2Entities.Add(t, lst);
-                return lst;
+                List<T> entityList = new List<T>();
+                m_TypeEntities.Add(t, entityList);
+                return entityList;
             }
-        }
-
-        public Enemy[] GetEnemies()
-        {
-            return GetEntities<Enemy>().ToArray();
         }
 
         public Player[] GetPlayers()
@@ -85,141 +123,114 @@ namespace XGame
             return GetEntities<Player>().ToArray();
         }
 
+        public Enemy[] GetEnemies()
+        {
+            return GetEntities<Enemy>().ToArray();
+        }
+
         public Spawner[] GetSpawners()
         {
             return GetEntities<Spawner>().ToArray(); //TODO Cache
         }
 
-        public object GetEntity(int id)
-        {
-            if (_id2Entities.TryGetValue(id, out var val))
-            {
-                return val;
-            }
-
-            return null;
-        }
-
-        public T CreateEntity<T>(int prefabId, LVector3 position) where T : BaseEntity, new()
-        {
-            T baseEntity = new T();
-
-            //TODO:Config
-            //_gameConfigService.GetEntityConfig(prefabId)?.CopyTo(baseEntity);
-
-            baseEntity.EntityId = m_IdService.GenId();
-            baseEntity.PrefabId = prefabId;
-            baseEntity.transform.Pos3 = position;
-            Log.Info($"CreateEntity {prefabId} pos {prefabId} entityId:{baseEntity.EntityId}");
-
-            baseEntity.DoBindRef();
-
-            baseEntity.Awake();
-            baseEntity.Start();
-            GameEntry.Service.GetService<GameViewService>().BindView(baseEntity, null, (bEntity) => {
-                if (bEntity is CEntity cEntity)
-                {
-                    PhysicSystem.Instance.RegisterEntity(prefabId, cEntity);
-                }
-            });
-            AddEntity(baseEntity);
-            return baseEntity;
-        }
-
-        public void DestroyEntity(BaseEntity entity)
-        {
-            RemoveEntity(entity);
-        }
-
-
         public void Backup(int tick)
         {
-            _tick2State[tick] = _curGameState;
+            m_Tick2State[tick] = m_CurGameState;
+
             Serializer writer = new Serializer();
-            writer.Write(GameEntry.Service.GetService<CommonStateService>().Hash); //hash
+            writer.Write(GameEntry.Service.GetService<CommonStateService>().Hash);
+
             BackUpEntities(GetPlayers(), writer);
-            _tick2Backup[tick] = writer;
+
+            m_Tick2Backup[tick] = writer;
         }
 
-        public void RollbackTo(int tick)
+        private void BackUpEntities<T>(T[] entityList, Serializer writer) where T : BaseEntity, IBackup, new()
         {
-            _curGameState = _tick2State[tick];
-            if (_tick2Backup.TryGetValue(tick, out var backupData))
-            {
-                //TODO reduce the unnecessary create and destroy 
-                var reader = new Deserializer(backupData.Data);
-                var hash = reader.ReadInt32();
-                GameEntry.Service.GetService<CommonStateService>().Hash = hash;
-
-                var oldId2Entity = _id2Entities;
-                _id2Entities = new Dictionary<int, BaseEntity>();
-                _type2Entities.Clear();
-
-                // Recover Entities
-                RecoverEntities(new List<Player>(), reader);
-
-                // Rebind Ref
-                foreach (var entity in _id2Entities.Values)
-                {
-                    entity.DoBindRef();
-                }
-
-                // Rebind Views 
-                foreach (var pair in _id2Entities)
-                {
-                    BaseEntity oldEntity = null;
-                    if (oldId2Entity.TryGetValue(pair.Key, out var poldEntity))
-                    {
-                        oldEntity = poldEntity;
-                        oldId2Entity.Remove(pair.Key);
-                    }
-                    GameEntry.Service.GetService<GameViewService>().BindView(pair.Value, oldEntity);
-                }
-
-                // Unbind Entity views
-                foreach (var pair in oldId2Entity)
-                {
-                    GameEntry.Service.GetService<GameViewService>().UnbindView(pair.Value);
-                }
-            }
-            else
-            {
-                Debug.LogError($"Miss backup data  cannot rollback! {tick}");
-            }
-        }
-
-
-        public void Clean(int maxVerifiedTick)
-        {
-
-        }
-
-        void BackUpEntities<T>(T[] lst, Serializer writer) where T : BaseEntity, IBackup, new()
-        {
-            writer.Write(lst.Length);
-            foreach (var item in lst)
+            writer.Write(entityList.Length);
+            foreach (IBackup item in entityList)
             {
                 item.WriteBackup(writer);
             }
         }
 
-        List<T> RecoverEntities<T>(List<T> lst, Deserializer reader) where T : BaseEntity, IBackup, new()
+        public void RollbackTo(int tick)
         {
-            var count = reader.ReadInt32();
+            m_CurGameState = m_Tick2State[tick];
+            if (m_Tick2Backup.TryGetValue(tick, out var backupData))
+            {
+                var reader = new Deserializer(backupData.Data);
+
+                var hash = reader.ReadInt32();
+                GameEntry.Service.GetService<CommonStateService>().Hash = hash;
+
+                RecoverEntities<Player>(reader);
+            }
+            else
+            {
+                Log.Error($"Miss backup data cannot rollback! {tick}");
+            }
+        }
+
+        private void RecoverEntities<T>(Deserializer reader) where T : BaseEntity, IBackup, new()
+        {
+            int count = reader.ReadInt32();
+
+            List<int> recoveredEntities = new List<int>();
             for (int i = 0; i < count; i++)
             {
-                var t = new T();
-                lst.Add(t);
-                t.ReadBackup(reader);
+                int entityId = reader.ReadInt32WithNoMovingPosition();
+                if (m_Entities.TryGetValue(entityId, out BaseEntity outEntity))
+                {
+                    //已存在的Entity, 不用重建，将数据读取到已存在Entity对象中。
+                    ((IBackup)outEntity)?.ReadBackup(reader);
+                }
+                else
+                {
+                    //此Entity已经被删除销毁，Recover这一帧的时候重新创建。
+                    T entity = new T();
+                    entity.ReadBackup(reader);
+
+                    //走一遍创建流程。
+                    entity.DoBindRef();
+                    entity.Awake();
+                    entity.Start();
+                    GameEntry.Service.GetService<GameViewService>().BindView(
+                        entity,
+                        (bEntity) =>
+                        {
+                            if (bEntity is CEntity cEntity)
+                            {
+                                PhysicSystem.Instance.RegisterEntity(entity.ConfigId, cEntity);
+                            }
+                        }
+                    );
+
+                    AddEntity(entity);
+                }
+
+                recoveredEntities.Add(entityId);
             }
 
-            _type2Entities[typeof(T)] = lst;
-            foreach (var e in lst)
+            //如果 entity 不在 recoveredEntities 中，但在 m_Entities 里，说明是新建的，Recover这一帧的时候恢复为不存在，即删除掉。
+            List<BaseEntity> needRemove = new List<BaseEntity>();
+            foreach (KeyValuePair<int, BaseEntity> kvp in m_Entities)
             {
-                _id2Entities[e.EntityId] = e;
+                if (!recoveredEntities.Contains(kvp.Key))
+                {
+                    needRemove.Add(kvp.Value);
+                }
             }
+            for (int i = 0; i < needRemove.Count; i++)
+            {
+                DestroyEntity(needRemove[i]);
+            }
+        }
 
-            return lst;
+        public void Clean(int maxVerifiedTick)
+        {
+            //TODO:防止内存占用过多，删除已经校验的帧数据。
+
         }
 
         public struct GameState
@@ -242,32 +253,32 @@ namespace XGame
 
         public LFloat RemainTime
         {
-            get => _curGameState.RemainTime;
-            set => _curGameState.RemainTime = value;
+            get => m_CurGameState.RemainTime;
+            set => m_CurGameState.RemainTime = value;
         }
 
         public LFloat DeltaTime
         {
-            get => _curGameState.DeltaTime;
-            set => _curGameState.DeltaTime = value;
+            get => m_CurGameState.DeltaTime;
+            set => m_CurGameState.DeltaTime = value;
         }
 
         public int MaxEnemyCount
         {
-            get => _curGameState.MaxEnemyCount;
-            set => _curGameState.MaxEnemyCount = value;
+            get => m_CurGameState.MaxEnemyCount;
+            set => m_CurGameState.MaxEnemyCount = value;
         }
 
         public int CurEnemyCount
         {
-            get => _curGameState.CurEnemyCount;
-            set => _curGameState.CurEnemyCount = value;
+            get => m_CurGameState.CurEnemyCount;
+            set => m_CurGameState.CurEnemyCount = value;
         }
 
         public int CurEnemyId
         {
-            get => _curGameState.CurEnemyId;
-            set => _curGameState.CurEnemyId = value;
+            get => m_CurGameState.CurEnemyId;
+            set => m_CurGameState.CurEnemyId = value;
         }
     }
 }

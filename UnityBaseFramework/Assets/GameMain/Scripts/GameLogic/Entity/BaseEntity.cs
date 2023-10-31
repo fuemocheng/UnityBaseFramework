@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using Lockstep;
 using Lockstep.Collision2D;
-using Lockstep.Game;
 using Lockstep.Math;
-using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
@@ -13,16 +11,15 @@ namespace XGame
     public partial class BaseEntity : IEntity, ILPTriggerEventHandler
     {
         public int EntityId;
-        public int PrefabId;
+        public int ConfigId;
 
         public CTransform2D transform = new CTransform2D();
 
         [NoBackup]
         public object EngineTransform;
 
-        private UnityEngine.Transform m_Transform => (UnityEngine.Transform)EngineTransform;
-
         [ReRefBackup]
+        [NonSerialized]
         public EntityLogicBase EntityLogicBase;
 
         protected List<CComponent> m_AllComponents;
@@ -91,32 +88,17 @@ namespace XGame
 
         public virtual void OnLPTriggerEnter(ColliderProxy other)
         {
-            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
-            {
-                Log.Error("OnLPTriggerEnter");
-                m_Transform?.gameObject?.SetActive(false);
-            }
+            EntityLogicBase?.OnLPTriggerEnter(other);
         }
 
         public virtual void OnLPTriggerStay(ColliderProxy other)
         {
-            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
-            {
-                //Log.Error("OnLPTriggerStay");
-                if(m_Transform != null && m_Transform.gameObject.activeSelf)
-                {
-                    m_Transform?.gameObject?.SetActive(false);
-                }
-            }
+            EntityLogicBase?.OnLPTriggerStay(other);
         }
 
         public virtual void OnLPTriggerExit(ColliderProxy other)
         {
-            if (other.LayerType == (int)EColliderLayer.MapGroupOne)
-            {
-                Log.Error("OnLPTriggerExit");
-                m_Transform?.gameObject?.SetActive(true);
-            }
+            EntityLogicBase?.OnLPTriggerExit(other);
         }
     }
 }

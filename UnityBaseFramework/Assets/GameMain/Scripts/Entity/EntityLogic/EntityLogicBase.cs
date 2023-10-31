@@ -2,6 +2,7 @@ using BaseFramework;
 using UnityEngine;
 using UnityBaseFramework.Runtime;
 using Lockstep.Math;
+using Lockstep.Collision2D;
 
 namespace XGame
 {
@@ -87,6 +88,24 @@ namespace XGame
             base.OnUpdate(elapseSeconds, realElapseSeconds);
         }
 
+        #region Trigger
+
+        public virtual void OnLPTriggerEnter(ColliderProxy other)
+        {
+        }
+
+        public virtual void OnLPTriggerStay(ColliderProxy other)
+        {
+        }
+
+        public virtual void OnLPTriggerExit(ColliderProxy other)
+        {
+        }
+
+        #endregion
+
+        #region Bind
+
         public virtual void BindLSEntity(BaseEntity baseEntity, BaseEntity oldEntity = null)
         {
             baseEntity.EntityLogicBase = this;
@@ -101,5 +120,7 @@ namespace XGame
         {
             //回收
         }
+
+        #endregion
     }
 }

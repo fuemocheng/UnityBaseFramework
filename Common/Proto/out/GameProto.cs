@@ -41,6 +41,9 @@ namespace GameProto
         [global::ProtoBuf.ProtoMember(3)]
         public int UserState { get; set; }
 
+        [global::ProtoBuf.ProtoMember(4)]
+        public int Camp { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -215,6 +218,9 @@ namespace GameProto
 
         [global::ProtoBuf.ProtoMember(1)]
         public int RoomId { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2)]
+        public int Camp { get; set; }
 
     }
 

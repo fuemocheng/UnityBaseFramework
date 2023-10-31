@@ -23,47 +23,28 @@ namespace XGame
             }
         }
 
-        public void BindView(BaseEntity baseEntity, BaseEntity oldEntity = null, Action<BaseEntity> onBindViewFinished = null)
+        public void BindView(BaseEntity baseEntity, Action<BaseEntity> onBindViewFinished = null)
         {
-            if (oldEntity != null)
+            m_EntityLoader.ShowEntity(baseEntity.ConfigId, typeof(EntityLogicPlayer), (entity) =>
             {
-                if (oldEntity.PrefabId == baseEntity.PrefabId)
+                if (entity == null)
                 {
-                    baseEntity.EngineTransform = oldEntity.EngineTransform;
-                    GameObject obj = (oldEntity.EngineTransform as Transform).gameObject;
-                    EntityLogicBase entityLogicBase = obj.GetComponent<EntityLogicBase>();
-                    entityLogicBase.BindLSEntity(baseEntity, oldEntity);
+                    return;
                 }
-                else
+                entity.transform.position = baseEntity.transform.Pos3.ToVector3();
+                entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.transform.deg, 0));
+                baseEntity.EngineTransform = entity.transform;
+
+
+                EntityLogicPlayer entityLogic = entity.gameObject.GetComponent<EntityLogicPlayer>();
+                if (entityLogic == null)
                 {
-                    UnbindView(oldEntity);
+                    entityLogic = entity.gameObject.AddComponent<EntityLogicPlayer>();
                 }
-            }
-            else
-            {
 
-                //默认10001
-                m_EntityLoader.ShowEntity(10001, typeof(EntityLogicPlayer), (entity) =>
-                {
-                    if (entity == null)
-                    {
-                        return;
-                    }
-                    entity.transform.position = baseEntity.transform.Pos3.ToVector3();
-                    entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.transform.deg, 0));
-                    baseEntity.EngineTransform = entity.transform;
-
-
-                    EntityLogicPlayer entityLogic = entity.gameObject.GetComponent<EntityLogicPlayer>();
-                    if (entityLogic == null)
-                    {
-                        entityLogic = entity.gameObject.AddComponent<EntityLogicPlayer>();
-                    }
-
-                    entityLogic.BindLSEntity(baseEntity);
-                    onBindViewFinished?.Invoke(baseEntity);
-                });
-            }
+                entityLogic.BindLSEntity(baseEntity);
+                onBindViewFinished?.Invoke(baseEntity);
+            });
         }
 
         public void UnbindView(BaseEntity entity)

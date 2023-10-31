@@ -11,6 +11,9 @@ namespace XGame
         public GameProto.Input input = new GameProto.Input();
         public CMover mover = new CMover();
 
+        [NonSerialized]
+        public ECamp Camp = ECamp.Default;
+
         protected override void BindRef()
         {
             base.BindRef();

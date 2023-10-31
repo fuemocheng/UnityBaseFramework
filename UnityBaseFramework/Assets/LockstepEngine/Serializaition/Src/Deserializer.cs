@@ -183,6 +183,12 @@ namespace Lockstep.Serialization {
             return result;
         }
 
+        public int ReadInt32WithNoMovingPosition()
+        {
+            int result = FastBitConverter.ToInt32(_data, _position);
+            return result;
+        }
+
         public uint ReadUInt32(){
             uint result = FastBitConverter.ToUInt32(_data, _position);
             _position += 4;

@@ -32,11 +32,19 @@ namespace XGame
             m_MapGrids.Add(mapGrid);
         }
 
-        public void RegisterMapColliderProxy()
+        public void AddAllMapColliderProxy()
         {
             foreach (var mapGrid in m_MapGrids)
             {
-                mapGrid.RegisterColliderProxy();
+                mapGrid.AddColliderProxy();
+            }
+        }
+
+        public void RemoveAddMapColliderProxy()
+        {
+            foreach (var mapGrid in m_MapGrids)
+            {
+                mapGrid.RemoveColliderProxy();
             }
         }
     }

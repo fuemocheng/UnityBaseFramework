@@ -67,7 +67,7 @@ namespace XGame
         #endregion
 
         #region ClientSimulateMode
-        public bool IsClientMode = true;
+        public bool IsClientMode = false;
         private bool m_IsDebugRollBack = false;
         #endregion
 
