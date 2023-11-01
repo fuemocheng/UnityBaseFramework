@@ -106,14 +106,13 @@ namespace XGame
 
         #region Bind
 
-        public virtual void BindLSEntity(BaseEntity baseEntity, BaseEntity oldEntity = null)
+        public virtual void BindLSEntity(BaseEntity baseEntity)
         {
             baseEntity.EntityLogicBase = this;
-            this.m_BaseEntity = baseEntity;
+            m_BaseEntity = baseEntity;
 
-            BaseEntity updateEntity = oldEntity ?? baseEntity;
-            transform.position = updateEntity.transform.Pos3.ToVector3();
-            transform.rotation = Quaternion.Euler(0, updateEntity.transform.deg.ToFloat(), 0);
+            transform.position = m_BaseEntity.transform.Pos3.ToVector3();
+            transform.rotation = Quaternion.Euler(0, m_BaseEntity.transform.deg.ToFloat(), 0);
         }
 
         public virtual void OnRollbackDestroy()

@@ -149,6 +149,7 @@ namespace XGame
             UserGameInfo userGameInfo = new UserGameInfo();
             userGameInfo.LocalId = 0;
             userGameInfo.UserState = (int)EUserState.Playing;
+            userGameInfo.Camp = (int)ECamp.White;
             userGameInfo.User = new GameProto.User();
             userGameInfo.User.UserId = 10001;
             userGameInfo.User.UserName = "10001";
