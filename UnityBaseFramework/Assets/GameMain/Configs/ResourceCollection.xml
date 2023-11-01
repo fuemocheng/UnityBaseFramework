@@ -10,6 +10,7 @@
       <Resource Name="GameMain/Localization" Variant="zh-cn" LoadType="0" Packed="True" />
       <Resource Name="GameMain/Materials" LoadType="0" Packed="True" />
       <Resource Name="GameMain/Music" LoadType="0" Packed="True" />
+      <Resource Name="GameMain/Record" LoadType="0" Packed="True" />
       <Resource Name="GameMain/Scenes" LoadType="0" Packed="True" />
       <Resource Name="GameMain/Sounds" LoadType="0" Packed="True" />
       <Resource Name="GameMain/Textures" LoadType="0" Packed="True" />
@@ -109,6 +110,7 @@
       <Asset Guid="e830964cdb85ff3429bca484c16bab44" ResourceName="GameMain/UI/UISounds" />
       <Asset Guid="e85864330b68dde498dcb6e8711815d3" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="e9b278a532d4e8c4daed907118f3d811" ResourceName="GameMain/UI/UISprites" />
+      <Asset Guid="eb1f13bf8c1c21f4a8aaeb55410e616f" ResourceName="GameMain/Record" />
       <Asset Guid="eeb5fa99f06427645898054ccf24686b" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="ef80c3d540b1744519c7324c0702a39f" ResourceName="GameMain/Materials" />
       <Asset Guid="f00001644c5492c4d9cb0dbfe061a86d" ResourceName="GameMain/Scenes" />

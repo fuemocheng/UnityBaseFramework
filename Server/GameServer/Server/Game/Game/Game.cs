@@ -401,7 +401,7 @@ namespace Server
 
             string recordPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                $"../Record/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Room.RoomId}_{MapId}.record");
+                $"../Record/{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Room.RoomId}_{MapId}.bytes");
 
             RecordUtility.WriteRecord(recordPath, gameStartInfo, scServerFrame);
         }

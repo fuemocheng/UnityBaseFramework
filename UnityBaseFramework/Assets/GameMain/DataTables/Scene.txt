@@ -4,6 +4,6 @@
 #	场景编号	备注	资源名称	背景音乐编号	流程名称
 	1	登录场景	Login	1	ProcedureLogin
 	2	大厅场景	Lobby	1	ProcedureLobby
-	3	单机版地图	MapClientMode	2	ProcedureClientMode
+	3	单机版地图	Map01	2	ProcedureClientMode
 	4	地图1	Map01	2	ProcedureMap
 	5	地图2	Map02	2	ProcedureMap

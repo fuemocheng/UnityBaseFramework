@@ -206,7 +206,7 @@ namespace XGame
 
         public void OnReadRecord()
         {
-            string recordPath = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/Assets/GameMain/Record/TestRecord.record");
+            string recordPath = Utility.Text.Format("{0}{1}", Directory.GetCurrentDirectory(), "/Assets/GameMain/Record/TestRecord.bytes");
             recordPath = recordPath.Replace("\\", "/");
             if (!File.Exists(recordPath))
             {

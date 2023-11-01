@@ -143,3 +143,13 @@ MonoBehaviour:
     packed: 1
     filterType: 2
     searchPatterns: '*.*'
+  - valid: 1
+    name: GameMain/Record
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/GameMain/Record
+    loadType: 0
+    packed: 1
+    filterType: 0
+    searchPatterns: '*.*'
