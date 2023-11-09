@@ -2,6 +2,7 @@ using System;
 using Lockstep.Collision2D;
 using Lockstep.Math;
 using UnityBaseFramework.Runtime;
+using UnityEngine;
 
 namespace XGame
 {
@@ -28,13 +29,51 @@ namespace XGame
             var needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
             if (needChase)
             {
-                var dir = inputUV.normalized;
+                LVector2 dir = inputUV.normalized;
                 transform.pos = transform.pos + dir * speed * deltaTime;
-                var targetDeg = dir.ToDeg();
-                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+                
+                //LFloat targetDeg = dir.ToDeg();
+                //transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
             }
 
             hasReachTarget = !needChase;
+
+            //deg
+            LVector2 mousePos = new LVector2(new LFloat(true, input.MousePosX), new LFloat(true, input.MousePosY));
+            if (!mousePos.Equals(LVector2.zero))
+            {
+                LFloat targetDeg = (mousePos - transform.pos).ToDeg();
+                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+            }
+            else
+            {
+                LVector2 dir = inputUV.normalized;
+                LFloat targetDeg = dir.ToDeg();
+                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+            }
+
+            //计算 moveDir 与 faceDir 的夹角
+            if(needChase)
+            {
+                LVector2 faceDir = mousePos - transform.pos;
+                LVector2 moveDir = inputUV;
+
+                LFloat faceDeg = LMath.Atan2(faceDir.y, faceDir.x) * LMath.Rad2Deg;
+                LFloat dirDeg = LMath.Atan2(moveDir.y, moveDir.x) * LMath.Rad2Deg;
+
+                //计算夹角，并置于 [0, 360]
+                LFloat diffDeg = faceDeg - dirDeg;
+                if(diffDeg < 0)
+                {
+                    diffDeg += (LFloat)360;
+                }
+                player.FMAngle = diffDeg;
+            }
+            else
+            {
+                player.FMAngle = -1;
+            }
+
         }
     }
 }

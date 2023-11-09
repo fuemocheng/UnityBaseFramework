@@ -261,6 +261,8 @@ namespace GameProto
         {
             writer.Write(InputH);
             writer.Write(InputV);
+            writer.Write(MousePosX);
+            writer.Write(MousePosY);
             writer.Write(SkillId);
         }
 
@@ -268,6 +270,8 @@ namespace GameProto
         {
             InputH = reader.ReadInt32();
             InputV = reader.ReadInt32();
+            MousePosX = reader.ReadInt32();
+            MousePosY = reader.ReadInt32();
             SkillId = reader.ReadInt32();
         }
 
@@ -276,15 +280,19 @@ namespace GameProto
             int hash = 1;
             hash += InputH.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += InputV.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += MousePosX.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += MousePosY.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += SkillId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             return hash;
         }
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            sb.AppendLine(prefix + "inputH" + ":" + InputH.ToString());
-            sb.AppendLine(prefix + "inputV" + ":" + InputV.ToString());
-            sb.AppendLine(prefix + "skillId" + ":" + SkillId.ToString());
+            sb.AppendLine(prefix + "InputH" + ":" + InputH.ToString());
+            sb.AppendLine(prefix + "InputV" + ":" + InputV.ToString());
+            sb.AppendLine(prefix + "MousePosX" + ":" + MousePosX.ToString());
+            sb.AppendLine(prefix + "MousePosY" + ":" + MousePosY.ToString());
+            sb.AppendLine(prefix + "SkillId" + ":" + SkillId.ToString());
         }
     }
 }

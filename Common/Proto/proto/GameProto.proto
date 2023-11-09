@@ -20,7 +20,9 @@ message UserGameInfo{
 message Input{
 	int32 InputH = 1;						//水平输入
 	int32 InputV = 2;						//垂直输入
-	int32 SkillId = 3;						//技能Id
+	int32 MousePosX = 3;					//鼠标位置X
+	int32 MousePosY = 4;					//鼠标位置Y
+	int32 SkillId = 5;						//技能Id
 }
 
 //输入帧

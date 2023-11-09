@@ -60,6 +60,12 @@ namespace GameProto
         public int InputV { get; set; }
 
         [global::ProtoBuf.ProtoMember(3)]
+        public int MousePosX { get; set; }
+
+        [global::ProtoBuf.ProtoMember(4)]
+        public int MousePosY { get; set; }
+
+        [global::ProtoBuf.ProtoMember(5)]
         public int SkillId { get; set; }
 
     }

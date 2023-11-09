@@ -527,6 +527,8 @@ namespace XGame
             {
                 playerInput.InputV = 0;
                 playerInput.InputH = 0;
+                playerInput.MousePosX = 0;
+                playerInput.MousePosY = 0;
                 playerInput.SkillId = 0;
             }
 
@@ -542,6 +544,8 @@ namespace XGame
                 //}
                 inputEntity.InputH = inputFrame.Input.InputH;
                 inputEntity.InputV = inputFrame.Input.InputV;
+                inputEntity.MousePosX = inputFrame.Input.MousePosX;
+                inputEntity.MousePosY = inputFrame.Input.MousePosY;
             }
         }
 

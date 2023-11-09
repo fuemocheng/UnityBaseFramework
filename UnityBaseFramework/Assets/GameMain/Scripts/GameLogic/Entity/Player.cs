@@ -10,6 +10,8 @@ namespace XGame
         public int localId;
         public GameProto.Input input = new GameProto.Input();
         public CMover mover = new CMover();
+        public CAnimator animator = new CAnimator();
+        public float FMAngle = -1;
 
         [NonSerialized]
         public ECamp Camp = ECamp.Default;
@@ -18,6 +20,7 @@ namespace XGame
         {
             base.BindRef();
             RegisterComponent(mover);
+            RegisterComponent(animator);
         }
 
         public override void Update(LFloat deltaTime)

@@ -14,6 +14,8 @@ namespace XGame
 
         private List<Lockstep.Collision2D.ColliderProxy> m_ColliderProxy = new();
 
+        private Animator m_Animator;
+
         private Renderer[] m_Renderers;
         private MaterialPropertyBlock m_MaterialPropertyBlock;
         private Color m_ColorBlack = new Color(70 / 255f, 70 / 255f, 70 / 255f);
@@ -22,7 +24,7 @@ namespace XGame
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
-
+            m_Animator = GetComponentInChildren<Animator>();
             m_Renderers = GetComponentsInChildren<Renderer>();
             m_MaterialPropertyBlock = new MaterialPropertyBlock();
         }
@@ -45,12 +47,80 @@ namespace XGame
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(elapseSeconds, realElapseSeconds);
+            UpdateMove();
+        }
 
+        protected void UpdateMove()
+        {
             //更新位置。
             var pos = m_CEntity.transform.Pos3.ToVector3();
             transform.position = Vector3.Lerp(transform.position, pos, 0.3f);
             var deg = m_CEntity.transform.deg.ToFloat();
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, deg, 0), 0.3f);
+
+            UpdateMoveAnimation();
+        }
+
+        protected void UpdateMoveAnimation()
+        {
+            float fmAngle = m_PlayerEntity.FMAngle;
+            if (fmAngle < 0)
+            {
+                m_Animator?.SetFloat("MovingX", 0);
+                m_Animator?.SetFloat("MovingY", 0);
+            }
+            else
+            {
+                if ((fmAngle >= 0 && fmAngle <= 22.5f) || fmAngle >= 337.5f)
+                {
+                    //Run Forward
+                    m_Animator?.SetFloat("MovingX", 0);
+                    m_Animator?.SetFloat("MovingY", 1);
+                }
+                else if (fmAngle > 22.5f && fmAngle <= 67.5f)
+                {
+                    //Run Forward Right
+                    m_Animator?.SetFloat("MovingX", 1);
+                    m_Animator?.SetFloat("MovingY", 1);
+                }
+                else if (fmAngle > 67.5 && fmAngle <= 112.5f)
+                {
+                    //Run Right
+                    m_Animator?.SetFloat("MovingX", 1);
+                    m_Animator?.SetFloat("MovingY", 0);
+                }
+                else if (fmAngle > 112.5 && fmAngle <= 157.5f)
+                {
+                    //Run Backward Right
+                    m_Animator?.SetFloat("MovingX", 1);
+                    m_Animator?.SetFloat("MovingY", -1);
+                }
+                else if (fmAngle > 157.5 && fmAngle <= 202.5f)
+                {
+                    //Run Backward
+                    m_Animator?.SetFloat("MovingX", 0);
+                    m_Animator?.SetFloat("MovingY", -1);
+                }
+                else if (fmAngle > 202.5f && fmAngle <= 247.5f)
+                {
+                    //Run Backward Left
+                    m_Animator?.SetFloat("MovingX", -1);
+                    m_Animator?.SetFloat("MovingY", -1);
+                }
+                else if (fmAngle > 247.5f && fmAngle <= 292.5f)
+                {
+                    //Run Left
+                    m_Animator?.SetFloat("MovingX", -1);
+                    m_Animator?.SetFloat("MovingY", 0);
+                }
+                else if (fmAngle > 292.5f && fmAngle < 337.5f)
+                {
+                    //Run Forward Left
+                    m_Animator?.SetFloat("MovingX", -1);
+                    m_Animator?.SetFloat("MovingY", 1);
+                }
+            }
+
         }
 
         #region Bind
@@ -122,7 +192,7 @@ namespace XGame
             if (other.LayerType == (int)m_Camp)
             {
                 //解决相邻同色块跨越的时候会闪现的问题；
-                if(m_ColliderProxy.Count == 0)
+                if (m_ColliderProxy.Count == 0)
                 {
                     m_CEntity.EntityLogicBase.Visible = true;
                 }

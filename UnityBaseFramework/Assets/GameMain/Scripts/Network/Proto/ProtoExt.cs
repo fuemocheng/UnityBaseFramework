@@ -9,7 +9,8 @@ namespace GameProto
                 return false;
             }
 
-            if (this.InputV != tInput.InputV || this.InputH != tInput.InputH)
+            if (this.InputV != tInput.InputV || this.InputH != tInput.InputH 
+                || this.MousePosX != tInput.MousePosX || this.MousePosY != tInput.MousePosY)
             {
                 return false;
             }

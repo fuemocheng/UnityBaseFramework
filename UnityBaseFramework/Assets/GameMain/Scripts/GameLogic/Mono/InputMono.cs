@@ -6,19 +6,20 @@ namespace XGame
 {
     public class InputMono : MonoBehaviour
     {
-        [HideInInspector] public int floorMask;
-        public float camRayLength = 100;
+        [HideInInspector]
+        public int FloorMask;
+        public float CamRayLength = 100;
 
-        public bool hasHitFloor;
-        public LVector2 mousePos;
-        public LVector2 inputUV;
-        public bool isInputFire;
-        public int skillId;
-        public bool isSpeedUp;
+        //Input
+        public LVector2 InputUV;
+        public LVector2 MousePos;
+        public int SkillId;
 
         void Start()
         {
-            floorMask = LayerMask.GetMask("Floor");
+            FloorMask = LayerMask.GetMask("Floor");
+            InputUV = new LVector2(0, 0);
+            MousePos = new LVector2(0, 0);
         }
 
         public void Update()
@@ -27,31 +28,20 @@ namespace XGame
             {
                 float h = Input.GetAxisRaw("Horizontal");
                 float v = Input.GetAxisRaw("Vertical");
-                inputUV = new LVector2(h.ToLFloat(), v.ToLFloat());
+                InputUV = new LVector2(h.ToLFloat(), v.ToLFloat());
 
-                //hasHitFloor = Input.GetMouseButtonDown(1);
-                //if (hasHitFloor)
-                //{
-                //    Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                //    RaycastHit floorHit;
-                //    if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
-                //    {
-                //        mousePos = floorHit.point.ToLVector2XZ();
-                //    }
-                //}
+                Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit floorHit;
+                if (Physics.Raycast(camRay, out floorHit, CamRayLength, FloorMask))
+                {
+                    MousePos = floorHit.point.ToLVector2XZ();
+                }
 
                 GameProto.Input currInput = GameEntry.Service.GetService<GameInputService>().CurrInput;
-                currInput.InputH = inputUV.x._val;
-                currInput.InputV = inputUV.y._val;
-
-                //GameInputService.CurGameInput = new PlayerInput()
-                //{
-                //    mousePos = mousePos,
-                //    inputUV = inputUV,
-                //    isInputFire = isInputFire,
-                //    skillId = skillId,
-                //    isSpeedUp = isSpeedUp,
-                //};
+                currInput.InputH = InputUV.x._val;
+                currInput.InputV = InputUV.y._val;
+                currInput.MousePosX = MousePos.x._val;
+                currInput.MousePosY = MousePos.y._val;
             }
         }
     }
