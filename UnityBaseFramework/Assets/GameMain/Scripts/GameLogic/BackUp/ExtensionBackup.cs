@@ -263,6 +263,8 @@ namespace GameProto
             writer.Write(InputV);
             writer.Write(MousePosX);
             writer.Write(MousePosY);
+            writer.Write(IsFire);
+            writer.Write(IsSpeedUp);
             writer.Write(SkillId);
         }
 
@@ -272,6 +274,8 @@ namespace GameProto
             InputV = reader.ReadInt32();
             MousePosX = reader.ReadInt32();
             MousePosY = reader.ReadInt32();
+            IsFire = reader.ReadBoolean();
+            IsSpeedUp = reader.ReadBoolean();
             SkillId = reader.ReadInt32();
         }
 
@@ -282,6 +286,8 @@ namespace GameProto
             hash += InputV.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += MousePosX.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += MousePosY.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += IsFire.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += IsSpeedUp.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += SkillId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             return hash;
         }
@@ -292,6 +298,8 @@ namespace GameProto
             sb.AppendLine(prefix + "InputV" + ":" + InputV.ToString());
             sb.AppendLine(prefix + "MousePosX" + ":" + MousePosX.ToString());
             sb.AppendLine(prefix + "MousePosY" + ":" + MousePosY.ToString());
+            sb.AppendLine(prefix + "IsFire" + ":" + IsFire.ToString());
+            sb.AppendLine(prefix + "IsSpeedUp" + ":" + IsSpeedUp.ToString());
             sb.AppendLine(prefix + "SkillId" + ":" + SkillId.ToString());
         }
     }

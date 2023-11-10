@@ -24,21 +24,24 @@ namespace XGame
                 return;
             }
 
+            //此帧速度，是否加速
+            LFloat currSpeed = input.IsSpeedUp ? (speed * (LFloat)2) : speed;
+            //此帧方向输入
             LVector2 inputUV = new LVector2(new LFloat(true, input.InputH), new LFloat(true, input.InputV));
 
             var needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
             if (needChase)
             {
                 LVector2 dir = inputUV.normalized;
-                transform.pos = transform.pos + dir * speed * deltaTime;
-                
+                transform.pos = transform.pos + dir * currSpeed * deltaTime;
+
                 //LFloat targetDeg = dir.ToDeg();
                 //transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
             }
 
             hasReachTarget = !needChase;
 
-            //deg
+            //朝向 deg，朝向鼠标的方向
             LVector2 mousePos = new LVector2(new LFloat(true, input.MousePosX), new LFloat(true, input.MousePosY));
             if (!mousePos.Equals(LVector2.zero))
             {
@@ -52,8 +55,9 @@ namespace XGame
                 transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
             }
 
+            //运动方向与朝向的夹角，用于行走动画的表现，-1表示Idle
             //计算 moveDir 与 faceDir 的夹角
-            if(needChase)
+            if (needChase)
             {
                 LVector2 faceDir = mousePos - transform.pos;
                 LVector2 moveDir = inputUV;
@@ -63,7 +67,7 @@ namespace XGame
 
                 //计算夹角，并置于 [0, 360]
                 LFloat diffDeg = faceDeg - dirDeg;
-                if(diffDeg < 0)
+                if (diffDeg < 0)
                 {
                     diffDeg += (LFloat)360;
                 }
@@ -73,7 +77,7 @@ namespace XGame
             {
                 player.FMAngle = -1;
             }
-
+            player.IsSpeedUp = input.IsSpeedUp;
         }
     }
 }

@@ -529,6 +529,8 @@ namespace XGame
                 playerInput.InputH = 0;
                 playerInput.MousePosX = 0;
                 playerInput.MousePosY = 0;
+                playerInput.IsFire = false;
+                playerInput.IsSpeedUp = false;
                 playerInput.SkillId = 0;
             }
 
@@ -546,6 +548,9 @@ namespace XGame
                 inputEntity.InputV = inputFrame.Input.InputV;
                 inputEntity.MousePosX = inputFrame.Input.MousePosX;
                 inputEntity.MousePosY = inputFrame.Input.MousePosY;
+                inputEntity.IsFire = inputFrame.Input.IsFire;
+                inputEntity.IsSpeedUp = inputFrame.Input.IsSpeedUp;
+                inputEntity.SkillId = inputFrame.Input.SkillId;
             }
         }
 

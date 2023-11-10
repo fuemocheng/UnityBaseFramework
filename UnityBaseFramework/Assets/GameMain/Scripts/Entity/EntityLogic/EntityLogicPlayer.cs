@@ -74,53 +74,116 @@ namespace XGame
                 if ((fmAngle >= 0 && fmAngle <= 22.5f) || fmAngle >= 337.5f)
                 {
                     //Run Forward
-                    m_Animator?.SetFloat("MovingX", 0);
-                    m_Animator?.SetFloat("MovingY", 1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", 0);
+                        m_Animator?.SetFloat("MovingY", 1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", 0);
+                        m_Animator?.SetFloat("MovingY", 0.5f);
+                    }
                 }
                 else if (fmAngle > 22.5f && fmAngle <= 67.5f)
                 {
                     //Run Forward Right
-                    m_Animator?.SetFloat("MovingX", 1);
-                    m_Animator?.SetFloat("MovingY", 1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", 1);
+                        m_Animator?.SetFloat("MovingY", 1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", 0.5f);
+                        m_Animator?.SetFloat("MovingY", 0.5f);
+                    }
                 }
                 else if (fmAngle > 67.5 && fmAngle <= 112.5f)
                 {
                     //Run Right
-                    m_Animator?.SetFloat("MovingX", 1);
-                    m_Animator?.SetFloat("MovingY", 0);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", 1);
+                        m_Animator?.SetFloat("MovingY", 0);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", 0.5f);
+                        m_Animator?.SetFloat("MovingY", 0);
+                    }
                 }
                 else if (fmAngle > 112.5 && fmAngle <= 157.5f)
                 {
                     //Run Backward Right
-                    m_Animator?.SetFloat("MovingX", 1);
-                    m_Animator?.SetFloat("MovingY", -1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", 1);
+                        m_Animator?.SetFloat("MovingY", -1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", 0.5f);
+                        m_Animator?.SetFloat("MovingY", -0.5f);
+                    }
                 }
                 else if (fmAngle > 157.5 && fmAngle <= 202.5f)
                 {
                     //Run Backward
-                    m_Animator?.SetFloat("MovingX", 0);
-                    m_Animator?.SetFloat("MovingY", -1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", 0);
+                        m_Animator?.SetFloat("MovingY", -1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", 0);
+                        m_Animator?.SetFloat("MovingY", -0.5f);
+                    }
                 }
                 else if (fmAngle > 202.5f && fmAngle <= 247.5f)
                 {
                     //Run Backward Left
-                    m_Animator?.SetFloat("MovingX", -1);
-                    m_Animator?.SetFloat("MovingY", -1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", -1);
+                        m_Animator?.SetFloat("MovingY", -1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", -0.5f);
+                        m_Animator?.SetFloat("MovingY", -0.5f);
+                    }
                 }
                 else if (fmAngle > 247.5f && fmAngle <= 292.5f)
                 {
                     //Run Left
-                    m_Animator?.SetFloat("MovingX", -1);
-                    m_Animator?.SetFloat("MovingY", 0);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", -1);
+                        m_Animator?.SetFloat("MovingY", 0);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", -0.5f);
+                        m_Animator?.SetFloat("MovingY", 0);
+                    }
                 }
                 else if (fmAngle > 292.5f && fmAngle < 337.5f)
                 {
                     //Run Forward Left
-                    m_Animator?.SetFloat("MovingX", -1);
-                    m_Animator?.SetFloat("MovingY", 1);
+                    if (m_PlayerEntity.IsSpeedUp)
+                    {
+                        m_Animator?.SetFloat("MovingX", -1);
+                        m_Animator?.SetFloat("MovingY", 1);
+                    }
+                    else
+                    {
+                        m_Animator?.SetFloat("MovingX", -0.5f);
+                        m_Animator?.SetFloat("MovingY", 0.5f);
+                    }
                 }
             }
-
         }
 
         #region Bind

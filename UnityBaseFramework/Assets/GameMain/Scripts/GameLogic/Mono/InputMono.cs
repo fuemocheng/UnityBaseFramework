@@ -13,6 +13,8 @@ namespace XGame
         //Input
         public LVector2 InputUV;
         public LVector2 MousePos;
+        public bool IsFire;
+        public bool IsSpeedUp;
         public int SkillId;
 
         void Start()
@@ -20,6 +22,9 @@ namespace XGame
             FloorMask = LayerMask.GetMask("Floor");
             InputUV = new LVector2(0, 0);
             MousePos = new LVector2(0, 0);
+            IsFire = false;
+            IsSpeedUp = false;
+            SkillId = 0;
         }
 
         public void Update()
@@ -37,11 +42,16 @@ namespace XGame
                     MousePos = floorHit.point.ToLVector2XZ();
                 }
 
+                IsFire = Input.GetMouseButtonDown(0);
+                IsSpeedUp = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
                 GameProto.Input currInput = GameEntry.Service.GetService<GameInputService>().CurrInput;
                 currInput.InputH = InputUV.x._val;
                 currInput.InputV = InputUV.y._val;
                 currInput.MousePosX = MousePos.x._val;
                 currInput.MousePosY = MousePos.y._val;
+                currInput.IsFire = IsFire;
+                currInput.IsSpeedUp = IsSpeedUp;
             }
         }
     }

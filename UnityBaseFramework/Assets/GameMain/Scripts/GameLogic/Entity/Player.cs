@@ -12,6 +12,7 @@ namespace XGame
         public CMover mover = new CMover();
         public CAnimator animator = new CAnimator();
         public float FMAngle = -1;
+        public bool IsSpeedUp = false;
 
         [NonSerialized]
         public ECamp Camp = ECamp.Default;

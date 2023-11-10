@@ -22,7 +22,9 @@ message Input{
 	int32 InputV = 2;						//垂直输入
 	int32 MousePosX = 3;					//鼠标位置X
 	int32 MousePosY = 4;					//鼠标位置Y
-	int32 SkillId = 5;						//技能Id
+	bool IsFire = 5;						//是否开火
+	bool IsSpeedUp = 6;						//是否加速
+	int32 SkillId = 7;						//技能Id
 }
 
 //输入帧

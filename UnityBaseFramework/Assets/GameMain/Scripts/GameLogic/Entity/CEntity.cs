@@ -16,7 +16,7 @@ namespace XGame
         //public CAnimator animator = new CAnimator();
         //public CSkillBox skillBox = new CSkillBox();
 
-        public LFloat moveSpd = 5;
+        public LFloat moveSpd = (LFloat)2.5f;
         public LFloat turnSpd = 360;
         //public int curHealth;
         //public int maxHealth = 100;

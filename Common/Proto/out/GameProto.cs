@@ -66,6 +66,12 @@ namespace GameProto
         public int MousePosY { get; set; }
 
         [global::ProtoBuf.ProtoMember(5)]
+        public bool IsFire { get; set; }
+
+        [global::ProtoBuf.ProtoMember(6)]
+        public bool IsSpeedUp { get; set; }
+
+        [global::ProtoBuf.ProtoMember(7)]
         public int SkillId { get; set; }
 
     }
