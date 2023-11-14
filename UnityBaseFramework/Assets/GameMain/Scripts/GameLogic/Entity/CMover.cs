@@ -29,7 +29,7 @@ namespace XGame
             //此帧方向输入
             LVector2 inputUV = new LVector2(new LFloat(true, input.InputH), new LFloat(true, input.InputV));
 
-            var needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
+            bool needChase = inputUV.sqrMagnitude > new LFloat(true, 10);
             if (needChase)
             {
                 LVector2 dir = inputUV.normalized;
@@ -55,29 +55,6 @@ namespace XGame
                 transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
             }
 
-            //运动方向与朝向的夹角，用于行走动画的表现，-1表示Idle
-            //计算 moveDir 与 faceDir 的夹角
-            if (needChase)
-            {
-                LVector2 faceDir = mousePos - transform.pos;
-                LVector2 moveDir = inputUV;
-
-                LFloat faceDeg = LMath.Atan2(faceDir.y, faceDir.x) * LMath.Rad2Deg;
-                LFloat dirDeg = LMath.Atan2(moveDir.y, moveDir.x) * LMath.Rad2Deg;
-
-                //计算夹角，并置于 [0, 360]
-                LFloat diffDeg = faceDeg - dirDeg;
-                if (diffDeg < 0)
-                {
-                    diffDeg += (LFloat)360;
-                }
-                player.FMAngle = diffDeg;
-            }
-            else
-            {
-                player.FMAngle = -1;
-            }
-            player.IsSpeedUp = input.IsSpeedUp;
         }
     }
 }

@@ -57,6 +57,15 @@ namespace XGame
             private set;
         }
 
+        /// <summary>
+        /// 获取绑定逻辑脚本类型。
+        /// </summary>
+        public string LogicType
+        {
+            get;
+            private set;
+        }
+
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -72,6 +81,7 @@ namespace XGame
             AssetName = columnStrings[index++];
             AssetId = int.Parse(columnStrings[index++]);
             GroupName = columnStrings[index++];
+            LogicType = columnStrings[index++];
 
             GeneratePropertyArray();
             return true;
@@ -87,6 +97,7 @@ namespace XGame
                     AssetName = binaryReader.ReadString();
                     AssetId = binaryReader.Read7BitEncodedInt32();
                     GroupName = binaryReader.ReadString();
+                    LogicType = binaryReader.ReadString();
                 }
             }
 

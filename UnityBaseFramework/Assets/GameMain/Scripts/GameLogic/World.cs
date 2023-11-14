@@ -44,8 +44,6 @@ namespace XGame
             RegisterSystem(new EnemySystem());
             RegisterSystem(new PhysicSystem());
             RegisterSystem(new HashSystem());
-
-            
         }
 
         public void OnGameCreate()

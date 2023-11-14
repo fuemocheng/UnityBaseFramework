@@ -253,6 +253,58 @@ namespace XGame
     }
 }
 
+namespace XGame
+{
+    public partial class Bullet : IBackup
+    {
+        public void WriteBackup(Serializer writer)
+        {
+            writer.Write(EntityId);
+            writer.Write(ConfigId);
+            writer.Write(Dir);
+            writer.Write(CurrTime);
+            colliderData.WriteBackup(writer);
+            rigidbody.WriteBackup(writer);
+            transform.WriteBackup(writer);
+        }
+
+        public void ReadBackup(Deserializer reader)
+        {
+            EntityId = reader.ReadInt32();
+            ConfigId = reader.ReadInt32();
+            Dir = reader.ReadLVector2();
+            CurrTime = reader.ReadLFloat();
+            colliderData.ReadBackup(reader);
+            rigidbody.ReadBackup(reader);
+            transform.ReadBackup(reader);
+        }
+
+        public int GetHash(ref int idx)
+        {
+            int hash = 1;
+            hash += EntityId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += ConfigId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += Dir.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += CurrTime.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += colliderData.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += rigidbody.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += transform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            return hash;
+        }
+
+        public void DumpStr(StringBuilder sb, string prefix)
+        {
+            sb.AppendLine(prefix + "EntityId" + ":" + EntityId.ToString());
+            sb.AppendLine(prefix + "PrefabId" + ":" + ConfigId.ToString());
+            sb.AppendLine(prefix + "Dir" + ":" + Dir.ToString());
+            sb.AppendLine(prefix + "CurrTime" + ":" + CurrTime.ToString());
+            sb.AppendLine(prefix + "colliderData" + ":"); colliderData.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "rigidbody" + ":"); rigidbody.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "transform" + ":"); transform.DumpStr(sb, "\t" + prefix);
+        }
+    }
+}
+
 namespace GameProto
 {
     public partial class Input : IBackup

@@ -1,6 +1,7 @@
-﻿#	实体配置表				
-#	Id		AssetName	AssetId	GroupName
-#	int		string	int	string
-#	实体编号	备注	资源名称	资源Id	实体组名
-	10001	玩家模型	XBot	10001	Player
-	10002	玩家模型	XBot	10002	Player
+﻿#	实体配置表					
+#	Id		AssetName	AssetId	GroupName	LogicType
+#	int		string	int	string	string
+#	实体编号	备注	资源名称	资源Id	实体组名	绑定逻辑脚本类型
+	10001	玩家模型	XBot	10001	Player	XGame.EntityLogicPlayer
+	10002	玩家模型	XBot	10002	Player	XGame.EntityLogicPlayer
+	100001	子弹模型	Bullet	100001	Bullet	XGame.EntityLogicBullet

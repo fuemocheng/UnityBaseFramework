@@ -6,6 +6,7 @@ namespace XGame
     {
         private Spawner[] Spawners;
         private Enemy[] AllEnemy;
+        private Bullet[] Bullets;
 
         public override void Start()
         {
@@ -36,6 +37,11 @@ namespace XGame
             //{
             //    enemy.Update(deltaTime);
             //}
+
+            foreach (var bullet in GameEntry.Service.GetService<GameStateService>().GetBullets())
+            {
+                bullet.Update(deltaTime);
+            }
         }
     }
 }

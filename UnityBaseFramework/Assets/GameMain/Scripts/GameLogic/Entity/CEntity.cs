@@ -12,35 +12,26 @@ namespace XGame
     public partial class CEntity : BaseEntity
     {
         public CRigidbody rigidbody = new CRigidbody();
-        public ColliderData colliderData = new ColliderData() {radius = (0.1f).ToLFloat() };
-        //public CAnimator animator = new CAnimator();
-        //public CSkillBox skillBox = new CSkillBox();
+        public ColliderData colliderData = new ColliderData() { radius = (0.1f).ToLFloat() };
 
         public LFloat moveSpd = (LFloat)2.5f;
-        public LFloat turnSpd = 360;
-        //public int curHealth;
-        //public int maxHealth = 100;
-        //public int damage = 10;
-
-        //public bool isInvincible;
-        //public bool isFire;
-
-        //public bool isDead => curHealth <= 0;
-
+        public LFloat turnSpd = (LFloat)360f;
 
         protected override void BindRef()
         {
             base.BindRef();
-            //RegisterComponent(animator);
-            //RegisterComponent(skillBox);
             rigidbody.BindRef(transform);
+        }
+
+        public override void Awake()
+        {
+            base.Awake();
         }
 
         public override void Start()
         {
             base.Start();
             rigidbody.DoStart();
-            //curHealth = maxHealth;
         }
 
         public override void Update(LFloat deltaTime)
@@ -49,37 +40,10 @@ namespace XGame
             base.Update(deltaTime);
         }
 
-        //public bool Fire(int idx = 0)
-        //{
-        //    //return skillBox.Fire(idx - 1);
-        //    return false;
-        //}
-
-        //public void StopSkill(int idx = -1)
-        //{
-        //    //skillBox.ForceStop(idx);
-        //}
-
-        //public virtual void TakeDamage(BaseEntity atker, int amount, LVector3 hitPoint)
-        //{
-        //    if (isInvincible || isDead) return;
-        //    Log.Info($"{atker.EntityId} attack {EntityId}  damage:{amount} hitPos:{hitPoint}");
-        //    curHealth -= amount;
-        //    //EntityView?.OnTakeDamage(amount, hitPoint);
-        //    OnTakeDamage(amount, hitPoint);
-        //    if (isDead)
-        //    {
-        //        OnDead();
-        //    }
-        //}
-
-        //protected virtual void OnTakeDamage(int amount, LVector3 hitPoint) { }
-
-        //protected virtual void OnDead()
-        //{
-        //    //EntityView?.OnDead();
-        //    PhysicSystem.Instance.RemoveCollider(this);
-        //    //GameStateService.DestroyEntity(this);
-        //}
+        public override void Destroy()
+        {
+            base.Destroy();
+            PhysicSystem.Instance.RemoveCollider(this);
+        }
     }
 }

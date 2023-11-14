@@ -25,7 +25,7 @@ namespace XGame
 
         //public static void HideEntity(this EntityComponent entityComponent, Entity entity)
         //{
-        //    entityComponent.HideEntity(entity.Entity);
+        //    entityComponent.HideEntity(entity);
         //}
 
         //public static void AttachEntity(this EntityComponent entityComponent, Entity entity, int ownerId, string parentTransformPath = null, object userData = null)

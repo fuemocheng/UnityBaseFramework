@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -407,14 +407,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_EntityGroups.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_EntityGroups.Array.data[0].m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[1].m_Name
+      value: Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_EntityGroups.Array.data[0].m_InstanceCapacity
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[1].m_InstanceCapacity
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
@@ -422,7 +430,15 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[1].m_InstanceExpireTime
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
       propertyPath: m_EntityGroups.Array.data[0].m_InstanceAutoReleaseInterval
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180238220910177114, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}
+      propertyPath: m_EntityGroups.Array.data[1].m_InstanceAutoReleaseInterval
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3710880779689643014, guid: ce2e031a24b215343a68b97dc1906a51, type: 3}

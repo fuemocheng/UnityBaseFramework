@@ -1,4 +1,5 @@
 using BaseFramework;
+using BaseFramework.DataTable;
 using Lockstep.Game;
 using Lockstep.Math;
 using System;
@@ -23,9 +24,13 @@ namespace XGame
             }
         }
 
-        public void BindView(BaseEntity baseEntity, Action<BaseEntity> onBindViewFinished = null)
+        public void BindView(BaseEntity baseEntity, Action<BaseEntity> onBindViewFinished)
         {
-            m_EntityLoader.ShowEntity(baseEntity.ConfigId, typeof(EntityLogicPlayer), (entity) =>
+            IDataTable<DREntity> dtEntity = GameEntry.DataTable.GetDataTable<DREntity>();
+            DREntity drEntity = dtEntity.GetDataRow(baseEntity.ConfigId);
+            Type logicType = Utility.Assembly.GetType(drEntity.LogicType);
+
+            m_EntityLoader.ShowEntity(baseEntity.ConfigId, logicType, (entity) =>
             {
                 if (entity == null)
                 {
@@ -35,14 +40,13 @@ namespace XGame
                 entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.transform.deg, 0));
                 baseEntity.EngineTransform = entity.transform;
 
-
-                EntityLogicPlayer entityLogic = entity.gameObject.GetComponent<EntityLogicPlayer>();
-                if (entityLogic == null)
+                EntityLogicBase entityLogicBase = (EntityLogicBase)entity.gameObject.GetComponent(logicType);
+                if (entityLogicBase == null)
                 {
-                    entityLogic = entity.gameObject.AddComponent<EntityLogicPlayer>();
+                    entityLogicBase = (EntityLogicBase)entity.gameObject.AddComponent(logicType);
                 }
 
-                entityLogic.BindLSEntity(baseEntity);
+                entityLogicBase.BindLSEntity(baseEntity);
                 onBindViewFinished?.Invoke(baseEntity);
             });
         }
@@ -50,6 +54,7 @@ namespace XGame
         public void UnbindView(BaseEntity entity)
         {
             entity.OnRollbackDestroy();
+            m_EntityLoader.HideEntity(entity.EntityLogicBase.Entity.Id);
         }
     }
 }

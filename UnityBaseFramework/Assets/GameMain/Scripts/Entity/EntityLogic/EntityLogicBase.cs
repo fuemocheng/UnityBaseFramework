@@ -118,6 +118,7 @@ namespace XGame
         public virtual void OnRollbackDestroy()
         {
             //回收
+            //Destroy(this);
         }
 
         #endregion

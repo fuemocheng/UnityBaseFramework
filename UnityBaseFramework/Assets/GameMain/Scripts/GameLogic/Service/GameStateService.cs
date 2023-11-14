@@ -7,6 +7,8 @@ using Lockstep.Game;
 using Lockstep.Serialization;
 using Lockstep.Util;
 using UnityBaseFramework.Runtime;
+using BaseFramework.DataTable;
+using BaseFramework;
 
 namespace XGame
 {
@@ -40,6 +42,7 @@ namespace XGame
 
             baseEntity.Awake();
             baseEntity.Start();
+
             GameEntry.Service.GetService<GameViewService>().BindView(
                 baseEntity,
                 (bEntity) =>
@@ -75,6 +78,7 @@ namespace XGame
 
         public void DestroyEntity(BaseEntity entity)
         {
+            entity.Destroy();
             GameEntry.Service.GetService<GameViewService>().UnbindView(entity);
             RemoveEntity(entity);
         }
@@ -133,6 +137,11 @@ namespace XGame
             return GetEntities<Spawner>().ToArray(); //TODO Cache
         }
 
+        public Bullet[] GetBullets()
+        {
+            return GetEntities<Bullet>().ToArray();
+        }
+
         public void Backup(int tick)
         {
             m_Tick2State[tick] = m_CurGameState;
@@ -141,6 +150,7 @@ namespace XGame
             writer.Write(GameEntry.Service.GetService<CommonStateService>().Hash);
 
             BackUpEntities(GetPlayers(), writer);
+            BackUpEntities(GetBullets(), writer);
 
             m_Tick2Backup[tick] = writer;
         }
@@ -165,6 +175,7 @@ namespace XGame
                 GameEntry.Service.GetService<CommonStateService>().Hash = hash;
 
                 RecoverEntities<Player>(reader);
+                RecoverEntities<Bullet>(reader);
             }
             else
             {
@@ -195,6 +206,7 @@ namespace XGame
                     entity.DoBindRef();
                     entity.Awake();
                     entity.Start();
+
                     GameEntry.Service.GetService<GameViewService>().BindView(
                         entity,
                         (bEntity) =>

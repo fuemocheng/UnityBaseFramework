@@ -43,7 +43,7 @@ namespace XGame
                 }
 
                 IsFire = Input.GetMouseButtonDown(0);
-                IsSpeedUp = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                IsSpeedUp = !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
 
                 GameProto.Input currInput = GameEntry.Service.GetService<GameInputService>().CurrInput;
                 currInput.InputH = InputUV.x._val;
