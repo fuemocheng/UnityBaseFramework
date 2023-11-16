@@ -23,7 +23,7 @@ namespace XGame
 
         public int Tick { get; private set; }
 
-        public GameProto.Input[] PlayerInputs => GameEntry.Service.GetService<GameStateService>().GetPlayers().Select(a => a.input).ToArray();
+        public GameProto.Input[] PlayerInputs => GameEntry.Service.GetService<GameStateService>().GetPlayers().Select(a => a.Input).ToArray();
 
         public static Player MyPlayer;
 
@@ -94,7 +94,7 @@ namespace XGame
                 LVector2 initPos = LVector2.zero;
                 Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(configId, initPos);
 
-                player.localId = userGameInfos[i].LocalId;
+                player.LocalId = userGameInfos[i].LocalId;
                 player.Camp = (ECamp)userGameInfos[i].Camp;
             }
 

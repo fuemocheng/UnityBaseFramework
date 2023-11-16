@@ -11,16 +11,16 @@ namespace XGame
     [NoBackup]
     public partial class CEntity : BaseEntity
     {
-        public CRigidbody rigidbody = new CRigidbody();
-        public ColliderData colliderData = new ColliderData() { radius = (0.1f).ToLFloat() };
+        public CRigidbody Rigidbody = new CRigidbody();
+        public ColliderData ColliderData = new ColliderData() { radius = (0.1f).ToLFloat() };
 
-        public LFloat moveSpd = (LFloat)2.5f;
-        public LFloat turnSpd = (LFloat)360f;
+        public LFloat MoveSpd = (LFloat)2.5f;
+        public LFloat TurnSpd = (LFloat)360f;
 
         protected override void BindRef()
         {
             base.BindRef();
-            rigidbody.BindRef(transform);
+            Rigidbody.BindRef(CTransform);
         }
 
         public override void Awake()
@@ -31,12 +31,12 @@ namespace XGame
         public override void Start()
         {
             base.Start();
-            rigidbody.DoStart();
+            Rigidbody.DoStart();
         }
 
         public override void Update(LFloat deltaTime)
         {
-            rigidbody.DoUpdate(deltaTime);
+            Rigidbody.DoUpdate(deltaTime);
             base.Update(deltaTime);
         }
 

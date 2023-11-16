@@ -11,8 +11,8 @@ namespace XGame
         {
             base.BindRef();
             RegisterComponent(brain);
-            moveSpd = 2;
-            turnSpd = 150;
+            MoveSpd = 2;
+            TurnSpd = 150;
         }
     }
 }

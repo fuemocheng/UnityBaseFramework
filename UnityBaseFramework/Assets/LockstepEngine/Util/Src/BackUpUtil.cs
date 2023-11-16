@@ -50,7 +50,7 @@ namespace Lockstep.Util {
 
         public static void DumpList(string name, IList lst, StringBuilder sb, string prefix){
             sb.AppendLine(prefix + name + " Count" + ":" + lst.Count.ToString());
-            sb.Append("[");
+            sb.AppendLine(prefix + "[");
             for (int i = 0; i < lst.Count; i++) {
                 var item = lst[i];
                 if (item is IDumpStr dump) {
@@ -61,7 +61,7 @@ namespace Lockstep.Util {
                 }
             }
 
-            sb.Append("]");
+            sb.AppendLine(prefix + "]");
         }
     }
 }

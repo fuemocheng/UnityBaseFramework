@@ -33,6 +33,36 @@ namespace Lockstep.Collision2D {
             });
             return colFab;
         }
+
+        public static ColliderPrefab CreateColliderPrefab(string prefabName, ColliderData data)
+        {
+            Debug.Trace("CreateColliderPrefab " + prefabName);
+            CBaseShape collider = null;
+            if (data == null)
+            {
+                Debug.LogError(prefabName + " Miss ColliderDataMono ");
+                return null;
+            }
+
+            if (data.radius > 0)
+            {
+                //circle
+                collider = new CCircle(data.radius);
+            }
+            else
+            {
+                //obb
+                collider = new COBB(data.size, data.deg);
+            }
+            Debug.Trace($"{prefabName} !!!CreateCollider  deg: {data.deg} up:{data.size} radius:{data.radius}");
+            var colFab = new ColliderPrefab();
+            colFab.parts.Add(new ColliderPart()
+            {
+                transform = new CTransform2D(LVector2.zero),
+                collider = collider
+            });
+            return colFab;
+        }
     }
 }
 #endif

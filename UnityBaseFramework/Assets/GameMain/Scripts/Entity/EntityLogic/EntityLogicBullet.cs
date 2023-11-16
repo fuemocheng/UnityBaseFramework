@@ -66,9 +66,9 @@ namespace XGame
             //}
 
             //更新位置。
-            var pos = m_CEntity.transform.Pos3.ToVector3();
+            var pos = m_CEntity.CTransform.Pos3.ToVector3();
             transform.position = Vector3.Lerp(transform.position, pos, 0.3f);
-            var deg = m_CEntity.transform.deg.ToFloat();
+            var deg = m_CEntity.CTransform.deg.ToFloat();
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, deg, 0), 0.3f);
 
             //Debug.LogError($"BulletLogicPos:{transform.position}");

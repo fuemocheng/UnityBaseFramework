@@ -16,9 +16,9 @@ namespace XGame
         {
             base.BindRef();
             //TODO:读表。
-            moveSpd = (LFloat)40f;
+            MoveSpd = (LFloat)40f;
             MaxTime = (LFloat)2f;
-            colliderData.radius = (0.1f).ToLFloat();
+            ColliderData.radius = (0.1f).ToLFloat();
         }
 
         public override void Awake()
@@ -39,7 +39,7 @@ namespace XGame
             }
             base.Update(deltaTime);
             CurrTime += deltaTime;
-            transform.pos = transform.pos + Dir * moveSpd * deltaTime;
+            CTransform.pos = CTransform.pos + Dir * MoveSpd * deltaTime;
 
             if (CurrTime >= MaxTime)
             {

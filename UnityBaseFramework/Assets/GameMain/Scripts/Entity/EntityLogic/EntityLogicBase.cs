@@ -111,8 +111,8 @@ namespace XGame
             baseEntity.EntityLogicBase = this;
             m_BaseEntity = baseEntity;
 
-            transform.position = m_BaseEntity.transform.Pos3.ToVector3();
-            transform.rotation = Quaternion.Euler(0, m_BaseEntity.transform.deg.ToFloat(), 0);
+            transform.position = m_BaseEntity.CTransform.Pos3.ToVector3();
+            transform.rotation = Quaternion.Euler(0, m_BaseEntity.CTransform.deg.ToFloat(), 0);
         }
 
         public virtual void OnRollbackDestroy()

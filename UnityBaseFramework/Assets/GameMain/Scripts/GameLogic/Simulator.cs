@@ -20,7 +20,7 @@ namespace XGame
             Instance = this;
         }
 
-        public const long MinMissFrameReqTickDiff = 10;
+        //public const long MinMissFrameReqTickDiff = 10;
         public const long MaxSimulationMsPerFrame = 20;
         public const int MaxPredictFrameCount = 30;
 
@@ -48,7 +48,7 @@ namespace XGame
 
         // frame count that need predict(TODO should change according current network's delay).
         public int FramePredictCount = 0;
-        // 预发送输入帧数量。
+        // 预发送输入帧数量，根据网络情况动态调整。
         public int PreSendInputCount = 1;
 
         public int TargetTick => m_TickSinceGameStart + FramePredictCount;
@@ -307,8 +307,8 @@ namespace XGame
 
             var minTickToBackup = (maxContinueServerTick - (maxContinueServerTick % m_SnapshotFrameInterval));
 
-            // Pursue Server frames
-            //var deadline = LTime.realtimeSinceStartupMS + MaxSimulationMsPerFrame;
+            //Pursue Server frames
+            //每自然帧 执行或者追逻辑帧，最多用时 MaxSimulationMsPerFrame；
             var deadline = GameTime.CurrTimeStamp + MaxSimulationMsPerFrame;
             while (World.Tick < m_FrameBuffer.CurTickInServer)
             {
@@ -355,7 +355,6 @@ namespace XGame
                     Simulate(sFrame, World.Tick == minTickToBackup);
                 }
             }
-
 
             //Run frames
             while (World.Tick <= TargetTick)
@@ -441,6 +440,10 @@ namespace XGame
             {
                 Log.Error($"Tick [{tick}] Rollback Error: Hash is diff. OldHash:{hash}  CurHash:{curHash}");
 #if UNITY_EDITOR
+                //只有混滚后hash不匹配，才重dump当前帧。
+                m_DumpHelper.DumpFrame(false);
+                m_DumpHelper.OnFrameEnd();
+
                 m_DumpHelper.DumpToFile(true);
                 return false;
 #endif
@@ -559,7 +562,7 @@ namespace XGame
             GameEntry.Service.GetService<ConstStateService>().IsPursueFrame = true;
 
             Log.Info($"PurchaseServering curTick:" + World.Tick);
-            var progress = World.Tick * 1.0f / m_FrameBuffer.CurTickInServer;
+            //var progress = World.Tick * 1.0f / m_FrameBuffer.CurTickInServer;
             //EventHelper.Trigger(EEvent.PursueFrameProcess, progress);
         }
 

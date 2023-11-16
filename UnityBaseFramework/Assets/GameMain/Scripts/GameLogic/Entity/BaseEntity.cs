@@ -12,8 +12,10 @@ namespace XGame
     {
         public int EntityId;
         public int ConfigId;
+        [NoBackup]
+        public int GameObjectSerialId;
 
-        public CTransform2D transform = new CTransform2D();
+        public CTransform2D CTransform = new CTransform2D();
 
         [NoBackup]
         public object EngineTransform;

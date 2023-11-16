@@ -13,7 +13,14 @@ namespace XGame
             foreach (var entity in GetPlayers())
             {
                 //hash += entity.curHealth.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-                hash += entity.transform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+                hash += entity.CTransform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+                //hash += entity.skillBox.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            }
+
+            foreach (var entity in GetBullets())
+            {
+                //hash += entity.curHealth.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+                hash += entity.CTransform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
                 //hash += entity.skillBox.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             }
 
@@ -31,17 +38,16 @@ namespace XGame
             //}
             //_debugService.Trace($"GetSpawners hash {hash}",true);
 
-            hash += m_CurGameState.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            //hash += m_CurGameState.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //_debugService.Trace($"GetHash hash {hash}",true);
             return hash;
         }
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            sb.AppendLine("Hash ------ : " + GameEntry.Service.GetService<CommonStateService>().Hash);
+            sb.AppendLine(prefix + "Hash : " + GameEntry.Service.GetService<CommonStateService>().Hash);
             BackUpUtil.DumpList("GetPlayers", GetPlayers(), sb, prefix);
-            //BackUpUtil.DumpList("GetEnemies", GetEnemies(), sb, prefix);
-            //BackUpUtil.DumpList("GetSpawners", GetSpawners(), sb, prefix);
+            BackUpUtil.DumpList("GetBullets", GetBullets(), sb, prefix);
             sb.AppendLine(prefix + "EntityId" + ":" + m_CurGameState.ToString());
         }
     }

@@ -35,8 +35,8 @@ namespace XGame
 
             baseEntity.EntityId = m_IdService.GenId();
             baseEntity.ConfigId = configId;
-            baseEntity.transform.Pos3 = position;
-            Log.Info($"CreateEntity:{configId} Pos:{position} EntityId:{baseEntity.EntityId}");
+            baseEntity.CTransform.Pos3 = position;
+            //Log.Error($"CreateEntity:{configId} Pos:{position} EntityId:{baseEntity.EntityId}");
 
             baseEntity.DoBindRef();
 
@@ -47,12 +47,14 @@ namespace XGame
                 baseEntity,
                 (bEntity) =>
                 {
-                    if (bEntity is CEntity cEntity)
-                    {
-                        PhysicSystem.Instance.RegisterEntity(configId, cEntity);
-                    }
+                    //Log.Error($"[{World.Instance.Tick}] CreateEntity - BindView - Entity {baseEntity.EntityId}");
                 }
             );
+
+            if (baseEntity is CEntity cEntity)
+            {
+                PhysicSystem.Instance.RegisterEntity(configId, cEntity);
+            }
 
             AddEntity(baseEntity);
             return baseEntity;
@@ -64,7 +66,17 @@ namespace XGame
             if (m_TypeEntities.TryGetValue(t, out IList outList))
             {
                 List<T> entityList = outList as List<T>;
-                entityList.Add(entity);
+                //保证插入的顺序；
+                int insertIndex = entityList.Count;
+                for (int i = 0; i < entityList.Count; i++)
+                {
+                    if (entity.EntityId <= entityList[i].EntityId)
+                    {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+                entityList.Insert(insertIndex, entity);
             }
             else
             {
@@ -78,8 +90,8 @@ namespace XGame
 
         public void DestroyEntity(BaseEntity entity)
         {
-            entity.Destroy();
             GameEntry.Service.GetService<GameViewService>().UnbindView(entity);
+            entity.Destroy();
             RemoveEntity(entity);
         }
 
@@ -200,23 +212,26 @@ namespace XGame
                 {
                     //此Entity已经被删除销毁，Recover这一帧的时候重新创建。
                     T entity = new T();
-                    entity.ReadBackup(reader);
-
+                    
                     //走一遍创建流程。
                     entity.DoBindRef();
                     entity.Awake();
                     entity.Start();
 
+                    entity.ReadBackup(reader);
+
                     GameEntry.Service.GetService<GameViewService>().BindView(
                         entity,
                         (bEntity) =>
                         {
-                            if (bEntity is CEntity cEntity)
-                            {
-                                PhysicSystem.Instance.RegisterEntity(entity.ConfigId, cEntity);
-                            }
+                            //Log.Error($"[{World.Instance.Tick}] RecoverEntities - BindView - Entity {bEntity.EntityId}");
                         }
                     );
+
+                    if (entity is CEntity cEntity)
+                    {
+                        PhysicSystem.Instance.RegisterEntity(entity.ConfigId, cEntity);
+                    }
 
                     AddEntity(entity);
                 }
@@ -228,14 +243,18 @@ namespace XGame
             List<BaseEntity> needRemove = new List<BaseEntity>();
             foreach (KeyValuePair<int, BaseEntity> kvp in m_Entities)
             {
-                if (!recoveredEntities.Contains(kvp.Key))
+                if(kvp.Value is T)
                 {
-                    needRemove.Add(kvp.Value);
+                    if (!recoveredEntities.Contains(kvp.Key))
+                    {
+                        needRemove.Add(kvp.Value);
+                    }
                 }
             }
             for (int i = 0; i < needRemove.Count; i++)
             {
                 DestroyEntity(needRemove[i]);
+                //Log.Error($"[{World.Instance.Tick}] RecoverEntities - DestroyEntity {needRemove[i].EntityId}");
             }
         }
 

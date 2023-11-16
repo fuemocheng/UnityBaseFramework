@@ -12,7 +12,7 @@ namespace XGame
 
         private ECamp m_Camp => m_PlayerEntity == null ? ECamp.Default : m_PlayerEntity.Camp;
 
-        private GameProto.Input m_Input => m_PlayerEntity == null ? null : m_PlayerEntity.input;
+        private GameProto.Input m_Input => m_PlayerEntity == null ? null : m_PlayerEntity.Input;
 
         private List<Lockstep.Collision2D.ColliderProxy> m_ColliderProxy = new();
 
@@ -54,10 +54,14 @@ namespace XGame
 
         protected void UpdateMove()
         {
+            if(m_CEntity == null)
+            {
+                return;
+            }
             //更新位置。
-            var pos = m_CEntity.transform.Pos3.ToVector3();
+            var pos = m_CEntity.CTransform.Pos3.ToVector3();
             transform.position = Vector3.Lerp(transform.position, pos, 0.3f);
-            var deg = m_CEntity.transform.deg.ToFloat();
+            var deg = m_CEntity.CTransform.deg.ToFloat();
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, deg, 0), 0.3f);
 
             UpdateMoveAnimation();
@@ -89,7 +93,7 @@ namespace XGame
             //是否加速。
             bool isSpeedUp = m_Input.IsSpeedUp;
 
-            LVector2 faceDir = mousePos - m_PlayerEntity.transform.pos;
+            LVector2 faceDir = mousePos - m_PlayerEntity.CTransform.pos;
             LVector2 moveDir = inputUV;
 
             LFloat faceDeg = LMath.Atan2(faceDir.y, faceDir.x) * LMath.Rad2Deg;

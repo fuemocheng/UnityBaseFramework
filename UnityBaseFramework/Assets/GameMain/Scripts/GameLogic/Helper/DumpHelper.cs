@@ -58,15 +58,15 @@ namespace XGame
             }
         }
 
-        private void DumpCurrFrame(StringBuilder sb, string prefix = "")
+        private void DumpCurrFrame(StringBuilder sb, string prefix = "\t")
         {
-            sb.AppendLine($"Tick: {Tick} --------------------");
-            foreach (var svc in GameEntry.Service.GetAllServices())
+            sb.AppendLine($"Tick: {Tick} ----------------------------------- ");
+            foreach (var service in GameEntry.Service.GetAllServices())
             {
-                if (svc is IDumpStr dump)
+                if (service is IDumpStr dump)
                 {
-                    sb.AppendLine($"{svc.GetType()} --------------------");
-                    dump.DumpStr(sb, "\t" + prefix);
+                    sb.AppendLine($"{prefix}{service.GetType()} --------------------");
+                    dump.DumpStr(sb, $"{prefix}\t");
                 }
             }
         }

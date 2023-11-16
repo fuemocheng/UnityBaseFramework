@@ -10,16 +10,17 @@ namespace XGame
     public partial class CMover : CComponent
     {
         public Player player => (Player)baseEntity;
-        public GameProto.Input input => player.input;
+        public GameProto.Input input => player.Input;
 
         static LFloat _sqrStopDist = new LFloat(true, 40);
-        public LFloat speed => player.moveSpd;
-        public bool hasReachTarget = false;
-        public bool needMove = true;
+        public LFloat speed => player.MoveSpd;
+
+        public bool HasReachTarget = false;
+        public bool NeedMove = true;
 
         public override void Update(LFloat deltaTime)
         {
-            if (!entity.rigidbody.isOnFloor)
+            if (!entity.Rigidbody.isOnFloor)
             {
                 return;
             }
@@ -39,20 +40,20 @@ namespace XGame
                 //transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
             }
 
-            hasReachTarget = !needChase;
+            HasReachTarget = !needChase;
 
             //朝向 deg，朝向鼠标的方向
             LVector2 mousePos = new LVector2(new LFloat(true, input.MousePosX), new LFloat(true, input.MousePosY));
             if (!mousePos.Equals(LVector2.zero))
             {
                 LFloat targetDeg = (mousePos - transform.pos).ToDeg();
-                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.TurnSpd * deltaTime, out var hasReachDeg);
             }
             else
             {
                 LVector2 dir = inputUV.normalized;
                 LFloat targetDeg = dir.ToDeg();
-                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.turnSpd * deltaTime, out var hasReachDeg);
+                transform.deg = CTransform2D.TurnToward(targetDeg, transform.deg, player.TurnSpd * deltaTime, out var hasReachDeg);
             }
 
         }

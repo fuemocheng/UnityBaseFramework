@@ -39,11 +39,15 @@ namespace XGame
         // the tick client need run in next update
         private int m_NextClientTick;
 
+        //当前服务器已经发来的最大Tick。
         public int CurTickInServer { get; private set; }
-        public int NextTickToCheck { get; private set; }
+        //Buffer中的最大Tick，因为可能重连或者Buffer大小限制，存储的不一定是服务器最大Tick。
         public int MaxServerTickInBuffer { get; private set; } = -1;
-        public bool IsNeedRollback { get; private set; }
+        //下一个需要校验的Tick。（未校验的）
+        public int NextTickToCheck { get; private set; }
+        //已经校验的最大Tick。
         public int MaxContinueServerTick { get; private set; }
+        public bool IsNeedRollback { get; private set; }
 
         public int LocalId;
 
@@ -204,7 +208,7 @@ namespace XGame
                 }
             }
 
-            //Request miss frame data
+            //TODO:Request miss frame data
             int tick = NextTickToCheck;
             for (; tick <= MaxServerTickInBuffer; tick++)
             {

@@ -28,7 +28,7 @@ namespace XGame
         /// <summary>
         /// 每个消息包请求的丢失帧的最大数量。
         /// </summary>
-        public const int MaxRepMissFrameCountPerPack = 300;
+        public const int MaxRepMissFrameCountPerPack = 500;
 
         /// <summary>
         /// Dump路径，客户端。

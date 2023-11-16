@@ -42,6 +42,7 @@
       <Asset Guid="23dc243f30c0e09448b15a00193a6383" ResourceName="GameMain/Animations" />
       <Asset Guid="24ca310f92a6796408f1db7647ec4e55" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="27b485c987643c34285b94f3a869e21d" ResourceName="GameMain/Materials" />
+      <Asset Guid="2b2295ba6b85af34ea96982a4e2dc2a3" ResourceName="GameMain/Animations" />
       <Asset Guid="2deec6345d837d540b8e07a0aedae157" ResourceName="GameMain/UI/UIForms" />
       <Asset Guid="2e81ef9c6a4ae794a9b24f11bf1ac973" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="2f73032e35c7e4942af4e612350dbba9" ResourceName="GameMain/UI/UISprites" />
@@ -50,22 +51,27 @@
       <Asset Guid="39615deded012b34488440d6511a6585" ResourceName="GameMain/DataTables" />
       <Asset Guid="3bb361fe5959cc34bb3ba8f3bc79e984" ResourceName="GameMain/Animations" />
       <Asset Guid="3be3fac3611f4584695662c4889f722d" ResourceName="GameMain/UI/UISprites" />
+      <Asset Guid="3d94a3e804db0a34781b9436c004a131" ResourceName="GameMain/Animations" />
       <Asset Guid="3dc7455402dfa462b89a4bbd513955e9" ResourceName="GameMain/Sounds" />
       <Asset Guid="3f54fcfdac53aec42ae18a6a1c6d8cb1" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="432065ea1d5005243be84f03a73c62db" ResourceName="GameMain/Animations" />
       <Asset Guid="4d6f7580f8ec7d544a9f9a3c3a5b3a64" ResourceName="GameMain/Animations" />
       <Asset Guid="4e0f7edb1e268ac438d901a05c473ba3" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="5059dbb1942397543843f80246e37f50" ResourceName="GameMain/Scenes" />
+      <Asset Guid="52dd21d0db84c2140b70e9e46c85cb64" ResourceName="GameMain/Animations" />
       <Asset Guid="52fa143ac9c648c4dbbf580af8a67f74" ResourceName="GameMain/Animations" />
       <Asset Guid="56b8df63bbad60749a69e38bc687fadf" ResourceName="GameMain/UI/UISprites" />
+      <Asset Guid="5aab91e54c19e0b4089a49fd4974bbdb" ResourceName="GameMain/Animations" />
       <Asset Guid="5c38247664a9e77429ad8bd8e884696f" ResourceName="GameMain/UI/UIForms" />
       <Asset Guid="5df68bdb6b3bb2a4fb017c4f2e6dae17" ResourceName="GameMain/Animations" />
       <Asset Guid="5f2f80912a7e3814aab6e48cb64023e8" ResourceName="GameMain/DataTables" />
       <Asset Guid="601a953f2ed8d244a8417b95ac025847" ResourceName="GameMain/Materials" />
+      <Asset Guid="623396db3c69271449a7bc033afba60f" ResourceName="GameMain/Textures" />
       <Asset Guid="62af9e5c8f39cfa49af9e10ccf42f1da" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="638ff8ae4a0d15047839cd265d3bc296" ResourceName="GameMain/Music" />
       <Asset Guid="642e831a3d357ba40bfbb2ac416afd07" ResourceName="GameMain/DataTables" />
       <Asset Guid="6cbc2c323b77f804fb958fa4eca33998" ResourceName="GameMain/UI/UISprites" />
+      <Asset Guid="6f6c577d74787c548981f39295331e1e" ResourceName="GameMain/Animations" />
       <Asset Guid="6f9ebfe2c2915e7468c33f08f8d76bee" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="6fe469f85abaeee4ab379a5335431c19" ResourceName="GameMain/Textures" />
       <Asset Guid="71bfd6d5cfded354e98399b7fdc143f6" ResourceName="GameMain/UI/UISprites" />
@@ -87,12 +93,15 @@
       <Asset Guid="8e021a81c51ce9b499c75ec6e783c32b" ResourceName="GameMain/Configs" />
       <Asset Guid="8e114ded6a865324588170636872943c" ResourceName="GameMain/DataTables" />
       <Asset Guid="90160e3023df3fd45bdefa4972e3b319" ResourceName="GameMain/Scenes" />
+      <Asset Guid="965bb1d01bd81d849b955503b5acdbbc" ResourceName="GameMain/Entities" />
       <Asset Guid="9b433f0bb7fef6f4085c316a0d88c307" ResourceName="GameMain/DataTables" />
       <Asset Guid="9be2e1e45f4edd74c8764538ad306b78" ResourceName="GameMain/Localization" ResourceVariant="zh-cn" />
       <Asset Guid="9c3faac13c8ced84a9f3018303b7bb98" ResourceName="GameMain/DataTables" />
       <Asset Guid="9e58ca723837e494fb0dfdc015b54c7a" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="9f847ec5e66e03e4ead1d3c5f7b510e8" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="a019ae3af8e864616b85773c509f5285" ResourceName="GameMain/Sounds" />
+      <Asset Guid="a3e1afe028fab2046bc18edb24eea8ff" ResourceName="GameMain/Materials" />
+      <Asset Guid="a60b27b7fe96ce044abbef32414213ff" ResourceName="GameMain/Animations" />
       <Asset Guid="a83b930d3f3d0d34da6044d52ae1d97b" ResourceName="GameMain/Animations" />
       <Asset Guid="a8c07bbe04fdaf04b80e27f651a8edd6" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="aa33044ebcd7ce343aa5f37ef7f4b009" ResourceName="GameMain/UI/UISprites" />
@@ -112,6 +121,7 @@
       <Asset Guid="bf75b984df8a84987bcf3a8bf6e2862d" ResourceName="GameMain/Sounds" />
       <Asset Guid="c09e5fd8e5f40ba419cc0a9b57513ccb" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="c5a7421be3793ec4fb2afdaaca0496a0" ResourceName="GameMain/Materials" />
+      <Asset Guid="c5cbd7207c2f0d344b83da0cece4fa86" ResourceName="GameMain/Animations" />
       <Asset Guid="c7d1e11dd37634b48a9dd4012b8e4306" ResourceName="GameMain/UI/UISounds" />
       <Asset Guid="c81544f135a14634aa2d14658e30c763" ResourceName="GameMain/Models" />
       <Asset Guid="caa829ab2ffc71340a69253afdf58365" ResourceName="GameMain/Music" />
@@ -138,8 +148,9 @@
       <Asset Guid="f1e64089d52b20d49a0bd6d79a0ab41c" ResourceName="GameMain/Animations" />
       <Asset Guid="f2f4df0b7211e4c42a5638273525d8ee" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="f2f97a713beae744181ba934f9c4113a" ResourceName="GameMain/DataTables" />
-      <Asset Guid="f72e12225668e234f830ccf3d3859451" ResourceName="GameMain/Animations" />
       <Asset Guid="f9158bdfef346af46b269f9aac83e198" ResourceName="GameMain/UI/UISprites" />
+      <Asset Guid="f931ca7ec4160ae468d50403b789da20" ResourceName="GameMain/Animations" />
+      <Asset Guid="f9d3fc4a26ff4ad46bb32ca303a4cadc" ResourceName="GameMain/Animations" />
       <Asset Guid="fad449af391eab74ea3165b70776b190" ResourceName="GameMain/UI/UISprites" />
       <Asset Guid="fb5f7567533a18442bbc16ae564a1b39" ResourceName="GameMain/UI/UISprites" />
     </Assets>

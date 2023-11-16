@@ -2,44 +2,46 @@ using System;
 using Lockstep;
 using Lockstep.Collision2D;
 using Lockstep.Math;
+using UnityBaseFramework.Runtime;
 
 namespace XGame
 {
     [Serializable]
     public partial class Player : CEntity
     {
-        public int localId;
+        public int LocalId;
 
-        public CMover mover = new CMover();
-        public CAnimator animator = new CAnimator();
+        public CMover Mover = new CMover();
+        public CAnimator Animator = new CAnimator();
         //public CSkillBox skillBox = new CSkillBox();
 
         [NonSerialized]
         public ECamp Camp = ECamp.Default;
 
-        public GameProto.Input input = new GameProto.Input();
+        public GameProto.Input Input = new GameProto.Input();
+
+        public bool IsFire;
 
         //public int curHealth;
         //public int maxHealth = 100;
         //public int damage = 10;
 
         //public bool isInvincible;
-        //public bool isFire;
 
         //public bool isDead => curHealth <= 0;
 
         protected override void BindRef()
         {
             base.BindRef();
-            RegisterComponent(mover);
-            RegisterComponent(animator);
+            RegisterComponent(Mover);
+            RegisterComponent(Animator);
             //RegisterComponent(skillBox);
 
             //TODO:读表
-            moveSpd = (LFloat)2.5f;
-            turnSpd = 360;
+            MoveSpd = (LFloat)2.5f;
+            TurnSpd = 360;
             //curHealth = maxHealth;
-            colliderData.radius = (0.2f).ToLFloat();
+            ColliderData.radius = (0.2f).ToLFloat();
             //TODO:rigidbody
         }
 
@@ -52,7 +54,22 @@ namespace XGame
         {
             base.Update(deltaTime);
 
-            if (transform != null && input != null && input.IsFire)
+            ////FireCD Temp;
+            //if(m_CurrFireCd >= (LFloat)0.5f)
+            //{
+            //    if (transform != null && input != null && input.IsFire)
+            //    {
+            //        Fire();
+            //        m_CurrFireCd = (LFloat)0f;
+            //    }
+            //}
+            //else
+            //{
+            //    m_CurrFireCd += deltaTime;
+            //}
+
+            IsFire = Input.IsFire;
+            if (CTransform != null && IsFire)
             {
                 Fire();
             }
@@ -60,10 +77,11 @@ namespace XGame
 
         public void Fire()
         {
+            Log.Error($"Tick{World.Instance.Tick} Entity:{EntityId} Fire");
             int bulletId = 100001;
-            Bullet bullet = GameEntry.Service.GetService<GameStateService>().CreateEntity<Bullet>(bulletId, transform.Pos3);
-            bullet.transform.Pos3 = transform.Pos3;
-            bullet.Dir = (new LVector2(new LFloat(true, input.MousePosX), new LFloat(true, input.MousePosY)) - transform.pos).normalized;
+            Bullet bullet = GameEntry.Service.GetService<GameStateService>().CreateEntity<Bullet>(bulletId, CTransform.Pos3);
+            bullet.CTransform.Pos3 = CTransform.Pos3;
+            bullet.Dir = (new LVector2(new LFloat(true, Input.MousePosX), new LFloat(true, Input.MousePosY)) - CTransform.pos).normalized;
         }
 
         //public bool Fire(int idx = 0)

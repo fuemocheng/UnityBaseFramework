@@ -169,15 +169,20 @@ namespace XGame
 
             RigisterPrefab(prefabId, prefabId < 100000 ? (int)EColliderLayer.Hero : (int)EColliderLayer.Enemy);
 
-            GameObject fab = ((Transform)entity.EngineTransform)?.gameObject;
-            if (fab == null)
-            {
-                Log.Error("PhysicSystem RegisterEntity Prefab is null.");
-                return;
-            }
+            //GameObject fab = ((Transform)entity.EngineTransform)?.gameObject;
+            //if (fab == null)
+            //{
+            //    Log.Error("PhysicSystem RegisterEntity Prefab is null.");
+            //    return;
+            //}
+            //if (!_fabId2ColPrefab.TryGetValue(prefabId, out colliderPrefab))
+            //{
+            //    colliderPrefab = CollisionSystem.CreateColliderPrefab(fab, entity.colliderData);
+            //}
+
             if (!_fabId2ColPrefab.TryGetValue(prefabId, out colliderPrefab))
             {
-                colliderPrefab = CollisionSystem.CreateColliderPrefab(fab, entity.colliderData);
+                colliderPrefab = CollisionSystem.CreateColliderPrefab($"Collier_{entity.EntityId}", entity.ColliderData);
             }
 
             AttachToColSystem(_fabId2Layer[prefabId], colliderPrefab, entity);
@@ -187,7 +192,7 @@ namespace XGame
         {
             var proxy = new ColliderProxy();
             proxy.EntityObject = entity;
-            proxy.Init(prefab, entity.transform);
+            proxy.Init(prefab, entity.CTransform);
             proxy.IsStatic = false;
             proxy.LayerType = layer;
             var eventHandler = entity;

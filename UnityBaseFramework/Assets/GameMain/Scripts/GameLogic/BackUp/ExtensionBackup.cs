@@ -10,28 +10,28 @@ namespace XGame
     {
         public void WriteBackup(Serializer writer)
         {
-            writer.Write(hasReachTarget);
-            writer.Write(needMove);
+            writer.Write(HasReachTarget);
+            writer.Write(NeedMove);
         }
 
         public void ReadBackup(Deserializer reader)
         {
-            hasReachTarget = reader.ReadBoolean();
-            needMove = reader.ReadBoolean();
+            HasReachTarget = reader.ReadBoolean();
+            NeedMove = reader.ReadBoolean();
         }
 
         public int GetHash(ref int idx)
         {
             int hash = 1;
-            hash += hasReachTarget.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += needMove.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += HasReachTarget.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += NeedMove.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             return hash;
         }
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            sb.AppendLine(prefix + "hasReachTarget" + ":" + hasReachTarget.ToString());
-            sb.AppendLine(prefix + "needMove" + ":" + needMove.ToString());
+            sb.AppendLine(prefix + "HasReachTarget" + ":" + HasReachTarget.ToString());
+            sb.AppendLine(prefix + "NeedMove" + ":" + NeedMove.ToString());
         }
     }
 }
@@ -73,9 +73,9 @@ namespace Lockstep.Game
         {
             sb.AppendLine(prefix + "Mass" + ":" + Mass.ToString());
             sb.AppendLine(prefix + "Speed" + ":" + Speed.ToString());
-            sb.AppendLine(prefix + "isEnable" + ":" + isEnable.ToString());
-            sb.AppendLine(prefix + "isOnFloor" + ":" + isOnFloor.ToString());
-            sb.AppendLine(prefix + "isSleep" + ":" + isSleep.ToString());
+            sb.AppendLine(prefix + "IsEnable" + ":" + isEnable.ToString());
+            sb.AppendLine(prefix + "IsOnFloor" + ":" + isOnFloor.ToString());
+            sb.AppendLine(prefix + "IsSleep" + ":" + isSleep.ToString());
         }
     }
 }
@@ -109,9 +109,9 @@ namespace Lockstep.Collision2D
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            sb.AppendLine(prefix + "deg" + ":" + deg.ToString());
-            sb.AppendLine(prefix + "pos" + ":" + pos.ToString());
-            sb.AppendLine(prefix + "y" + ":" + y.ToString());
+            sb.AppendLine(prefix + "Deg" + ":" + deg.ToString());
+            sb.AppendLine(prefix + "Pos" + ":" + pos.ToString());
+            sb.AppendLine(prefix + "Y" + ":" + y.ToString());
         }
     }
 }
@@ -157,13 +157,13 @@ namespace Lockstep.Collision2D
 
         public void DumpStr(StringBuilder sb, string prefix)
         {
-            sb.AppendLine(prefix + "deg" + ":" + deg.ToString());
-            sb.AppendLine(prefix + "high" + ":" + high.ToString());
-            sb.AppendLine(prefix + "pos" + ":" + pos.ToString());
-            sb.AppendLine(prefix + "radius" + ":" + radius.ToString());
-            sb.AppendLine(prefix + "size" + ":" + size.ToString());
-            sb.AppendLine(prefix + "up" + ":" + up.ToString());
-            sb.AppendLine(prefix + "y" + ":" + y.ToString());
+            sb.AppendLine(prefix + "Deg" + ":" + deg.ToString());
+            sb.AppendLine(prefix + "High" + ":" + high.ToString());
+            sb.AppendLine(prefix + "Pos" + ":" + pos.ToString());
+            sb.AppendLine(prefix + "Radius" + ":" + radius.ToString());
+            sb.AppendLine(prefix + "Size" + ":" + size.ToString());
+            sb.AppendLine(prefix + "Up" + ":" + up.ToString());
+            sb.AppendLine(prefix + "Y" + ":" + y.ToString());
         }
     }
 }
@@ -177,38 +177,38 @@ namespace XGame
         {
             writer.Write(EntityId);
             writer.Write(ConfigId);
+            writer.Write(LocalId);
             //writer.Write(curHealth);
             //writer.Write(damage);
-            //writer.Write(isFire);
             //writer.Write(isInvincible);
-            writer.Write(localId);
             //writer.Write(maxHealth);
-            writer.Write(moveSpd);
-            writer.Write(turnSpd);
-            colliderData.WriteBackup(writer);
-            input.WriteBackup(writer);
-            mover.WriteBackup(writer);
-            rigidbody.WriteBackup(writer);
-            transform.WriteBackup(writer);
+            writer.Write(IsFire);
+            writer.Write(MoveSpd);
+            writer.Write(TurnSpd);
+            ColliderData.WriteBackup(writer);
+            Input.WriteBackup(writer);
+            Mover.WriteBackup(writer);
+            Rigidbody.WriteBackup(writer);
+            CTransform.WriteBackup(writer);
         }
 
         public void ReadBackup(Deserializer reader)
         {
             EntityId = reader.ReadInt32();
             ConfigId = reader.ReadInt32();
+            LocalId = reader.ReadInt32();
             //curHealth = reader.ReadInt32();
             //damage = reader.ReadInt32();
-            //isFire = reader.ReadBoolean();
             //isInvincible = reader.ReadBoolean();
-            localId = reader.ReadInt32();
             //maxHealth = reader.ReadInt32();
-            moveSpd = reader.ReadLFloat();
-            turnSpd = reader.ReadLFloat();
-            colliderData.ReadBackup(reader);
-            input.ReadBackup(reader);
-            mover.ReadBackup(reader);
-            rigidbody.ReadBackup(reader);
-            transform.ReadBackup(reader);
+            IsFire = reader.ReadBoolean();
+            MoveSpd = reader.ReadLFloat();
+            TurnSpd = reader.ReadLFloat();
+            ColliderData.ReadBackup(reader);
+            Input.ReadBackup(reader);
+            Mover.ReadBackup(reader);
+            Rigidbody.ReadBackup(reader);
+            CTransform.ReadBackup(reader);
         }
 
         public int GetHash(ref int idx)
@@ -216,19 +216,19 @@ namespace XGame
             int hash = 1;
             hash += EntityId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += ConfigId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += LocalId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += curHealth.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += damage.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            //hash += isFire.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += isInvincible.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += localId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             //hash += maxHealth.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += moveSpd.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += turnSpd.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += colliderData.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += input.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += mover.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += rigidbody.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += transform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += IsFire.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += MoveSpd.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += TurnSpd.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += ColliderData.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += Input.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += Mover.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += Rigidbody.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += CTransform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             return hash;
         }
 
@@ -236,19 +236,19 @@ namespace XGame
         {
             sb.AppendLine(prefix + "EntityId" + ":" + EntityId.ToString());
             sb.AppendLine(prefix + "PrefabId" + ":" + ConfigId.ToString());
+            sb.AppendLine(prefix + "LocalId" + ":" + LocalId.ToString());
             //sb.AppendLine(prefix + "curHealth" + ":" + curHealth.ToString());
             //sb.AppendLine(prefix + "damage" + ":" + damage.ToString());
-            //sb.AppendLine(prefix + "isFire" + ":" + isFire.ToString());
             //sb.AppendLine(prefix + "isInvincible" + ":" + isInvincible.ToString());
-            sb.AppendLine(prefix + "localId" + ":" + localId.ToString());
             //sb.AppendLine(prefix + "maxHealth" + ":" + maxHealth.ToString());
-            sb.AppendLine(prefix + "moveSpd" + ":" + moveSpd.ToString());
-            sb.AppendLine(prefix + "turnSpd" + ":" + turnSpd.ToString());
-            sb.AppendLine(prefix + "colliderData" + ":"); colliderData.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "input" + ":"); input.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "mover" + ":"); mover.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "rigidbody" + ":"); rigidbody.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "transform" + ":"); transform.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "IsFire" + ":" + IsFire.ToString());
+            sb.AppendLine(prefix + "MoveSpd" + ":" + MoveSpd.ToString());
+            sb.AppendLine(prefix + "TurnSpd" + ":" + TurnSpd.ToString());
+            sb.AppendLine(prefix + "ColliderData" + ":"); ColliderData.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "Input" + ":"); Input.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "Mover" + ":"); Mover.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "Rigidbody" + ":"); Rigidbody.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "CTransform" + ":"); CTransform.DumpStr(sb, "\t" + prefix);
         }
     }
 }
@@ -261,22 +261,24 @@ namespace XGame
         {
             writer.Write(EntityId);
             writer.Write(ConfigId);
+            //writer.Write(GameObjectSerialId);
             writer.Write(Dir);
             writer.Write(CurrTime);
-            colliderData.WriteBackup(writer);
-            rigidbody.WriteBackup(writer);
-            transform.WriteBackup(writer);
+            ColliderData.WriteBackup(writer);
+            Rigidbody.WriteBackup(writer);
+            CTransform.WriteBackup(writer);
         }
 
         public void ReadBackup(Deserializer reader)
         {
             EntityId = reader.ReadInt32();
             ConfigId = reader.ReadInt32();
+            //GameObjectSerialId = reader.ReadInt32();
             Dir = reader.ReadLVector2();
             CurrTime = reader.ReadLFloat();
-            colliderData.ReadBackup(reader);
-            rigidbody.ReadBackup(reader);
-            transform.ReadBackup(reader);
+            ColliderData.ReadBackup(reader);
+            Rigidbody.ReadBackup(reader);
+            CTransform.ReadBackup(reader);
         }
 
         public int GetHash(ref int idx)
@@ -284,11 +286,12 @@ namespace XGame
             int hash = 1;
             hash += EntityId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += ConfigId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            //hash += GameObjectSerialId.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += Dir.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             hash += CurrTime.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += colliderData.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += rigidbody.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
-            hash += transform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += ColliderData.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += Rigidbody.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
+            hash += CTransform.GetHash(ref idx) * PrimerLUT.GetPrimer(idx++);
             return hash;
         }
 
@@ -296,11 +299,12 @@ namespace XGame
         {
             sb.AppendLine(prefix + "EntityId" + ":" + EntityId.ToString());
             sb.AppendLine(prefix + "PrefabId" + ":" + ConfigId.ToString());
+            //sb.AppendLine(prefix + "GameObjectSerialId" + ":" + GameObjectSerialId.ToString());
             sb.AppendLine(prefix + "Dir" + ":" + Dir.ToString());
             sb.AppendLine(prefix + "CurrTime" + ":" + CurrTime.ToString());
-            sb.AppendLine(prefix + "colliderData" + ":"); colliderData.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "rigidbody" + ":"); rigidbody.DumpStr(sb, "\t" + prefix);
-            sb.AppendLine(prefix + "transform" + ":"); transform.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "colliderData" + ":"); ColliderData.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "rigidbody" + ":"); Rigidbody.DumpStr(sb, "\t" + prefix);
+            sb.AppendLine(prefix + "transform" + ":"); CTransform.DumpStr(sb, "\t" + prefix);
         }
     }
 }

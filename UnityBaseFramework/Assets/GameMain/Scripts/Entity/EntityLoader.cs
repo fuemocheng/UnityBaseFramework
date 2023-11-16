@@ -85,13 +85,16 @@ namespace XGame
         public void HideEntity(int serialId)
         {
             Entity entity = null;
-            if (!m_DicSerialId2Entity.TryGetValue(serialId, out entity))
-            {
-                Log.Error("Can find entity('serial id:{0}') ", serialId);
-            }
-
+            
             m_DicSerialId2Entity.Remove(serialId);
             m_DicCallback.Remove(serialId);
+
+            if (!m_DicSerialId2Entity.TryGetValue(serialId, out entity))
+            {
+                Log.Info("Entity('serial id:{0}') is Loading or Null.", serialId);
+                GameEntry.Entity.HideEntity(serialId);
+                return;
+            }
 
             Entity[] entities = GameEntry.Entity.GetChildEntities(entity);
             if (entities != null)
@@ -104,7 +107,9 @@ namespace XGame
                         HideEntity(item);
                     }
                     else//若Child Entity不由这个Loader对象托管，则从Parent Entity脱离
+                    {
                         GameEntry.Entity.DetachEntity(item);
+                    }
                 }
             }
 

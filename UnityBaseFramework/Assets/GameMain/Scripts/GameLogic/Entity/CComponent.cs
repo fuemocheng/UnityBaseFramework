@@ -32,7 +32,7 @@ namespace XGame
         public virtual void BindEntity(BaseEntity entity)
         {
             this.baseEntity = entity;
-            transform = entity.transform;
+            transform = entity.CTransform;
         }
 
         public virtual void Awake()

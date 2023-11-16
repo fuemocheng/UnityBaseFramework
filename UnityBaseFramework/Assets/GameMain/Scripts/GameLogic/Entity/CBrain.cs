@@ -22,7 +22,7 @@ namespace XGame
 
         public override void Update(LFloat deltaTime)
         {
-            if (!entity.rigidbody.isOnFloor)
+            if (!entity.Rigidbody.isOnFloor)
             {
                 return;
             }

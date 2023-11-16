@@ -30,31 +30,38 @@ namespace XGame
             DREntity drEntity = dtEntity.GetDataRow(baseEntity.ConfigId);
             Type logicType = Utility.Assembly.GetType(drEntity.LogicType);
 
-            m_EntityLoader.ShowEntity(baseEntity.ConfigId, logicType, (entity) =>
-            {
-                if (entity == null)
+            baseEntity.GameObjectSerialId = m_EntityLoader.ShowEntity(
+                baseEntity.ConfigId,
+                logicType,
+                (entity) =>
                 {
-                    return;
-                }
-                entity.transform.position = baseEntity.transform.Pos3.ToVector3();
-                entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.transform.deg, 0));
-                baseEntity.EngineTransform = entity.transform;
+                    if (entity == null)
+                    {
+                        return;
+                    }
+                    entity.transform.position = baseEntity.CTransform.Pos3.ToVector3();
+                    entity.transform.rotation = Quaternion.Euler(new Vector3(0, baseEntity.CTransform.deg, 0));
+                    baseEntity.EngineTransform = entity.transform;
 
-                EntityLogicBase entityLogicBase = (EntityLogicBase)entity.gameObject.GetComponent(logicType);
-                if (entityLogicBase == null)
-                {
-                    entityLogicBase = (EntityLogicBase)entity.gameObject.AddComponent(logicType);
-                }
+                    EntityLogicBase entityLogicBase = (EntityLogicBase)entity.gameObject.GetComponent(logicType);
+                    if (entityLogicBase == null)
+                    {
+                        entityLogicBase = (EntityLogicBase)entity.gameObject.AddComponent(logicType);
+                    }
 
-                entityLogicBase.BindLSEntity(baseEntity);
-                onBindViewFinished?.Invoke(baseEntity);
-            });
+                    entityLogicBase.BindLSEntity(baseEntity);
+                    onBindViewFinished?.Invoke(baseEntity);
+                });
         }
 
         public void UnbindView(BaseEntity entity)
         {
             entity.OnRollbackDestroy();
-            m_EntityLoader.HideEntity(entity.EntityLogicBase.Entity.Id);
+            m_EntityLoader.HideEntity(entity.GameObjectSerialId);
+            //if (entity != null && entity.EntityLogicBase != null && entity.EntityLogicBase.Entity != null)
+            //{
+            //    m_EntityLoader.HideEntity(entity.EntityLogicBase.Entity.Id);
+            //}
         }
     }
 }

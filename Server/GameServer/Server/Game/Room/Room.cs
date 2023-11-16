@@ -184,7 +184,7 @@ namespace Server
                     Log.Error("User:{0} Join Camp Error, Camp:{1} is Full.", user.UserId, user.Camp);
                 }
             }
-            Log.Info("User:{0} Join Room:{1}, Join Camp:{2}", user.UserId, RoomId, user.Camp);
+            Log.Info("User:{0} LocalId:{1}  Join Room:{2}, Join Camp:{3}", user.UserId, user.LocalId, RoomId, user.Camp);
         }
 
         public void LeaveRoom(User user)

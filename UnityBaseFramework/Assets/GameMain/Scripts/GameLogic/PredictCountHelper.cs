@@ -42,11 +42,12 @@ namespace XGame
 
                         int targetPreSendTick = LMath.Clamp((int)System.Math.Ceiling(m_TargetPreSendTick), 1, 60);
 #if UNITY_EDITOR
-                        //if (targetPreSendTick != m_Simulator.PreSendInputCount) 
-                        //{
-                        //    Log.Warning($"Shrink preSend buffer old:{m_Simulator.PreSendInputCount} new:{m_TargetPreSendTick} " +
-                        //        $"PING: min:{m_FrameBuffer.m_MinPing} max:{m_FrameBuffer.m_MaxPing} avg:{m_FrameBuffer.PingVal}");
-                        //}
+                        if (targetPreSendTick != m_Simulator.PreSendInputCount)
+                        {
+                            //缩小预发送缓冲；
+                            Log.Warning($"Shrink preSend buffer old:{m_Simulator.PreSendInputCount} new:{m_TargetPreSendTick} " +
+                                $"PING: min:{m_FrameBuffer.m_MinPing} max:{m_FrameBuffer.m_MaxPing} avg:{m_FrameBuffer.PingVal}");
+                        }
 #endif
                         m_Simulator.PreSendInputCount = targetPreSendTick;
                     }
@@ -56,7 +57,9 @@ namespace XGame
 
                 if (MissTick != -1)
                 {
+                    //目标帧与丢帧之间的延迟帧数。
                     int delayTick = m_Simulator.TargetTick - MissTick;
+                    //在有丢帧的情况下，预测的预发送帧数量将增加当前延迟帧数的30%。
                     int targetPreSendTick = m_Simulator.PreSendInputCount + (int)System.Math.Ceiling(delayTick * m_IncPercent);
                     targetPreSendTick = LMath.Clamp(targetPreSendTick, 1, 60);
 #if UNITY_EDITOR
