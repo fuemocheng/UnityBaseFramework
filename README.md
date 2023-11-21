@@ -1,10 +1,20 @@
 # UnityBaseFramework
 
-## 简介
-- Based on https://gameframework.cn/ ;  
-- 基于 GameFramework 修改，添加详解教程；
+## 简介  
+- 基于开源框架 [GameFramework](https://github.com/EllanJiang/GameFramework) 修改和扩展，添加详解教程；
+- 在框架基础上实现一个帧同步的框架帧（包含服务器）， 基本的同步、预测、回滚、录像播放、追帧、断线重连等；
 
-## 教程
+## Demo概览
+- 基础同步  
+    ![PVP.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/PVP.gif)  
+- 单机模式  
+    ![ClientMode.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/ClientMode.gif)  
+- 逐帧查看  
+    ![FrameByFrame.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/FrameByFrame.gif)   
+- 断线重连
+    ![Reconnect.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/Reconnect.gif)   
+
+## 模块详解
 1. [基础模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/01%20BaseModules.md)
     - [ReferencePool 引用池](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/01%20BaseModules.md#0x00-referencepool-%E5%BC%95%E7%94%A8%E6%B1%A0)
     - [EventArgs 事件数据类](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/01%20BaseModules.md#0x01-eventargs-%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%B1%BB)
