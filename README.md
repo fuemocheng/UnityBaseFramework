@@ -12,7 +12,29 @@
 - 逐帧查看  
     ![FrameByFrame.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/FrameByFrame.gif)   
 - 断线重连
-    ![Reconnect.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/Reconnect.gif)   
+    ![Reconnect.gif](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/Gif/Reconnect.gif)  
+
+## 运行
+1. 服务器  
+    - Proto 生成  
+        点击Unity 菜单 Tools/Generate Server Proto，即可生成服务器Proto；  
+    - 打开GameServer解决方案  
+        Server/GameServer/GameServer.sln；  
+    - 运行  
+        Server项目设为启动项，即可启动；
+2. 打包资源
+    - 通过扩展编辑器 BaseFramework/ResourceTools/ResourceRuleEditor 编辑要打包的资源；  
+    - 通过扩展编辑器 BaseFramework/ResourceTools/ResourceBuilder 打包资源到 HFS/Output/ 目录下；
+    - 配置版本信息文件，HFS/version.txt；  
+        - 根据输出目录的BuildReport/xxx/BuildLog.txt将资源信息填入到version.txt中；  
+        - UpdatePrefixUri下载资源的地址配置为正确的地址；
+    - 启动HFS服务，HFS/hfs.exe，作为下载资源的服务器；
+3. 配置
+    - Assets/GameMain/Configs/Buildinfo.txt 中，CheckVersionUrl 设置为2中的资源服务器地址中的版本信息；
+    - Launcher.scene 中的BaseFramework/Builtin 的EditorResourceMode 设置为资源更新模式；
+4. Build
+    - 打包输出；
+    - 启动两个客户端即可运行Demo；
 
 ## 模块详解
 1. [基础模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/01%20BaseModules.md)
@@ -62,3 +84,7 @@
 15. [Sound 模块](https://github.com/fuemocheng/UnityBaseFramework/blob/main/Tutorial/15%20Sound.md)
 
 
+## 感谢
+[GameFramework](https://github.com/EllanJiang/UnityGameFramework)  
+[LockstepEngine](https://github.com/JiepengTan/LockstepEngine)  
+[ET](https://github.com/egametang/ET)  
