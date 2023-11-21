@@ -41,7 +41,7 @@ namespace XGame
             MoveSpd = (LFloat)2.5f;
             TurnSpd = 360;
             //curHealth = maxHealth;
-            ColliderData.radius = (0.2f).ToLFloat();
+            ColliderData.radius = (LFloat)0.8f;
             //TODO:rigidbody
         }
 
@@ -77,7 +77,7 @@ namespace XGame
 
         public void Fire()
         {
-            Log.Error($"Tick{World.Instance.Tick} Entity:{EntityId} Fire");
+            //Log.Error($"Tick{World.Instance.Tick} Entity:{EntityId} Fire");
             int bulletId = 100001;
             Bullet bullet = GameEntry.Service.GetService<GameStateService>().CreateEntity<Bullet>(bulletId, CTransform.Pos3);
             bullet.CTransform.Pos3 = CTransform.Pos3;

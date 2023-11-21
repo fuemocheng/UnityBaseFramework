@@ -16,9 +16,10 @@ namespace XGame
         {
             base.BindRef();
             //TODO:读表。
-            MoveSpd = (LFloat)40f;
-            MaxTime = (LFloat)2f;
-            ColliderData.radius = (0.1f).ToLFloat();
+            MoveSpd = (LFloat)20f;
+            MaxTime = (LFloat)1f;
+            ColliderData.radius = (LFloat)0.4f;
+            //ColliderData.size = new LVector2((LFloat)0.5f, (LFloat)1.5f);
         }
 
         public override void Awake()

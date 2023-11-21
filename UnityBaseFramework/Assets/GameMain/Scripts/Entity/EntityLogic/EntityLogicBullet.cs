@@ -1,6 +1,7 @@
 using Lockstep.Math;
 using System.Collections;
 using System.Collections.Generic;
+using UnityBaseFramework.Runtime;
 using UnityEngine;
 
 namespace XGame
@@ -67,7 +68,7 @@ namespace XGame
 
             //更新位置。
             var pos = m_CEntity.CTransform.Pos3.ToVector3();
-            transform.position = Vector3.Lerp(transform.position, pos, 0.3f);
+            transform.position = Vector3.Lerp(transform.position, pos, 0.7f);
             var deg = m_CEntity.CTransform.deg.ToFloat();
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, deg, 0), 0.3f);
 
@@ -98,7 +99,7 @@ namespace XGame
 
         public override void OnLPTriggerEnter(Lockstep.Collision2D.ColliderProxy other)
         {
-            //Log.Info("OnLPTriggerEnter");
+            //Log.Error($"OnLPTriggerEnter - bullet");
             base.OnLPTriggerEnter(other);
         }
 

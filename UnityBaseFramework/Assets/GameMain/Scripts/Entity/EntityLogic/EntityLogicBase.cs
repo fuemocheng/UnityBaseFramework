@@ -48,7 +48,7 @@ namespace XGame
             m_EntityData = userData as EntityData;
             if (m_EntityData == null)
             {
-                Log.Error("Entity data is invalid.");
+                //Log.Error("Entity data is invalid.");
                 return;
             }
 

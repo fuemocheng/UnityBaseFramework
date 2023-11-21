@@ -1,5 +1,6 @@
 using Lockstep;
 using Lockstep.Game;
+using Lockstep.Math;
 
 namespace XGame
 {
@@ -39,5 +40,8 @@ namespace XGame
             get => _relPath;
             set => _relPath = value;
         }
+
+        public LVector2 BornPosBlackCamp = new LVector2(new LFloat(-9), new LFloat(0));
+        public LVector2 BornPosWhiteCamp = new LVector2(new LFloat(9), new LFloat(0));
     }
 }

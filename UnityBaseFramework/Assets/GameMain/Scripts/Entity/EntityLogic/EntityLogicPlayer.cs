@@ -52,9 +52,14 @@ namespace XGame
             UpdateMove();
         }
 
+        protected bool IsMyCamp()
+        {
+            return m_Camp == World.MyPlayer.Camp;
+        }
+
         protected void UpdateMove()
         {
-            if(m_CEntity == null)
+            if (m_CEntity == null)
             {
                 return;
             }
@@ -65,6 +70,7 @@ namespace XGame
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, deg, 0), 0.3f);
 
             UpdateMoveAnimation();
+            UpdateOtherAnimation();
         }
 
         protected void UpdateMoveAnimation()
@@ -220,6 +226,15 @@ namespace XGame
             }
         }
 
+        protected void UpdateOtherAnimation()
+        {
+            if (m_Input != null && m_Input.IsFire)
+            {
+                //射击动作
+                m_Animator?.SetTrigger("FireFast");
+            }
+        }
+
         #region Bind
 
         public override void BindLSEntity(BaseEntity baseEntity)
@@ -256,12 +271,23 @@ namespace XGame
         public override void OnLPTriggerEnter(Lockstep.Collision2D.ColliderProxy other)
         {
             //Log.Info("OnLPTriggerEnter");
+            //Log.Error($"OnLPTriggerEnter - Player");
             base.OnLPTriggerEnter(other);
 
             m_ColliderProxy.Add(other);
             if (other.LayerType == (int)m_Camp)
             {
-                m_CEntity.EntityLogicBase.Visible = false;
+                if (!IsMyCamp())
+                {
+                    m_CEntity.EntityLogicBase.Visible = false;
+                }
+            }
+
+            if (other.LayerType == (int)EColliderLayer.Enemy)
+            {
+                //被击中，做被击动作
+                m_Animator?.SetTrigger("BeHit");
+                //TODO:计算伤害等等。
             }
         }
 
@@ -272,7 +298,10 @@ namespace XGame
 
             if (other.LayerType == (int)m_Camp)
             {
-                m_CEntity.EntityLogicBase.Visible = false;
+                if (!IsMyCamp())
+                {
+                    m_CEntity.EntityLogicBase.Visible = false;
+                }
             }
             else
             {

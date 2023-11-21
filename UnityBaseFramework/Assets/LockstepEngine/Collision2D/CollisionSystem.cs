@@ -267,7 +267,7 @@ namespace Lockstep.Collision2D {
                 if (boundsTree == null) 
                     return;
 
-                boundsTree.DrawAllBounds(); // Draw node boundaries
+                //boundsTree.DrawAllBounds(); // Draw node boundaries
                 boundsTree.DrawAllObjects(); // Draw object boundaries
                 boundsTree.DrawCollisionChecks(); // Draw the last *numCollisionsToSave* collision check boundaries
             }

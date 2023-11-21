@@ -91,7 +91,19 @@ namespace XGame
             for (int i = 0; i < userGameInfos.Count; i++)
             {
                 int configId = 10001;
+                ECamp camp = (ECamp)userGameInfos[i].Camp;
                 LVector2 initPos = LVector2.zero;
+                switch (camp)
+                {
+                    case ECamp.Black:
+                        initPos = GameEntry.Service.GetService<ConstStateService>().BornPosBlackCamp;
+                        break;
+                    case ECamp.White:
+                        initPos = GameEntry.Service.GetService<ConstStateService>().BornPosWhiteCamp;
+                        break;
+                    default:
+                        break;
+                }
                 Player player = GameEntry.Service.GetService<GameStateService>().CreateEntity<Player>(configId, initPos);
 
                 player.LocalId = userGameInfos[i].LocalId;
