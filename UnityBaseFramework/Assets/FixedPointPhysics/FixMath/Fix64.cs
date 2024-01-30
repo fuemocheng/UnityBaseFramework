@@ -38,6 +38,16 @@ namespace FixMath
         public static readonly Fix64 PiInv = (Fix64)0.3183098861837906715377675267M;
         public static readonly Fix64 PiOver2Inv = (Fix64)0.6366197723675813430755350535M;
 
+        public static readonly Fix64 EN1 = Fix64.One / (Fix64)10;
+        public static readonly Fix64 EN2 = Fix64.One / (Fix64)100;
+        public static readonly Fix64 EN3 = Fix64.One / (Fix64)1000;
+        public static readonly Fix64 EN4 = Fix64.One / (Fix64)10000;
+        public static readonly Fix64 EN5 = Fix64.One / (Fix64)100000;
+        public static readonly Fix64 EN6 = Fix64.One / (Fix64)1000000;
+        public static readonly Fix64 EN7 = Fix64.One / (Fix64)10000000;
+        public static readonly Fix64 EN8 = Fix64.One / (Fix64)100000000;
+        public static readonly Fix64 Epsilon = Fix64.EN3;                                   //Epsilon Number 极小的数值。
+
         private static readonly Fix64 Log2Max = new Fix64(LOG2MAX);                         //"31"
         private static readonly Fix64 Log2Min = new Fix64(LOG2MIN);                         //"-32"
         private static readonly Fix64 Ln2 = new Fix64(LN2);                                 //"0.6931471804"
