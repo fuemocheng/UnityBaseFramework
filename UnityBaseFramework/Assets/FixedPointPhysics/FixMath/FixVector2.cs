@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace FixMath
@@ -17,42 +18,91 @@ namespace FixMath
         public Fix64 X;
         public Fix64 Y;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public FixVector2(Fix64 value) : this(value, value)
+        {
+        }
+
         public FixVector2(Fix64 x, Fix64 y)
         {
             X = x;
             Y = y;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public FixVector2(FixVector2 value)
         {
             X = value.X;
             Y = value.Y;
         }
 
+        /// <summary>
+        /// 向量的模。
+        /// </summary>
+        public Fix64 Magnitude
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Fix64.Sqrt(X * X + Y * Y);
+            }
+        }
+
+        /// <summary>
+        /// 向量的模的平方。
+        /// </summary>
+        public Fix64 SqrMagnitude
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return X * X + Y * Y;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(FixVector2 other)
         {
-            return this == other;
+            if (X == other.X)
+            {
+                return Y == other.Y;
+            }
+            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
         {
-            return (obj is FixVector2) ? this == ((FixVector2)(obj)) : false;
+            if (obj is not FixVector2)
+            {
+                return false;
+            }
+            return Equals((FixVector2)obj);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode()
         {
-            return (int)(X.RawValue * 49157) + (int)(Y.RawValue * 98317);
+            unchecked
+            {
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
             return string.Format("({0:f1}, {1:f1})", X.AsFloat(), Y.AsFloat());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public FixVector3 ToFixVector3()
+        {
+            return new FixVector3(X, Y, Fix64.Zero);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vector2 ToVector2()
+        {
+            return new Vector2(X.AsFloat(), Y.AsFloat());
         }
 
         #region operators
@@ -68,13 +118,21 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(FixVector2 left, FixVector2 right)
         {
-            return left.X == right.X && left.Y == right.Y;
+            if (left.X == right.X)
+            {
+                return left.Y == right.Y;
+            }
+            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(FixVector2 left, FixVector2 right)
         {
-            return left.X != right.X || left.Y != right.Y;
+            if (left.X == right.X)
+            {
+                return left.Y != right.Y;
+            }
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,6 +152,14 @@ namespace FixMath
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 operator *(FixVector2 left, FixVector2 right)
+        {
+            left.X *= right.X;
+            left.Y *= right.Y;
+            return left;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator *(FixVector2 value, Fix64 scaleFactor)
         {
             value.X *= scaleFactor;
@@ -107,14 +173,6 @@ namespace FixMath
             value.X *= scaleFactor;
             value.Y *= scaleFactor;
             return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 operator *(FixVector2 left, FixVector2 right)
-        {
-            left.X *= right.X;
-            left.Y *= right.Y;
-            return left;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -147,6 +205,12 @@ namespace FixMath
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 Multiply(FixVector2 left, FixVector2 right)
+        {
+            return left * right;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Multiply(FixVector2 value, Fix64 scaleFactor)
         {
             return value * scaleFactor;
@@ -156,12 +220,6 @@ namespace FixMath
         public static FixVector2 Multiply(Fix64 scaleFactor, FixVector2 value)
         {
             return scaleFactor * value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 Multiply(FixVector2 left, FixVector2 right)
-        {
-            return left * right;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -176,6 +234,9 @@ namespace FixMath
             return value / divisor;
         }
 
+        /// <summary>
+        /// 取负。
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Negate(FixVector2 value)
         {
@@ -183,6 +244,7 @@ namespace FixMath
         }
 
         #endregion
+
 
         #region Public Methods
 
@@ -196,6 +258,12 @@ namespace FixMath
         public Fix64 LengthSquared()
         {
             return X * X + Y * Y;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public FixVector2 Normalize()
+        {
+            return FixVector2.Normalize(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,12 +285,6 @@ namespace FixMath
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 Lerp(FixVector2 value1, FixVector2 value2, Fix64 amount)
-        {
-            return new FixVector2(value1.X + (value2.X - value1.X) * amount, value1.Y + (value2.Y - value1.Y) * amount);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Clamp(FixVector2 value, FixVector2 min, FixVector2 max)
         {
             Fix64 x = value.X;
@@ -232,6 +294,12 @@ namespace FixMath
             y = ((y > max.Y) ? max.Y : y);
             y = ((y < min.Y) ? min.Y : y);
             return new FixVector2(x, y);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 Lerp(FixVector2 value1, FixVector2 value2, Fix64 amount)
+        {
+            return new FixVector2(value1.X + (value2.X - value1.X) * amount, value1.Y + (value2.Y - value1.Y) * amount);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -251,6 +319,15 @@ namespace FixMath
         }
 
         /// <summary>
+        /// 对每个分量进行平方根运算。
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 SquareRoot(FixVector2 value)
+        {
+            return new FixVector2(Fix64.Sqrt(value.X), Fix64.Sqrt(value.Y));
+        }
+
+        /// <summary>
         /// 归一化（Normalization）操作，将向量缩放为单位长度（长度为1）。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,18 +339,10 @@ namespace FixMath
         }
 
         /// <summary>
-        /// 对每个分量进行平方根运算。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 SquareRoot(FixVector2 value)
-        {
-            return new FixVector2(Fix64.Sqrt(value.X), Fix64.Sqrt(value.Y));
-        }
-
-        /// <summary>
-        /// 点积（Dot Product）运算。
-        /// 当结果为正时，表示两个向量之间的夹角小于 90°，为负时表示夹角大于 90°，为零时表示两个向量垂直。
-        /// 点积常用于判断向量之间的相似性、计算角度以及进行投影等操作。
+        /// 点乘（Dot Product）运算。
+        /// 如果结果为 0，说明两个向量垂直（正交）。
+        /// 如果结果大于 0，说明两个向量夹角小于 90°。
+        /// 如果结果小于 0，说明两个向量夹角大于 90°。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fix64 Dot(FixVector2 value1, FixVector2 value2)
@@ -287,6 +356,7 @@ namespace FixMath
         /// 面积：二维向量的叉乘的绝对值表示由这两个向量构成的平行四边形的面积。方向（正负号）表示了叉乘结果的方向，垂直于所在平面。
         /// 方向：叉乘的正负号表示了两个向量之间的相对方向。如果叉乘结果为正，表示从第一个向量到第二个向量需要逆时针旋转，而如果为负，则需要顺时针旋转。
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fix64 Cross(FixVector2 value1, FixVector2 value2)
         {
             return value1.X * value2.Y - value1.Y * value2.X;
@@ -300,22 +370,23 @@ namespace FixMath
         public static FixVector2 Reflect(FixVector2 vector, FixVector2 normal)
         {
             Fix64 dot = Dot(vector, normal);
-            return vector - ((Fix64)2f * dot) * normal;
+            return vector - (Fix64)2f * dot * normal;
         }
 
         /// <summary>
         /// 计算 vector 在 onNormal 上的投影。
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Project(FixVector2 vector, FixVector2 onNormal)
         {
-            var sqrMag = Dot(onNormal, onNormal);
+            Fix64 sqrMag = Dot(onNormal, onNormal);
             if (sqrMag < Fix64.Epsilon)
             {
-                return Zero;
+                return FixVector2.Zero;
             }
             else
             {
-                var dot = Dot(vector, onNormal);
+                Fix64 dot = Dot(vector, onNormal);
                 return new FixVector2(onNormal.X * dot / sqrMag, onNormal.Y * dot / sqrMag);
             }
         }
