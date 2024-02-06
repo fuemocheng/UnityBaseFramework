@@ -395,8 +395,8 @@ namespace FixMath
         /// </summary>
         public static FixMatrix4x4 CreateRotationX(Fix64 radians)
         {
-            Fix64 num = Fix64.Cos(radians);
-            Fix64 num2 = Fix64.Sin(radians);
+            Fix64 num = FixMath.Cos(radians);
+            Fix64 num2 = FixMath.Sin(radians);
             FixMatrix4x4 result = default;
             result.M11 = Fix64.One;
             result.M12 = Fix64.Zero;
@@ -423,8 +423,8 @@ namespace FixMath
         /// </summary>
         public static FixMatrix4x4 CreateRotationY(Fix64 radians)
         {
-            Fix64 num = Fix64.Cos(radians);
-            Fix64 num2 = Fix64.Sin(radians);
+            Fix64 num = FixMath.Cos(radians);
+            Fix64 num2 = FixMath.Sin(radians);
             FixMatrix4x4 result = default;
             result.M11 = num;
             result.M12 = Fix64.Zero;
@@ -451,8 +451,8 @@ namespace FixMath
         /// </summary>
         public static FixMatrix4x4 CreateRotationZ(Fix64 radians)
         {
-            Fix64 num = Fix64.Cos(radians);
-            Fix64 num2 = Fix64.Sin(radians);
+            Fix64 num = FixMath.Cos(radians);
+            Fix64 num2 = FixMath.Sin(radians);
             FixMatrix4x4 result = default;
             result.M11 = num;
             result.M12 = num2;
@@ -482,8 +482,8 @@ namespace FixMath
             Fix64 x = axis.X;
             Fix64 y = axis.Y;
             Fix64 z = axis.Z;
-            Fix64 num = Fix64.Sin(angle);
-            Fix64 num2 = Fix64.Cos(angle);
+            Fix64 num = FixMath.Sin(angle);
+            Fix64 num2 = FixMath.Cos(angle);
             Fix64 num3 = x * x;
             Fix64 num4 = y * y;
             Fix64 num5 = z * z;
@@ -651,8 +651,8 @@ namespace FixMath
             Fix64 num9 = m5 * num2 - m6 * num4 + m8 * num6;
             Fix64 num10 = -(m5 * num3 - m6 * num5 + m7 * num6);
             Fix64 num11 = m * num7 + m2 * num8 + m3 * num9 + m4 * num10;    //矩阵的行列式
-            // 如果行列式的绝对值小于一个极小的浮点数（Fix64.Epsilon），则说明矩阵不可逆。
-            if (Fix64.Abs(num11) < Fix64.Epsilon)
+            // 如果行列式的绝对值小于一个极小的浮点数（FixMath.Epsilon），则说明矩阵不可逆。
+            if (FixMath.Abs(num11) < FixMath.Epsilon)
             {
                 result = new FixMatrix4x4(Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN, Fix64.NaN);
                 return false;

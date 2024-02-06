@@ -44,7 +44,7 @@ namespace FixMath
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Fix64.Sqrt(X * X + Y * Y);
+                return FixMath.Sqrt(X * X + Y * Y);
             }
         }
 
@@ -252,7 +252,7 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Fix64 Length()
         {
-            return Fix64.Sqrt(X * X + Y * Y);
+            return FixMath.Sqrt(X * X + Y * Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -264,7 +264,7 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Abs(FixVector2 value)
         {
-            return new FixVector2(Fix64.Abs(value.X), Fix64.Abs(value.Y));
+            return new FixVector2(FixMath.Abs(value.X), FixMath.Abs(value.Y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -302,7 +302,7 @@ namespace FixMath
         {
             Fix64 num1 = value1.X - value2.X;
             Fix64 num2 = value1.Y - value2.Y;
-            return Fix64.Sqrt(num1 * num1 + num2 * num2);
+            return FixMath.Sqrt(num1 * num1 + num2 * num2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -319,7 +319,7 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 SquareRoot(FixVector2 value)
         {
-            return new FixVector2(Fix64.Sqrt(value.X), Fix64.Sqrt(value.Y));
+            return new FixVector2(FixMath.Sqrt(value.X), FixMath.Sqrt(value.Y));
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace FixMath
         public static FixVector2 Normalize(FixVector2 value)
         {
             Fix64 disSquared = value.X * value.X + value.Y * value.Y;
-            Fix64 factor = Fix64.One / Fix64.Sqrt(disSquared);
+            Fix64 factor = Fix64.One / FixMath.Sqrt(disSquared);
             return new FixVector2(value.X * factor, value.Y * factor);
         }
 
@@ -375,7 +375,7 @@ namespace FixMath
         public static FixVector2 Project(FixVector2 vector, FixVector2 onNormal)
         {
             Fix64 sqrMag = Dot(onNormal, onNormal);
-            if (sqrMag < Fix64.Epsilon)
+            if (sqrMag < FixMath.Epsilon)
             {
                 return FixVector2.Zero;
             }

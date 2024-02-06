@@ -91,9 +91,9 @@ namespace FixMath
                 //TODO:处理万向节锁和分母为0的情况
 
                 FixVector3 result = default;
-                result.X = Fix64.Asin(-m23) * Fix64.Rad2Deg;
-                result.Y = Fix64.Atan2(m13, m33) * Fix64.Rad2Deg;
-                result.Z = Fix64.Atan2(m21, m22) * Fix64.Rad2Deg;
+                result.X = FixMath.Asin(-m23) * FixMath.Rad2Deg;
+                result.Y = FixMath.Atan2(m13, m33) * FixMath.Rad2Deg;
+                result.Z = FixMath.Atan2(m21, m22) * FixMath.Rad2Deg;
                 return result;
             }
             set
@@ -296,7 +296,7 @@ namespace FixMath
         public Fix64 Length()
         {
             Fix64 num = X * X + Y * Y + Z * Z + W * W;
-            return Fix64.Sqrt(num);
+            return FixMath.Sqrt(num);
         }
 
         public Fix64 LengthSquared()
@@ -311,7 +311,7 @@ namespace FixMath
         public static FixQuaternion Normalize(FixQuaternion value)
         {
             Fix64 num = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
-            Fix64 num2 = Fix64.One / Fix64.Sqrt(num);
+            Fix64 num2 = Fix64.One / FixMath.Sqrt(num);
             FixQuaternion result = default;
             result.X = value.X * num2;
             result.Y = value.Y * num2;
@@ -359,8 +359,8 @@ namespace FixMath
         public static FixQuaternion CreateFromAxisAngle(FixVector3 axis, Fix64 angle)
         {
             Fix64 num = angle * Fix64.Half;
-            Fix64 num2 = Fix64.Sin(num);
-            Fix64 w = Fix64.Cos(num);
+            Fix64 num2 = FixMath.Sin(num);
+            Fix64 w = FixMath.Cos(num);
             FixQuaternion result = default;
             result.X = axis.X * num2;
             result.Y = axis.Y * num2;
@@ -379,9 +379,9 @@ namespace FixMath
         /// <returns></returns>
         public static FixQuaternion Euler(Fix64 x, Fix64 y, Fix64 z)
         {
-            x *= Fix64.Deg2Rad;
-            y *= Fix64.Deg2Rad;
-            z *= Fix64.Deg2Rad;
+            x *= FixMath.Deg2Rad;
+            y *= FixMath.Deg2Rad;
+            z *= FixMath.Deg2Rad;
             return CreateFromYawPitchRoll(y, x, z);
         }
 
@@ -407,14 +407,14 @@ namespace FixMath
         public static FixQuaternion CreateFromYawPitchRoll(Fix64 yaw, Fix64 pitch, Fix64 roll)
         {
             Fix64 num = roll * Fix64.Half;
-            Fix64 num2 = Fix64.Sin(num);
-            Fix64 num3 = Fix64.Cos(num);
+            Fix64 num2 = FixMath.Sin(num);
+            Fix64 num3 = FixMath.Cos(num);
             Fix64 num4 = pitch * Fix64.Half;
-            Fix64 num5 = Fix64.Sin(num4);
-            Fix64 num6 = Fix64.Cos(num4);
+            Fix64 num5 = FixMath.Sin(num4);
+            Fix64 num6 = FixMath.Cos(num4);
             Fix64 num7 = yaw * Fix64.Half;
-            Fix64 num8 = Fix64.Sin(num7);
-            Fix64 num9 = Fix64.Cos(num7);
+            Fix64 num8 = FixMath.Sin(num7);
+            Fix64 num9 = FixMath.Cos(num7);
             FixQuaternion result = default;
             result.X = num9 * num5 * num3 + num8 * num6 * num2;
             result.Y = num8 * num6 * num3 - num9 * num5 * num2;
@@ -435,7 +435,7 @@ namespace FixMath
             //如果迹值 num 大于 0，使用一种常见的情况来计算四元数的分量。
             if (num > Fix64.Zero)
             {
-                Fix64 num2 = Fix64.Sqrt(num + Fix64.One);
+                Fix64 num2 = FixMath.Sqrt(num + Fix64.One);
                 result.W = num2 * Fix64.Half;
                 num2 = Fix64.Half / num2;
                 result.X = (matrix.M23 - matrix.M32) * num2;
@@ -445,7 +445,7 @@ namespace FixMath
             else if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
             {
                 //如果 matrix.M11 是最大的元素，旋转轴最接近X轴，通过计算一个辅助变量来构建四元数。
-                Fix64 num3 = Fix64.Sqrt(Fix64.One + matrix.M11 - matrix.M22 - matrix.M33);
+                Fix64 num3 = FixMath.Sqrt(Fix64.One + matrix.M11 - matrix.M22 - matrix.M33);
                 Fix64 num4 = Fix64.Half / num3;
                 result.X = Fix64.Half * num3;
                 result.Y = (matrix.M12 + matrix.M21) * num4;
@@ -455,7 +455,7 @@ namespace FixMath
             else if (matrix.M22 > matrix.M33)
             {
                 //如果 matrix.M22 是最大的元素，旋转轴最接近Y轴，同样通过计算辅助变量构建四元数。
-                Fix64 num5 = Fix64.Sqrt(Fix64.One + matrix.M22 - matrix.M11 - matrix.M33);
+                Fix64 num5 = FixMath.Sqrt(Fix64.One + matrix.M22 - matrix.M11 - matrix.M33);
                 Fix64 num6 = Fix64.Half / num5;
                 result.X = (matrix.M21 + matrix.M12) * num6;
                 result.Y = Fix64.Half * num5;
@@ -465,7 +465,7 @@ namespace FixMath
             else
             {
                 //如果 matrix.M33 是最大的元素，旋转轴最接近Z轴，同样通过计算辅助变量构建四元数。
-                Fix64 num7 = Fix64.Sqrt(Fix64.One + matrix.M33 - matrix.M11 - matrix.M22);
+                Fix64 num7 = FixMath.Sqrt(Fix64.One + matrix.M33 - matrix.M11 - matrix.M22);
                 Fix64 num8 = Fix64.Half / num7;
                 result.X = (matrix.M31 + matrix.M13) * num8;
                 result.Y = (matrix.M32 + matrix.M23) * num8;
@@ -509,10 +509,10 @@ namespace FixMath
             }
             else
             {
-                Fix64 num4 = Fix64.Acos(num);
-                Fix64 num5 = Fix64.One / Fix64.Sin(num4);
-                num2 = Fix64.Sin((Fix64.One - amount) * num4) * num5;
-                num3 = flag ? Fix64.Zero - Fix64.Sin(amount * num4) * num5 : Fix64.Sin(amount * num4) * num5;
+                Fix64 num4 = FixMath.Acos(num);
+                Fix64 num5 = Fix64.One / FixMath.Sin(num4);
+                num2 = FixMath.Sin((Fix64.One - amount) * num4) * num5;
+                num3 = flag ? Fix64.Zero - FixMath.Sin(amount * num4) * num5 : FixMath.Sin(amount * num4) * num5;
             }
 
             FixQuaternion result = default;
@@ -548,7 +548,7 @@ namespace FixMath
             }
 
             Fix64 num3 = result.X * result.X + result.Y * result.Y + result.Z * result.Z + result.W * result.W;
-            Fix64 num4 = Fix64.One / Fix64.Sqrt(num3);
+            Fix64 num4 = Fix64.One / FixMath.Sqrt(num3);
             result.X *= num4;
             result.Y *= num4;
             result.Z *= num4;

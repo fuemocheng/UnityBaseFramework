@@ -56,7 +56,7 @@ namespace FixMath
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Fix64.Sqrt(X * X + Y * Y + Z * Z + W * W);
+                return FixMath.Sqrt(X * X + Y * Y + Z * Z + W * W);
             }
         }
 
@@ -222,7 +222,7 @@ namespace FixMath
         {
             return value * scaleFactor;
         }
-]
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector4 Multiply(Fix64 scaleFactor, FixVector4 value)
         {
@@ -250,7 +250,7 @@ namespace FixMath
         public Fix64 Length()
         {
             Fix64 num = X * X + Y * Y + Z * Z + W * W;
-            return Fix64.Sqrt(num);
+            return FixMath.Sqrt(num);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,7 +262,7 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector4 Abs(FixVector4 value)
         {
-            return new FixVector4(Fix64.Abs(value.X), Fix64.Abs(value.Y), Fix64.Abs(value.Z), Fix64.Abs(value.W));
+            return new FixVector4(FixMath.Abs(value.X), FixMath.Abs(value.Y), FixMath.Abs(value.Z), FixMath.Abs(value.W));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -309,7 +309,7 @@ namespace FixMath
             Fix64 num4 = value1.Z - value2.Z;
             Fix64 num5 = value1.W - value2.W;
             Fix64 num6 = num2 * num2 + num3 * num3 + num4 * num4 + num5 * num5;
-            return Fix64.Sqrt(num6);
+            return FixMath.Sqrt(num6);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -328,7 +328,7 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector4 SquareRoot(FixVector4 value)
         {
-            return new FixVector4(Fix64.Sqrt(value.X), Fix64.Sqrt(value.Y), Fix64.Sqrt(value.Z), Fix64.Sqrt(value.W));
+            return new FixVector4(FixMath.Sqrt(value.X), FixMath.Sqrt(value.Y), FixMath.Sqrt(value.Z), FixMath.Sqrt(value.W));
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace FixMath
         public static FixVector4 Normalize(FixVector4 vector)
         {
             Fix64 num2 = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z + vector.W * vector.W;
-            Fix64 num3 = Fix64.One / Fix64.Sqrt(num2);
+            Fix64 num3 = Fix64.One / FixMath.Sqrt(num2);
             return new FixVector4(vector.X * num3, vector.Y * num3, vector.Z * num3, vector.W * num3);
         }
 
