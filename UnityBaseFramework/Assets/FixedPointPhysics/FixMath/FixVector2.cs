@@ -1,9 +1,11 @@
 using System;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace FixMath
 {
+    /// <summary>
+    /// Represents a fixed-point Vector2.
+    /// </summary>
     public struct FixVector2 : IEquatable<FixVector2>
     {
         public static readonly FixVector2 Zero = new FixVector2(Fix64.Zero, Fix64.Zero);
@@ -58,6 +60,21 @@ namespace FixMath
             }
         }
 
+        /// <summary>
+        /// 归一化向量。
+        /// </summary>
+        public FixVector2 Normalized
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return FixVector2.Normalize(this);
+            }
+        }
+
+
+        #region Base
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(FixVector2 other)
         {
@@ -81,16 +98,13 @@ namespace FixMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
-            }
+            return X.GetHashCode() ^ (Y.GetHashCode() << 2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
-            return string.Format("({0:f1}, {1:f1})", X.AsFloat(), Y.AsFloat());
+            return string.Format("({0:f2}, {1:f2})", X.AsFloat(), Y.AsFloat());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -100,20 +114,15 @@ namespace FixMath
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Vector2 ToVector2()
+        public UnityEngine.Vector2 ToVector2()
         {
-            return new Vector2(X.AsFloat(), Y.AsFloat());
+            return new UnityEngine.Vector2(X.AsFloat(), Y.AsFloat());
         }
+
+        #endregion
+
 
         #region operators
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 operator -(FixVector2 value)
-        {
-            value.X = -value.X;
-            value.Y = -value.Y;
-            return value;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(FixVector2 left, FixVector2 right)
@@ -136,60 +145,61 @@ namespace FixMath
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 operator -(FixVector2 value)
+        {
+            return new FixVector2(-value.X, -value.Y);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator +(FixVector2 left, FixVector2 right)
         {
-            left.X += right.X;
-            left.Y += right.Y;
-            return left;
+            return new FixVector2(left.X + right.X, left.Y + right.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator -(FixVector2 left, FixVector2 right)
         {
-            left.X -= right.X;
-            left.Y -= right.Y;
-            return left;
+            return new FixVector2(left.X - right.X, left.Y - right.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator *(FixVector2 left, FixVector2 right)
         {
-            left.X *= right.X;
-            left.Y *= right.Y;
-            return left;
+            return new FixVector2(left.X * right.X, left.Y * right.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator *(FixVector2 value, Fix64 scaleFactor)
         {
-            value.X *= scaleFactor;
-            value.Y *= scaleFactor;
-            return value;
+            return new FixVector2(value.X * scaleFactor, value.Y * scaleFactor);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator *(Fix64 scaleFactor, FixVector2 value)
         {
-            value.X *= scaleFactor;
-            value.Y *= scaleFactor;
-            return value;
+            return new FixVector2(scaleFactor * value.X, scaleFactor * value.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator /(FixVector2 left, FixVector2 right)
         {
-            left.X /= right.X;
-            left.Y /= right.Y;
-            return left;
+            return new FixVector2(left.X / right.X, left.Y / right.Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 operator /(FixVector2 value, Fix64 divisor)
         {
             Fix64 factor = Fix64.One / divisor;
-            value.X *= factor;
-            value.Y *= factor;
-            return value;
+            return new FixVector2(value.X * factor, value.Y * factor);
+        }
+
+        /// <summary>
+        /// 取负。
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FixVector2 Negate(FixVector2 value)
+        {
+            return -value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -234,15 +244,6 @@ namespace FixMath
             return value / divisor;
         }
 
-        /// <summary>
-        /// 取负。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FixVector2 Negate(FixVector2 value)
-        {
-            return -value;
-        }
-
         #endregion
 
 
@@ -258,12 +259,6 @@ namespace FixMath
         public Fix64 LengthSquared()
         {
             return X * X + Y * Y;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public FixVector2 Normalize()
-        {
-            return FixVector2.Normalize(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

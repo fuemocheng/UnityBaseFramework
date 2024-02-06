@@ -15,7 +15,9 @@ namespace FixMath
         private const long MIN_VALUE = long.MinValue;               //-9223372036854775808L     二进制：10000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000 (补码)
         private const int NUM_BITS = 64;
         private const int FRACTIONAL_PLACES = 32;
+        private const long HALF = 1L << (FRACTIONAL_PLACES - 1);
         private const long ONE = 1L << FRACTIONAL_PLACES;           //1L << 32 = 2^32 = 4294967296L
+        private const long TEN = 10L << FRACTIONAL_PLACES;
         private const long PI_TIMES_2 = 0x6487ED511;                //0x6487ED511 = 26986075409L = Math.PI * 2 * (1L << 32)
         private const long PI = 0x3243F6A88;                        //0x3243F6A88 = 13493037704L = Math.PI * (1L << 32)
         private const long PI_OVER_2 = 0x1921FB544;                 //0x1921FB544 = 6746518852L = Math.PI / 2 * (1L << 32)
@@ -30,13 +32,18 @@ namespace FixMath
         public static readonly decimal Precision = (decimal)(new Fix64(1L));                //0.00000000023283064365386962890625m;
         public static readonly Fix64 MaxValue = new Fix64(MAX_VALUE);                       //"2147483647.9999999998"    2147483647 = int.MaxValue =  2^32-1
         public static readonly Fix64 MinValue = new Fix64(MIN_VALUE);                       //"-2147483648"             -2147483648 = int.MinValue = -2^32
-        public static readonly Fix64 One = new Fix64(ONE);                                  //"1"                       
         public static readonly Fix64 Zero = new Fix64();                                    //"0"
+        public static readonly Fix64 Half = new Fix64(HALF);                                //"0.5"
+        public static readonly Fix64 One = new Fix64(ONE);                                  //"1"                       
+        public static readonly Fix64 Ten = new Fix64(TEN);                                  //"10"
         public static readonly Fix64 Pi = new Fix64(PI);                                    //"3.1415926535"
         public static readonly Fix64 PiOver2 = new Fix64(PI_OVER_2);                        //"1.5707963267"
         public static readonly Fix64 PiTimes2 = new Fix64(PI_TIMES_2);                      //"6.2831853072"
         public static readonly Fix64 PiInv = (Fix64)0.3183098861837906715377675267M;
         public static readonly Fix64 PiOver2Inv = (Fix64)0.6366197723675813430755350535M;
+
+        public static readonly Fix64 Deg2Rad = Pi / new Fix64(180);                         //角度转弧度系数。  角度转弧度公式：rad=deg*Pi/180
+        public static readonly Fix64 Rad2Deg = new Fix64(180) / Pi;                         //弧度转角度系数。  弧度转角度公式：deg=rad*180/Pi
 
         public static readonly Fix64 EN1 = Fix64.One / (Fix64)10;
         public static readonly Fix64 EN2 = Fix64.One / (Fix64)100;
@@ -47,6 +54,8 @@ namespace FixMath
         public static readonly Fix64 EN7 = Fix64.One / (Fix64)10000000;
         public static readonly Fix64 EN8 = Fix64.One / (Fix64)100000000;
         public static readonly Fix64 Epsilon = Fix64.EN3;                                   //Epsilon Number 极小的数值。
+
+        public static readonly Fix64 NaN = new Fix64(MIN_VALUE);
 
         private static readonly Fix64 Log2Max = new Fix64(LOG2MAX);                         //"31"
         private static readonly Fix64 Log2Min = new Fix64(LOG2MIN);                         //"-32"
