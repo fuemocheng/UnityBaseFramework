@@ -78,8 +78,8 @@ namespace FixMath
                 Fix64 ySqr = Y * Y;
                 Fix64 zSqr = Z * Z;
 
-                //Fix64 m11 = Fix64.One - (Fix64)2 * (ySqr + zSqr);
-                //Fix64 m12 = (Fix64)2 * (X * Y - Z * W);
+                Fix64 m11 = Fix64.One - (Fix64)2 * (ySqr + zSqr);
+                Fix64 m12 = (Fix64)2 * (X * Y - Z * W);
                 Fix64 m13 = (Fix64)2 * (X * Z + Y * W);
                 Fix64 m21 = (Fix64)2 * (X * Y + Z * W);
                 Fix64 m22 = Fix64.One - (Fix64)2 * (xSqr + zSqr);
@@ -88,12 +88,65 @@ namespace FixMath
                 //Fix64 m32 = (Fix64)2 * (Y * Z + X * W);
                 Fix64 m33 = Fix64.One - (Fix64)2 * (xSqr + ySqr);
 
-                //TODO:处理万向节锁和分母为0的情况
+                /// 处理万向节死锁：
+                /// 当第二旋转角（绕X轴） β 为 ±π/2 时，即 m23 = -sinβ = ±1 时，Y、Z轴的旋转将失去一个自由度，出现万向节死锁。
+                /// 这时 Atan2(m13, m33)，Atan2(m21, m22) 分子分母都为0，公式则没有意义。
+                /// 所以要处理 β 为 ±π/2 的情况。
+                /// 
+                /// 当 β 为 π/2 时，sin(β)=1，cos(β)=0，简化矩阵，最终的到矩阵:
+                /// --                                     --
+                /// |   cos(ɑ - γ),     sin(ɑ - γ),     0   |
+                /// |   0,              0,              1   |
+                /// |   -sin(ɑ - γ),    cos(ɑ + γ),     0   |
+                /// --                                     --
+                /// 由此得 ɑ - γ = atan2(m12, m11)，只要给ɑ或γ其中一个赋值，另一个就可以计算出来。
+                /// 
+                /// 当 β 为 -π/2 时，sin(β)=-1，cos(β)=0，简化矩阵，最终的到矩阵:
+                /// --                                     --
+                /// |   cos(ɑ + γ),     -sin(ɑ + γ),    0   |
+                /// |   0,              0,              1   |
+                /// |   -sin(ɑ + γ),    -cos(ɑ + γ),    0   |
+                /// --                                     --
+                /// 由此得 ɑ + γ = atan2(-m12, m11)，只要给ɑ或γ其中一个赋值，另一个就可以计算出来。
+                ///
+                /// 这里当出现万向节死锁的时候，令绕Z轴的旋转γ为0；
 
                 FixVector3 result = default;
-                result.X = FixMath.Asin(-m23) * FixMath.Rad2Deg;
-                result.Y = FixMath.Atan2(m13, m33) * FixMath.Rad2Deg;
-                result.Z = FixMath.Atan2(m21, m22) * FixMath.Rad2Deg;
+
+                if (FixMath.Abs(m23 - Fix64.One) < FixMath.EN8)
+                {
+                    // m23 = -sinβ 约为 1 时，β 为 -π/2；
+                    // 令 γ 为 0；
+                    result.X = -Fix64.PiOver2;
+                    result.Y = FixMath.Atan2(-m12, m11);
+                    result.Z = Fix64.Zero;
+
+                }
+                else if (FixMath.Abs(m23 + Fix64.One) < FixMath.EN8)
+                {
+                    // m23 = -sinβ 约为 -1 时，β 为 π/2；
+                    // γ 为 0；
+                    result.X = Fix64.PiOver2;
+                    result.Y = FixMath.Atan2(m12, m11);
+                    result.Z = Fix64.Zero;
+                }
+                else
+                {
+                    // β 在 ±π/2之间，不会出现万向节死锁的情况；
+                    result.X = FixMath.Asin(-m23);
+                    result.Y = FixMath.Atan2(m13, m33);
+                    result.Z = FixMath.Atan2(m21, m22);
+                }
+
+                // 每个角度都限定在 [0, 2π]；
+                result.X = result.X < Fix64.Zero ? (result.X + FixMath.PiTimes2) : (result.X > FixMath.PiTimes2 ? result.X - FixMath.PiTimes2 : result.X);
+                result.Y = result.Y < Fix64.Zero ? (result.Y + FixMath.PiTimes2) : (result.Y > FixMath.PiTimes2 ? result.Y - FixMath.PiTimes2 : result.Y);
+                result.Z = result.Z < Fix64.Zero ? (result.Z + FixMath.PiTimes2) : (result.Z > FixMath.PiTimes2 ? result.Z - FixMath.PiTimes2 : result.Z);
+
+                result.X *= FixMath.Rad2Deg;
+                result.Y *= FixMath.Rad2Deg;
+                result.Z *= FixMath.Rad2Deg;
+
                 return result;
             }
             set

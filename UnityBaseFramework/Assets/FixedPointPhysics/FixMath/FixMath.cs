@@ -11,27 +11,41 @@ namespace FixMath
         /// Represents a smaller number to handle accuracy issues.
         /// Fix64.One / (Fix64)1000，0.001 三位小数精度。
         /// </summary>
-        public static Fix64 Epsilon = Fix64.Epsilon;
+        public static readonly Fix64 Epsilon = Fix64.Epsilon;
+
+        public static readonly Fix64 EN1 = Fix64.EN1;
+        public static readonly Fix64 EN2 = Fix64.EN2;
+        public static readonly Fix64 EN3 = Fix64.EN3;
+        public static readonly Fix64 EN4 = Fix64.EN4;
+        public static readonly Fix64 EN5 = Fix64.EN5;
+        public static readonly Fix64 EN6 = Fix64.EN6;
+        public static readonly Fix64 EN7 = Fix64.EN7;
+        public static readonly Fix64 EN8 = Fix64.EN8;
 
         /// <summary>
         /// Pi。
         /// </summary>
-        public static Fix64 Pi = Fix64.Pi;
+        public static readonly Fix64 Pi = Fix64.Pi;
 
         /// <summary>
         /// Pi/2。
         /// </summary>
-        public static Fix64 PiOver2 = Fix64.PiOver2;
+        public static readonly Fix64 PiOver2 = Fix64.PiOver2;
+
+        /// <summary>
+        /// Pi*2。
+        /// </summary>
+        public static readonly Fix64 PiTimes2 = Fix64.PiTimes2;
 
         /// <summary>
         /// Pi/180。角度转弧度公式：rad=deg*Pi/180。
         /// </summary>
-        public static Fix64 Deg2Rad = Fix64.Deg2Rad;
+        public static readonly Fix64 Deg2Rad = Fix64.Deg2Rad;
 
         /// <summary>
         /// 180/Pi。弧度转角度公式：deg=rad*180/Pi。
         /// </summary>
-        public static Fix64 Rad2Deg = Fix64.Rad2Deg;
+        public static readonly Fix64 Rad2Deg = Fix64.Rad2Deg;
 
 
         #region Base
@@ -118,6 +132,15 @@ namespace FixMath
         }
 
         /// <summary>
+        /// 幂运算，b^exp。
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Fix64 Pow(Fix64 b, Fix64 exp)
+        {
+            return Fix64.Pow(b, exp);
+        }
+
+        /// <summary>
         /// log₂(x) ，以 2 为底的对数。提供至少9位小数的精度。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -136,16 +159,7 @@ namespace FixMath
         }
 
         /// <summary>
-        /// 幂运算，b^exp。
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Fix64 Pow(Fix64 b, Fix64 exp)
-        {
-            return Fix64.Pow(b, exp);
-        }
-
-        /// <summary>
-        /// Square root. √x.
+        /// Square root. 平方根。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fix64 Sqrt(Fix64 x)
@@ -215,7 +229,7 @@ namespace FixMath
         }
 
         /// <summary>
-        /// 线性插值
+        /// 线性插值。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Fix64 Lerp(Fix64 value1, Fix64 value2, Fix64 amount)
