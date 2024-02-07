@@ -83,7 +83,7 @@ namespace FixMath
 
         public override string ToString()
         {
-            return string.Format("{ {{M11:{0:f2} M12:{1:f2} M13:{2:f2} M14:{3:f2}}} {{M21:{4:f2} M22:{5:f2} M23:{6:f2} M24:{7:f2}}} {{M31:{8:f2} M32:{9:f2} M33:{10:f2} M34:{11:f2}}} {{M41:{12:f2} M42:{13:f2} M43:{14:f2} M44:{15:f2}}} }",
+            return string.Format("[ ({0:f2}, {1:f2}, {2:f2}, {3:f2}) ({4:f2}, {5:f2}, {6:f2}, {7:f2}) ({8:f2}, {9:f2}, {10:f2}, {11:f2}) ({12:f2}, {13:f2}, {14:f2}, {15:f2}) ]",
                 M11.AsFloat(), M12.AsFloat(), M13.AsFloat(), M14.AsFloat(),
                 M21.AsFloat(), M22.AsFloat(), M23.AsFloat(), M24.AsFloat(),
                 M31.AsFloat(), M32.AsFloat(), M33.AsFloat(), M34.AsFloat(),
@@ -313,6 +313,7 @@ namespace FixMath
         /// <summary>
         /// 缩放矩阵。根据传入的缩放因子（scale）生成一个4x4的缩放矩阵。
         /// 该方法通过将缩放因子分别赋值给矩阵的对角线元素（M11、M22、M33），并将其他元素设置为单位矩阵的形式，得到了一个表示等比例缩放的矩阵。
+        /// <summary>
         public static FixMatrix4x4 CreateScale(Fix64 scale)
         {
             FixMatrix4x4 result = default;
@@ -339,8 +340,6 @@ namespace FixMath
         /// 缩放矩阵。根据传入的缩放因子（scales）生成一个4x4的缩放矩阵。
         /// 该方法通过将缩放因子的各个分量分别赋值给矩阵的对角线元素（M11、M22、M33），并将其他元素设置为单位矩阵的形式，得到了一个表示等比例缩放的矩阵。
         /// </summary>
-        /// <param name="scales"></param>
-        /// <returns></returns>
         public static FixMatrix4x4 CreateScale(FixVector3 scales)
         {
             FixMatrix4x4 result = default;
@@ -658,7 +657,9 @@ namespace FixMath
                 return false;
             }
 
-            Fix64 num12 = Fix64.Zero / num11;
+            result = default;
+
+            Fix64 num12 = Fix64.One / num11;
             result.M11 = num7 * num12;
             result.M21 = num8 * num12;
             result.M31 = num9 * num12;
@@ -742,6 +743,5 @@ namespace FixMath
             return result;
         }
         #endregion
-
     }
 }
