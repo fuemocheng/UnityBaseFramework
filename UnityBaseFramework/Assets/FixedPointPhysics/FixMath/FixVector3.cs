@@ -46,6 +46,8 @@ namespace FixMath
             Z = value.Z;
         }
 
+        #region Base
+
         /// <summary>
         /// 向量的模。
         /// </summary>
@@ -94,39 +96,16 @@ namespace FixMath
             }
         }
 
-
-        #region Base
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(FixVector3 other)
+        public Fix64 Length()
         {
-            if (X == other.X && Y == other.Y)
-            {
-                return Z == other.Z;
-            }
-            return false;
+            return FixMath.Sqrt(X * X + Y * Y + Z * Z);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public Fix64 LengthSquared()
         {
-            if (obj is not FixVector3)
-            {
-                return false;
-            }
-            return Equals((FixVector3)obj);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString()
-        {
-            return string.Format("({0:f2}, {1:f2}, {2:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat());
+            return X * X + Y * Y + Z * Z;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,8 +134,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region operators
+        #region Operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(FixVector3 left, FixVector3 right)
@@ -280,20 +258,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region Public Methods
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 Length()
-        {
-            return FixMath.Sqrt(X * X + Y * Y + Z * Z);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 LengthSquared()
-        {
-            return X * X + Y * Y + Z * Z;
-        }
+        #region Public Static Methods
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector3 Abs(FixVector3 value)
@@ -432,6 +397,42 @@ namespace FixMath
                 Fix64 dot = Dot(vector, onNormal) / sqrMag;
                 return new FixVector3(onNormal.X * dot, onNormal.Y * dot, onNormal.Z * dot);
             }
+        }
+
+        #endregion
+
+        #region Inherit/Override
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(FixVector3 other)
+        {
+            if (X == other.X && Y == other.Y)
+            {
+                return Z == other.Z;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            if (obj is not FixVector3)
+            {
+                return false;
+            }
+            return Equals((FixVector3)obj);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString()
+        {
+            return string.Format("({0:f2}, {1:f2}, {2:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat());
         }
 
         #endregion

@@ -30,6 +30,8 @@ namespace FixMath
             W = scalarPart;
         }
 
+        #region Base
+
         public bool IsIdentity
         {
             get
@@ -163,34 +165,15 @@ namespace FixMath
             }
         }
 
-        #region Base
-
-        public bool Equals(FixQuaternion other)
+        public Fix64 Length()
         {
-            if (X == other.X && Y == other.Y && Z == other.Z)
-            {
-                return W == other.W;
-            }
-            return false;
+            Fix64 num = X * X + Y * Y + Z * Z + W * W;
+            return FixMath.Sqrt(num);
         }
 
-        public override bool Equals(object obj)
+        public Fix64 LengthSquared()
         {
-            if (obj is FixQuaternion)
-            {
-                return Equals((FixQuaternion)obj);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2) ^ (W.GetHashCode() >> 1);
-        }
-
-        public override string ToString()
-        {
-            return string.Format("({0:f2}, {1:f2}, {2:f2}, {3:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat(), W.AsFloat());
+            return X * X + Y * Y + Z * Z + W * W;
         }
 
         public UnityEngine.Quaternion ToQuaternion()
@@ -200,8 +183,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region operators
+        #region Operators
 
         public static bool operator ==(FixQuaternion left, FixQuaternion right)
         {
@@ -344,18 +326,7 @@ namespace FixMath
 
         #endregion
 
-        #region Public Methods
-
-        public Fix64 Length()
-        {
-            Fix64 num = X * X + Y * Y + Z * Z + W * W;
-            return FixMath.Sqrt(num);
-        }
-
-        public Fix64 LengthSquared()
-        {
-            return X * X + Y * Y + Z * Z + W * W;
-        }
+        #region Public Static Methods
 
         /// <summary>
         /// 归一化（normalize）。
@@ -634,6 +605,38 @@ namespace FixMath
             result.Z = z * w2 + z2 * w + num3;
             result.W = w * w2 - num4;
             return result;
+        }
+
+        #endregion
+
+        #region Inherit/Override
+
+        public bool Equals(FixQuaternion other)
+        {
+            if (X == other.X && Y == other.Y && Z == other.Z)
+            {
+                return W == other.W;
+            }
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FixQuaternion)
+            {
+                return Equals((FixQuaternion)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2) ^ (W.GetHashCode() >> 1);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0:f2}, {1:f2}, {2:f2}, {3:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat(), W.AsFloat());
         }
 
         #endregion

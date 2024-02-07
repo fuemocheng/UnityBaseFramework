@@ -51,49 +51,42 @@ namespace FixMath
             M44 = m44;
         }
 
-
         #region Base
 
-        public bool Equals(FixMatrix4x4 other)
+        /// <summary>
+        /// 计算矩阵行列式（Determinant）。
+        /// 行列式告诉我们矩阵的一些特性，这些特性对解线性方程组很有用，也可以帮我们找逆矩阵，并且在微积分及其他领域都很有用。
+        /// </summary>
+        public Fix64 GetDeterminant()
         {
-            if (M11 == other.M11 && M22 == other.M22 && M33 == other.M33 && M44 == other.M44 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 && M21 == other.M21 && M23 == other.M23 && M24 == other.M24 && M31 == other.M31 && M32 == other.M32 && M34 == other.M34 && M41 == other.M41 && M42 == other.M42)
-            {
-                return M43 == other.M43;
-            }
-            return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is FixMatrix4x4)
-            {
-                return Equals((FixMatrix4x4)obj);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            int column1HashCode = M11.GetHashCode() ^ (M21.GetHashCode() << 2) ^ (M31.GetHashCode() >> 2) ^ (M41.GetHashCode() >> 1);
-            int column2HashCode = M12.GetHashCode() ^ (M22.GetHashCode() << 2) ^ (M32.GetHashCode() >> 2) ^ (M42.GetHashCode() >> 1);
-            int column3HashCode = M13.GetHashCode() ^ (M23.GetHashCode() << 2) ^ (M33.GetHashCode() >> 2) ^ (M43.GetHashCode() >> 1);
-            int column4HashCode = M14.GetHashCode() ^ (M24.GetHashCode() << 2) ^ (M34.GetHashCode() >> 2) ^ (M44.GetHashCode() >> 1);
-            return column1HashCode.GetHashCode() ^ (column2HashCode.GetHashCode() << 2) ^ (column3HashCode.GetHashCode() >> 2) ^ (column4HashCode.GetHashCode() >> 1);
-        }
-
-        public override string ToString()
-        {
-            return string.Format("[ ({0:f2}, {1:f2}, {2:f2}, {3:f2}) ({4:f2}, {5:f2}, {6:f2}, {7:f2}) ({8:f2}, {9:f2}, {10:f2}, {11:f2}) ({12:f2}, {13:f2}, {14:f2}, {15:f2}) ]",
-                M11.AsFloat(), M12.AsFloat(), M13.AsFloat(), M14.AsFloat(),
-                M21.AsFloat(), M22.AsFloat(), M23.AsFloat(), M24.AsFloat(),
-                M31.AsFloat(), M32.AsFloat(), M33.AsFloat(), M34.AsFloat(),
-                M41.AsFloat(), M42.AsFloat(), M43.AsFloat(), M44.AsFloat());
+            Fix64 m = M11;
+            Fix64 m2 = M12;
+            Fix64 m3 = M13;
+            Fix64 m4 = M14;
+            Fix64 m5 = M21;
+            Fix64 m6 = M22;
+            Fix64 m7 = M23;
+            Fix64 m8 = M24;
+            Fix64 m9 = M31;
+            Fix64 m10 = M32;
+            Fix64 m11 = M33;
+            Fix64 m12 = M34;
+            Fix64 m13 = M41;
+            Fix64 m14 = M42;
+            Fix64 m15 = M43;
+            Fix64 m16 = M44;
+            Fix64 num = m11 * m16 - m12 * m15;
+            Fix64 num2 = m10 * m16 - m12 * m14;
+            Fix64 num3 = m10 * m15 - m11 * m14;
+            Fix64 num4 = m9 * m16 - m12 * m13;
+            Fix64 num5 = m9 * m15 - m11 * m13;
+            Fix64 num6 = m9 * m14 - m10 * m13;
+            return m * (m6 * num - m7 * num2 + m8 * num3) - m2 * (m5 * num - m7 * num4 + m8 * num5) + m3 * (m5 * num2 - m6 * num4 + m8 * num6) - m4 * (m5 * num3 - m6 * num5 + m7 * num6);
         }
 
         #endregion
 
-
-        #region operators
+        #region Operators
 
         public static bool operator ==(FixMatrix4x4 left, FixMatrix4x4 right)
         {
@@ -255,8 +248,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region Public Methods
+        #region Public Static Methods
 
         /// <summary>
         /// 平移矩阵。
@@ -587,37 +579,6 @@ namespace FixMath
         }
 
         /// <summary>
-        /// 计算矩阵行列式（Determinant）。
-        /// 行列式告诉我们矩阵的一些特性，这些特性对解线性方程组很有用，也可以帮我们找逆矩阵，并且在微积分及其他领域都很有用。
-        /// </summary>
-        public Fix64 GetDeterminant()
-        {
-            Fix64 m = M11;
-            Fix64 m2 = M12;
-            Fix64 m3 = M13;
-            Fix64 m4 = M14;
-            Fix64 m5 = M21;
-            Fix64 m6 = M22;
-            Fix64 m7 = M23;
-            Fix64 m8 = M24;
-            Fix64 m9 = M31;
-            Fix64 m10 = M32;
-            Fix64 m11 = M33;
-            Fix64 m12 = M34;
-            Fix64 m13 = M41;
-            Fix64 m14 = M42;
-            Fix64 m15 = M43;
-            Fix64 m16 = M44;
-            Fix64 num = m11 * m16 - m12 * m15;
-            Fix64 num2 = m10 * m16 - m12 * m14;
-            Fix64 num3 = m10 * m15 - m11 * m14;
-            Fix64 num4 = m9 * m16 - m12 * m13;
-            Fix64 num5 = m9 * m15 - m11 * m13;
-            Fix64 num6 = m9 * m14 - m10 * m13;
-            return m * (m6 * num - m7 * num2 + m8 * num3) - m2 * (m5 * num - m7 * num4 + m8 * num5) + m3 * (m5 * num2 - m6 * num4 + m8 * num6) - m4 * (m5 * num3 - m6 * num5 + m7 * num6);
-        }
-
-        /// <summary>
         /// 矩阵求逆。
         /// A 的逆矩阵是 A⁻¹ ,仅当 A×A⁻¹=A⁻¹×A = I(单位矩阵)
         /// </summary>
@@ -742,6 +703,47 @@ namespace FixMath
             result.M44 = matrix1.M44 + (matrix2.M44 - matrix1.M44) * amount;
             return result;
         }
+
+        #endregion
+
+        #region Inherit/Override
+
+        public bool Equals(FixMatrix4x4 other)
+        {
+            if (M11 == other.M11 && M22 == other.M22 && M33 == other.M33 && M44 == other.M44 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 && M21 == other.M21 && M23 == other.M23 && M24 == other.M24 && M31 == other.M31 && M32 == other.M32 && M34 == other.M34 && M41 == other.M41 && M42 == other.M42)
+            {
+                return M43 == other.M43;
+            }
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FixMatrix4x4)
+            {
+                return Equals((FixMatrix4x4)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int column1HashCode = M11.GetHashCode() ^ (M21.GetHashCode() << 2) ^ (M31.GetHashCode() >> 2) ^ (M41.GetHashCode() >> 1);
+            int column2HashCode = M12.GetHashCode() ^ (M22.GetHashCode() << 2) ^ (M32.GetHashCode() >> 2) ^ (M42.GetHashCode() >> 1);
+            int column3HashCode = M13.GetHashCode() ^ (M23.GetHashCode() << 2) ^ (M33.GetHashCode() >> 2) ^ (M43.GetHashCode() >> 1);
+            int column4HashCode = M14.GetHashCode() ^ (M24.GetHashCode() << 2) ^ (M34.GetHashCode() >> 2) ^ (M44.GetHashCode() >> 1);
+            return column1HashCode.GetHashCode() ^ (column2HashCode.GetHashCode() << 2) ^ (column3HashCode.GetHashCode() >> 2) ^ (column4HashCode.GetHashCode() >> 1);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[ ({0:f2}, {1:f2}, {2:f2}, {3:f2}) ({4:f2}, {5:f2}, {6:f2}, {7:f2}) ({8:f2}, {9:f2}, {10:f2}, {11:f2}) ({12:f2}, {13:f2}, {14:f2}, {15:f2}) ]",
+                M11.AsFloat(), M12.AsFloat(), M13.AsFloat(), M14.AsFloat(),
+                M21.AsFloat(), M22.AsFloat(), M23.AsFloat(), M24.AsFloat(),
+                M31.AsFloat(), M32.AsFloat(), M33.AsFloat(), M34.AsFloat(),
+                M41.AsFloat(), M42.AsFloat(), M43.AsFloat(), M44.AsFloat());
+        }
+
         #endregion
     }
 }

@@ -36,6 +36,8 @@ namespace FixMath
             Y = value.Y;
         }
 
+        #region Base
+
         /// <summary>
         /// 向量的模。
         /// </summary>
@@ -72,39 +74,16 @@ namespace FixMath
             }
         }
 
-
-        #region Base
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(FixVector2 other)
+        public Fix64 Length()
         {
-            if (X == other.X)
-            {
-                return Y == other.Y;
-            }
-            return false;
+            return FixMath.Sqrt(X * X + Y * Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public Fix64 LengthSquared()
         {
-            if (obj is not FixVector2)
-            {
-                return false;
-            }
-            return Equals((FixVector2)obj);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ (Y.GetHashCode() << 2);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString()
-        {
-            return string.Format("({0:f2}, {1:f2})", X.AsFloat(), Y.AsFloat());
+            return X * X + Y * Y;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -121,8 +100,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region operators
+        #region Operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(FixVector2 left, FixVector2 right)
@@ -193,9 +171,6 @@ namespace FixMath
             return new FixVector2(value.X * factor, value.Y * factor);
         }
 
-        /// <summary>
-        /// 取负。
-        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Negate(FixVector2 value)
         {
@@ -246,20 +221,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region Public Methods
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 Length()
-        {
-            return FixMath.Sqrt(X * X + Y * Y);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 LengthSquared()
-        {
-            return X * X + Y * Y;
-        }
+        #region Public Static Methods
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector2 Abs(FixVector2 value)
@@ -384,6 +346,42 @@ namespace FixMath
                 Fix64 dot = Dot(vector, onNormal);
                 return new FixVector2(onNormal.X * dot / sqrMag, onNormal.Y * dot / sqrMag);
             }
+        }
+
+        #endregion
+
+        #region Inherit/Override
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(FixVector2 other)
+        {
+            if (X == other.X)
+            {
+                return Y == other.Y;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            if (obj is not FixVector2)
+            {
+                return false;
+            }
+            return Equals((FixVector2)obj);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ (Y.GetHashCode() << 2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString()
+        {
+            return string.Format("({0:f2}, {1:f2})", X.AsFloat(), Y.AsFloat());
         }
 
         #endregion

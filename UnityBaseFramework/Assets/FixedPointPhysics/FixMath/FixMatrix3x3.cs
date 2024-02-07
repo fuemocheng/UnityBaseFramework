@@ -37,6 +37,8 @@ namespace FixMath
             M33 = m33;
         }
 
+        #region Base
+
         /// <summary>
         /// Gets or sets the forward vector of the matrix.
         /// </summary>
@@ -163,45 +165,30 @@ namespace FixMath
             }
         }
 
-
-        #region Base
-
-        public bool Equals(FixMatrix3x3 other)
+        /// <summary>
+        /// 计算矩阵行列式（Determinant）。
+        /// 行列式告诉我们矩阵的一些特性，这些特性对解线性方程组很有用，也可以帮我们找逆矩阵，并且在微积分及其他领域都很有用。
+        /// </summary>
+        public Fix64 GetDeterminant()
         {
-            if (M11 == other.M11 && M22 == other.M22 && M33 == other.M33 && M12 == other.M12 && M13 == other.M13 && M21 == other.M21 && M23 == other.M23 && M31 == other.M31)
-            {
-                return M32 == other.M32;
-            }
-            return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is FixMatrix3x3)
-            {
-                return Equals((FixMatrix3x3)obj);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            int column1HashCode = M11.GetHashCode() ^ (M21.GetHashCode() << 2) ^ (M31.GetHashCode() >> 2);
-            int column2HashCode = M12.GetHashCode() ^ (M22.GetHashCode() << 2) ^ (M32.GetHashCode() >> 2);
-            int column3HashCode = M13.GetHashCode() ^ (M23.GetHashCode() << 2) ^ (M33.GetHashCode() >> 2);
-            return column1HashCode.GetHashCode() ^ (column2HashCode.GetHashCode() << 2) ^ (column3HashCode.GetHashCode() >> 2);
-        }
-
-        public override string ToString()
-        {
-            return string.Format("[ ({0:f2}, {1:f2}, {2:f2}) ({3:f2}, {4:f2}, {5:f2}) ({6:f2}, {7:f2}, {8:f2}) ]",
-                M11.AsFloat(), M12.AsFloat(), M13.AsFloat(), M21.AsFloat(), M22.AsFloat(), M23.AsFloat(), M31.AsFloat(), M32.AsFloat(), M33.AsFloat());
+            Fix64 m1 = M11;
+            Fix64 m2 = M12;
+            Fix64 m3 = M13;
+            Fix64 m4 = M21;
+            Fix64 m5 = M22;
+            Fix64 m6 = M23;
+            Fix64 m7 = M31;
+            Fix64 m8 = M32;
+            Fix64 m9 = M33;
+            Fix64 num1 = m5 * m9 - m6 * m8;
+            Fix64 num2 = m4 * m9 - m6 * m7;
+            Fix64 num3 = m4 * m8 - m5 * m7;
+            return m1 * num1 - m2 * num2 + m3 * num3;
         }
 
         #endregion
 
-
-        #region operators
+        #region Operators
 
         public static bool operator ==(FixMatrix3x3 left, FixMatrix3x3 right)
         {
@@ -326,8 +313,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region
+        #region Public Static Methods
 
         /// <summary>
         /// 缩放矩阵。根据传入的缩放因子（scale）生成一个3x3的缩放矩阵。
@@ -517,27 +503,6 @@ namespace FixMath
         }
 
         /// <summary>
-        /// 计算矩阵行列式（Determinant）。
-        /// 行列式告诉我们矩阵的一些特性，这些特性对解线性方程组很有用，也可以帮我们找逆矩阵，并且在微积分及其他领域都很有用。
-        /// </summary>
-        public Fix64 GetDeterminant()
-        {
-            Fix64 m1 = M11;
-            Fix64 m2 = M12;
-            Fix64 m3 = M13;
-            Fix64 m4 = M21;
-            Fix64 m5 = M22;
-            Fix64 m6 = M23;
-            Fix64 m7 = M31;
-            Fix64 m8 = M32;
-            Fix64 m9 = M33;
-            Fix64 num1 = m5 * m9 - m6 * m8;
-            Fix64 num2 = m4 * m9 - m6 * m7;
-            Fix64 num3 = m4 * m8 - m5 * m7;
-            return m1 * num1 - m2 * num2 + m3 * num3;
-        }
-
-        /// <summary>
         /// 矩阵求逆。
         /// A 的逆矩阵是 A⁻¹ ,仅当 A×A⁻¹=A⁻¹×A = I(单位矩阵)
         /// </summary>
@@ -627,6 +592,42 @@ namespace FixMath
             result.M32 = matrix1.M32 + (matrix2.M32 - matrix1.M32) * amount;
             result.M33 = matrix1.M33 + (matrix2.M33 - matrix1.M33) * amount;
             return result;
+        }
+
+        #endregion
+
+        #region Inherit/Override
+
+        public bool Equals(FixMatrix3x3 other)
+        {
+            if (M11 == other.M11 && M22 == other.M22 && M33 == other.M33 && M12 == other.M12 && M13 == other.M13 && M21 == other.M21 && M23 == other.M23 && M31 == other.M31)
+            {
+                return M32 == other.M32;
+            }
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FixMatrix3x3)
+            {
+                return Equals((FixMatrix3x3)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int column1HashCode = M11.GetHashCode() ^ (M21.GetHashCode() << 2) ^ (M31.GetHashCode() >> 2);
+            int column2HashCode = M12.GetHashCode() ^ (M22.GetHashCode() << 2) ^ (M32.GetHashCode() >> 2);
+            int column3HashCode = M13.GetHashCode() ^ (M23.GetHashCode() << 2) ^ (M33.GetHashCode() >> 2);
+            return column1HashCode.GetHashCode() ^ (column2HashCode.GetHashCode() << 2) ^ (column3HashCode.GetHashCode() >> 2);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[ ({0:f2}, {1:f2}, {2:f2}) ({3:f2}, {4:f2}, {5:f2}) ({6:f2}, {7:f2}, {8:f2}) ]",
+                M11.AsFloat(), M12.AsFloat(), M13.AsFloat(), M21.AsFloat(), M22.AsFloat(), M23.AsFloat(), M31.AsFloat(), M32.AsFloat(), M33.AsFloat());
         }
 
         #endregion

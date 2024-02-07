@@ -48,6 +48,8 @@ namespace FixMath
             W = value.W;
         }
 
+        #region Base
+
         /// <summary>
         /// 向量的模。
         /// </summary>
@@ -84,50 +86,28 @@ namespace FixMath
             }
         }
 
-        #region Base
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(FixVector4 other)
+        public Fix64 Length()
         {
-            if (X == other.X && Y == other.Y && Z == other.Z)
-            {
-                return W == other.W;
-            }
-            return false;
+            Fix64 num = X * X + Y * Y + Z * Z + W * W;
+            return FixMath.Sqrt(num);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public Fix64 LengthSquared()
         {
-            if (!(obj is FixVector4))
-            {
-                return false;
-            }
-            return Equals((FixVector4)obj);
+            return X * X + Y * Y + Z * Z + W * W;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2) ^ (W.GetHashCode() >> 1);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString()
-        {
-            return string.Format("({0:f2}, {1:f2}, {2:f2}, {3:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat(), W.AsFloat());
-        }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UnityEngine.Vector4 ToVector4()
         {
             return new UnityEngine.Vector4(X.AsFloat(), Y.AsFloat(), Z.AsFloat(), W.AsFloat());
         }
+
         #endregion
 
-
-        #region operators
+        #region Operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(FixVector4 left, FixVector4 right)
@@ -243,21 +223,7 @@ namespace FixMath
 
         #endregion
 
-
-        #region Public Methods
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 Length()
-        {
-            Fix64 num = X * X + Y * Y + Z * Z + W * W;
-            return FixMath.Sqrt(num);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Fix64 LengthSquared()
-        {
-            return X * X + Y * Y + Z * Z + W * W;
-        }
+        #region Public Static Methods
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FixVector4 Abs(FixVector4 value)
@@ -349,6 +315,42 @@ namespace FixMath
         public static Fix64 Dot(FixVector4 vector1, FixVector4 vector2)
         {
             return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z + vector1.W * vector2.W;
+        }
+
+        #endregion
+
+        #region Inherit/Override
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(FixVector4 other)
+        {
+            if (X == other.X && Y == other.Y && Z == other.Z)
+            {
+                return W == other.W;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FixVector4))
+            {
+                return false;
+            }
+            return Equals((FixVector4)obj);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ (Y.GetHashCode() << 2) ^ (Z.GetHashCode() >> 2) ^ (W.GetHashCode() >> 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override string ToString()
+        {
+            return string.Format("({0:f2}, {1:f2}, {2:f2}, {3:f2})", X.AsFloat(), Y.AsFloat(), Z.AsFloat(), W.AsFloat());
         }
 
         #endregion
